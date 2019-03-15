@@ -7,29 +7,43 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.view.View;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectFile;
 import org.json.JSONException;
+import android.support.design.widget.FloatingActionButton;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
     private List<Project> projectList;
-
+    private FloatingActionButton floatingActionButton;
 
     @Override
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
         if (!checkStoragePermission()) {
             requestStoragePermission();
         }
+        findViews();
+        readPreviousProjects();
+    }
+
+    /*
+    Find in XML views from there IDs
+     */
+    private void findViews() {
+        floatingActionButton = this.findViewById(R.id.new_project_float_btn);
+    }
+
+    /*
+    Create new project after Folat button touched
+     */
+    public void newProject(View view) {
 
     }
 
@@ -39,6 +53,9 @@ public class StartActivity extends AppCompatActivity {
     private void readPreviousProjects() {
         this.projectList = new ArrayList<>();
         File workspace = new File(Environment.getExternalStorageDirectory() + "/CinAProjects/");
+        if (!workspace.exists()) {
+            workspace.mkdir();
+        }
         File likeProjects[] = workspace.listFiles();
         for (File likeProject : likeProjects) {
             File projectInfoFile = null;

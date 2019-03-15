@@ -7,19 +7,26 @@ import java.io.*;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/*
+Class for extract and setup compiler e
+ */
 public class CompilerSetup {
     private File compilerZipFile;
     private Activity context;
     private String compilerZipPath;
 
+    /*
+    Create compiler path and file
+     */
     public CompilerSetup(Activity context) {
         this.context = context;
         this.compilerZipPath = context.getFilesDir().getAbsolutePath() + "/compiler/gcc.zip";
         this.compilerZipFile = new File(this.compilerZipPath);
     }
 
-
-
+    /*
+    check and test compiler
+     */
     public boolean checkCompiler() {
         if (!this.compilerZipFile.exists())
             return false;
@@ -31,6 +38,9 @@ public class CompilerSetup {
         return true;
     }
 
+    /*
+    copy from given asset name to phone memory
+     */
     public void copyCompiler(String assetName) throws IOException {
         if (this.compilerZipFile.exists()) {
             boolean delResult = this.compilerZipFile.delete();
@@ -61,6 +71,9 @@ public class CompilerSetup {
         outSteam.close();
     }
 
+    /*
+    extract compiler .zip file to internal storage
+     */
     public void extractCompiler(File zipFile) throws IOException {
         ZipInputStream zipInStream = new ZipInputStream(new FileInputStream(zipFile));
         ZipEntry zipEntry;

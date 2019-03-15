@@ -1,12 +1,13 @@
 package ir.ashkanabd.cina.project;
 
-import android.util.JsonWriter;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+/*
+Class for controll Projects nad read and write theme
+ */
 public class ProjectFile {
     private File project;
 
@@ -14,6 +15,9 @@ public class ProjectFile {
         this.project = file;
     }
 
+    /*
+    Read project info from .cina file
+     */
     public String readFile() throws IOException {
         Scanner scn = new Scanner(this.project);
         StringBuilder builder = new StringBuilder();
@@ -24,6 +28,9 @@ public class ProjectFile {
         return builder.toString();
     }
 
+    /*
+    write project info in .cina file
+     */
     public void writeFile(String json) throws IOException {
         PrintWriter pw = new PrintWriter(this.project);
         pw.println(json);

@@ -8,12 +8,18 @@ import java.util.Scanner;
 import java.io.File;
 import java.io.IOException;
 
+/*
+Class for compiling source with GCC
+ */
 public class CompileGCC {
     private CompilerSetup compilerSetup;
     private Process compileProcess;
     private Activity context;
     private File workspace;
 
+    /*
+    Check compiler in test it
+     */
     public CompileGCC(Activity context) throws IOException {
         this.context = context;
         this.compilerSetup = new CompilerSetup(this.context);
@@ -25,6 +31,9 @@ public class CompileGCC {
         Log.i("CinA", "Compiler setup successfully");
     }
 
+    /*
+    Compile with given source files and link it to project dir
+     */
     public void Compile(File... inputFiles) throws IOException {
         // TODO: 3/15/19 Check compile output and try to link output binary and run program
         String compileParam = createCompileParam(inputFiles);
@@ -42,6 +51,9 @@ public class CompileGCC {
         Log.e("ERR", "---------------------");
     }
 
+    /*
+    Create compile parameter from given source files
+     */
     private String createCompileParam(File... inputFiles) {
         StringBuilder builder = new StringBuilder(this.workspace.getAbsolutePath() + "/gcc/bin/aarch64-linux-android-g++");
         for (File file : inputFiles) {

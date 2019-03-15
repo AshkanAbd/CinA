@@ -10,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
+Class for controll project info and pars it to json or String
+ */
 public class Project {
     private String name;
     private String lang;
