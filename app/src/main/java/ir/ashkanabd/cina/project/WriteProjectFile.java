@@ -17,6 +17,13 @@ public class WriteProjectFile extends ProjectFile {
         this.jsonMap = new HashMap<>();
     }
 
+    private void addProject(Project project) {
+        this.addProjectName(project.getName());
+        this.addProjectLang(project.getLang());
+        this.addProjectDir(project.getDir());
+        this.addSourceFiles((String[]) project.getSource().toArray());
+    }
+
     public void addProjectName(String name) {
         this.jsonMap.put("name", name);
     }

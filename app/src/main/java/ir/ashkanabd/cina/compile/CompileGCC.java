@@ -26,6 +26,7 @@ public class CompileGCC {
     }
 
     public void Compile(File... inputFiles) throws IOException {
+        // TODO: 3/15/19 Check compile output and try to link output binary and run program
         String compileParam = createCompileParam(inputFiles);
         this.compileProcess = Runtime.getRuntime().exec(compileParam, null, this.workspace);
         Scanner escn = new Scanner(this.compileProcess.getErrorStream());
