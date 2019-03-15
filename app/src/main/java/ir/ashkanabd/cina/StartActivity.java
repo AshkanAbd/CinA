@@ -3,16 +3,16 @@ package ir.ashkanabd.cina;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toolbar;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import co.dift.ui.SwipeToAction;
@@ -85,6 +85,17 @@ public class StartActivity extends Activity {
         swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener<Project>() {
             @Override
             public boolean swipeLeft(Project itemData) {
+                /*
+                 * Remove Item
+                 */
+                new AlertDialog.Builder(StartActivity.this).setTitle("Remove Project?")
+                        .setMessage("Are you sure to remove project " + itemData.getName() + "?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            ProjectManager.removeProject(itemData);
+                            loadProjects();
+                            setupListView();
+                        })
+                        .setNegativeButton("No", null).setCancelable(false).show();
                 return true;
             }
 
@@ -95,7 +106,7 @@ public class StartActivity extends Activity {
 
             @Override
             public void onClick(Project itemData) {
-
+                StartActivity.this.startActivity(new Intent(StartActivity.this, EditorActivity.class));
             }
 
             @Override
@@ -206,7 +217,7 @@ public class StartActivity extends Activity {
             if (project == null) {
                 return;
             }
-            File cinaFile = new File(project.getDir(), projectName + ".cina");
+            File cinaFile = new File(project.getDir(), "." + projectName + ".cina");
             boolean tmp = cinaFile.createNewFile();
             if (!tmp)
                 throw new IOException();

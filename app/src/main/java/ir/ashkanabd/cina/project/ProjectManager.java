@@ -25,6 +25,27 @@ public class ProjectManager {
     }
 
     /*
+     * Remove given Project
+     */
+    public static void removeProject(Project project) {
+        File projectDir = new File(project.getDir());
+        remove(projectDir);
+        Log.e("INFO", "REMOVE PROJECT");
+    }
+
+    private static void remove(File file) {
+        if (!file.isDirectory()) {
+            file.delete();
+            return;
+        }
+        File[] sub = file.listFiles();
+        for (File f : sub) {
+            remove(f);
+        }
+        file.delete();
+    }
+
+    /*
      * Check given File(directory) is project or not
      */
     public static Object[] isProject(@NonNull File likeProject) {
@@ -52,7 +73,7 @@ public class ProjectManager {
                 try {
                     projectList.add(new Project(ProjectManager.readFile((File) objs[1])));
                 } catch (JSONException | IOException ignored) {
-                    Log.e("IFNO", "Error while reading project");
+                    Log.e("INFO", "Error while reading project");
                     // TODO: 3/15/19 Catch project reading error
                 }
             }
@@ -70,9 +91,9 @@ public class ProjectManager {
         newProject.setName(projectName);
         newProject.setDescription(description);
         if (isC) {
-            newProject.setLang("c");
+            newProject.setLang("C");
         } else {
-            newProject.setLang("c++");
+            newProject.setLang("C++");
         }
         if (!this.initializeProject(projectName, newProject))
             return null;
@@ -83,13 +104,16 @@ public class ProjectManager {
      * Initialize project and create files
      */
     private boolean initializeProject(@NonNull String projectName, @NonNull Project project) throws IOException {
-        boolean isC = project.getLang().equals("c");
+        boolean isC = project.getLang().equals("C");
         File projectDir = new File(workspace, projectName);
         if (projectDir.exists()) return false;
         boolean tmp = projectDir.mkdir();
         if (!tmp) return false;
         project.setDir(projectDir.getAbsolutePath());
-        File main = isC ? new File(projectDir, "main.c") : new File(projectDir, "main.cpp");
+        File srcDir = new File(projectDir, "src/");
+        tmp = srcDir.mkdir();
+        if (!tmp) return false;
+        File main = isC ? new File(srcDir, "main.c") : new File(srcDir, "main.cpp");
         tmp = main.createNewFile();
         if (!tmp) return false;
         if (isC) {
