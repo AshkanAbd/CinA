@@ -8,15 +8,22 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import ir.ashkanabd.cina.project.Project;
+import ir.ashkanabd.cina.project.ProjectFile;
+import org.json.JSONException;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
+    private List<Project> projectList;
+
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
@@ -30,12 +37,17 @@ public class StartActivity extends AppCompatActivity {
     Read every directory in main workspace and find CinA projects
      */
     private void readPreviousProjects() {
+        this.projectList = new ArrayList<>();
         File workspace = new File(Environment.getExternalStorageDirectory() + "/CinAProjects/");
         File likeProjects[] = workspace.listFiles();
-        List<File> projectList = new ArrayList<>();
         for (File likeProject : likeProjects) {
-            if (isProject(likeProject)) {
-
+            File projectInfoFile = null;
+            if (isProject(likeProject, projectInfoFile)) {
+                ProjectFile projectFile = new ProjectFile(projectInfoFile);
+                try {
+                    this.projectList.add(new Project(projectFile.readFile()));
+                } catch (JSONException | IOException ignored) {
+                }
             }
         }
     }
@@ -43,11 +55,16 @@ public class StartActivity extends AppCompatActivity {
     /*
     check given File(directory) is project or not
      */
-    private boolean isProject(File likeProject) {
+    private boolean isProject(File likeProject, File projectInfoFile) {
         if (!likeProject.isDirectory())
             return false;
-        String[] subFiles = likeProject.list((path, name) -> name.endsWith("cina"));
-        return subFiles.length == 1;
+        File[] subFiles = likeProject.listFiles((path, name) -> name.endsWith("cina"));
+        if (subFiles.length == 1) {
+            projectInfoFile = subFiles[0];
+            return true;
+        }
+        projectInfoFile = null;
+        return false;
     }
 
     /*

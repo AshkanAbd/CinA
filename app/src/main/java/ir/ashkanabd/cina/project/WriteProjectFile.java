@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Deprecated
 public class WriteProjectFile extends ProjectFile {
     private Map<String, Object> jsonMap;
 

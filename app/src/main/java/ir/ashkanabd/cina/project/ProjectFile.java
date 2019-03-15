@@ -7,14 +7,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
-public abstract class ProjectFile {
+public class ProjectFile {
     private File project;
 
     public ProjectFile(File file) {
         this.project = file;
     }
 
-    protected String readFile() throws IOException {
+    public String readFile() throws IOException {
         Scanner scn = new Scanner(this.project);
         StringBuilder builder = new StringBuilder();
         while (scn.hasNextLine()) {
@@ -24,7 +24,7 @@ public abstract class ProjectFile {
         return builder.toString();
     }
 
-    protected void writeFile(String json) throws IOException {
+    public void writeFile(String json) throws IOException {
         PrintWriter pw = new PrintWriter(this.project);
         pw.println(json);
         pw.close();
