@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.Scanner;
 
 /*
-Class for controll Projects nad read and write theme
+ * Class for controll Projects nad read and write theme
  */
 public class ProjectFile {
     private File project;
@@ -16,7 +16,7 @@ public class ProjectFile {
     }
 
     /*
-    Read project info from .cina file
+     * Read project info from .cina file
      */
     @Deprecated
     public String readFile() throws IOException {
@@ -30,7 +30,7 @@ public class ProjectFile {
     }
 
     /*
-    write project info in .cina file
+     * write project info in .cina file
      */
     @Deprecated
     public void writeFile(String json) throws IOException {

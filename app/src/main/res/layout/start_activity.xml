@@ -22,13 +22,6 @@
 				android:background="?attr/colorPrimary"
 				android:theme="@style/ThemeOverlay.AppCompat.ActionBar"/>
 
-		<TextView
-				android:id="@+id/center_tv_startAC"
-				android:layout_width="0dp"
-				android:layout_height="0dp"
-				android:layout_centerInParent="true"/>
-
-
 		<com.google.android.material.floatingactionbutton.FloatingActionButton
 				android:layout_alignParentBottom="true"
 				android:layout_alignParentEnd="true"

@@ -43,7 +43,7 @@ public class StartActivity extends Activity {
     private Toolbar toolbar;
     private ActionBar actionBar;
     private NavigationView navigationView;
-    private TextInputEditText newProjectName;
+    private TextInputEditText newProjectName, newProjectDescription;
     private MaterialRadioButton cRadioBtn, cppRadioBtn;
     private boolean backPress = false;
     private boolean drawerOpen = false;
@@ -75,6 +75,7 @@ public class StartActivity extends Activity {
         materialDialog.setContentView(R.layout.create_new_project);
         materialDialog.setCancelable(true);
         this.newProjectName = materialDialog.findViewById(R.id.create_new_project_name);
+        this.newProjectDescription = materialDialog.findViewById(R.id.create_new_project_description);
         this.cRadioBtn = materialDialog.findViewById(R.id.create_new_project_c_radio);
         this.cppRadioBtn = materialDialog.findViewById(R.id.create_new_project_cpp_radio);
     }
@@ -148,6 +149,7 @@ public class StartActivity extends Activity {
      */
     public void addProject(View view) {
         this.newProjectName.setText("");
+        this.newProjectDescription.setText("");
         this.cRadioBtn.setChecked(true);
         this.cppRadioBtn.setChecked(false);
         this.materialDialog.show();
@@ -158,9 +160,10 @@ public class StartActivity extends Activity {
      */
     public void createNewProject(View view) {
         String projectName = newProjectName.getText().toString();
+        String projectDescription = newProjectDescription.getText().toString();
         boolean isC = cRadioBtn.isChecked();
         try {
-            Project project = this.projectManager.createNewProject(projectName, isC);
+            Project project = this.projectManager.createNewProject(projectName, projectDescription, isC);
             if (project == null) {
                 return;
             }

@@ -61,11 +61,12 @@ public class ProjectManager {
      * Create new Project after checking dialog
      */
     @Nullable
-    public Project createNewProject(@NonNull String projectName, boolean isC) throws IOException {
+    public Project createNewProject(@NonNull String projectName, @Nullable String description, boolean isC) throws IOException {
         if (projectName.isEmpty())
             return null;
         Project newProject = new Project();
         newProject.setName(projectName);
+        newProject.setDescription(description);
         if (isC) {
             newProject.setLang("c");
         } else {

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:tools="http://schemas.android.com/tools"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		xmlns:tools="http://schemas.android.com/tools"
 		android:id="@+id/create_new_project"
 		tools:context=".StartActivity"
 		android:padding="40dp">
@@ -16,9 +16,20 @@
 			android:textAlignment="center"
 			android:textSize="20sp"/>
 
+	<com.google.android.material.textfield.TextInputEditText
+			android:id="@+id/create_new_project_description"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="Project description(Optional)"
+			android:textAlignment="center"
+			android:layout_below="@id/create_new_project_name"
+			android:maxLines="2"
+			android:layout_marginTop="20dp"
+			android:textSize="15sp"/>
+
 	<RadioGroup
 			android:id="@+id/create_new_project_radio_gp"
-			android:layout_below="@id/create_new_project_name"
+			android:layout_below="@id/create_new_project_description"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="20dp"

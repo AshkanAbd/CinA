@@ -11,11 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 /*
-Class for controll project info and pars it to json or String
+ * Class for controll project info and pars it to json or String
  */
 public class Project {
     private String name;
     private String lang;
+    private String description;
     private String dir;
     private List<String> source;
     private Map<String, Object> jsonMap;
@@ -25,14 +26,16 @@ public class Project {
         this.jsonMap = new HashMap<>();
     }
 
-    public Project(String name, String lang, String dir, List<String> source) {
+    public Project(String name, String lang, String description, String dir, List<String> source) {
         this.name = name;
         this.lang = lang;
+        this.description = description;
         this.dir = dir;
         this.source = source;
         this.jsonMap = new HashMap<>();
         this.jsonMap.put("name", name);
         this.jsonMap.put("lang", lang);
+        this.jsonMap.put("description", description);
         this.jsonMap.put("dir", dir);
         this.jsonMap.put("src", source);
     }
@@ -46,6 +49,7 @@ public class Project {
             this.name = jsonObject.getString("name");
             this.lang = jsonObject.getString("lang");
             this.dir = jsonObject.getString("dir");
+            this.description = jsonObject.getString("description");
             this.source = new ArrayList<>();
             JSONArray jsonArr = jsonObject.getJSONArray("src");
             for (int i = 0; i < jsonArr.length(); i++) {
@@ -55,6 +59,7 @@ public class Project {
             this.jsonMap.put("name", name);
             this.jsonMap.put("lang", lang);
             this.jsonMap.put("dir", dir);
+            this.jsonMap.put("description", description);
             this.jsonMap.put("src", source);
         } catch (Exception ignored) {
             throw new JSONException("Invalid Project structure");
@@ -79,6 +84,14 @@ public class Project {
     public void setSource(List<String> source) {
         this.source = source;
         this.jsonMap.put("src", source);
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public String getName() {
