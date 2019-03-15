@@ -49,7 +49,11 @@ public class Project {
             this.name = jsonObject.getString("name");
             this.lang = jsonObject.getString("lang");
             this.dir = jsonObject.getString("dir");
-            this.description = jsonObject.getString("description");
+            if (jsonObject.has("description")) {
+                this.description = jsonObject.getString("description");
+            } else {
+                this.description = "";
+            }
             this.source = new ArrayList<>();
             JSONArray jsonArr = jsonObject.getJSONArray("src");
             for (int i = 0; i < jsonArr.length(); i++) {
@@ -88,6 +92,7 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+        this.jsonMap.put("description", description);
     }
 
     public String getDescription() {

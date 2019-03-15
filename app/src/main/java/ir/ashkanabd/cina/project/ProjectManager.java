@@ -1,6 +1,7 @@
 package ir.ashkanabd.cina.project;
 
 import android.os.Environment;
+import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import org.json.JSONException;
@@ -48,10 +49,11 @@ public class ProjectManager {
         for (File likeProject : likeProjects) {
             Object[] objs = isProject(likeProject);
             if ((boolean) objs[0]) {
-                ProjectFile projectFile = new ProjectFile((File) objs[1]);
                 try {
-                    projectList.add(new Project(projectFile.readFile()));
+                    projectList.add(new Project(ProjectManager.readFile((File) objs[1])));
                 } catch (JSONException | IOException ignored) {
+                    Log.e("IFNO", "Error while reading project");
+                    // TODO: 3/15/19 Catch project reading error
                 }
             }
         }
