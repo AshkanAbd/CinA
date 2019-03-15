@@ -1,24 +1,29 @@
 package ir.ashkanabd.cina;
 
 import android.Manifest;
+import android.app.ActionBar;
+import android.app.Activity;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.widget.RelativeLayout;
+import android.widget.Toolbar;
+import androidx.annotation.NonNull;
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.navigation.NavigationView;
+import androidx.drawerlayout.widget.DrawerLayout;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.support.design.widget.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.widget.Toast;
+import com.google.android.material.radiobutton.MaterialRadioButton;
+import com.google.android.material.textfield.TextInputEditText;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectFile;
 
@@ -29,13 +34,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends Activity {
     private List<Project> projectList;
     private FloatingActionButton floatingActionButton;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private ActionBar actionBar;
     private NavigationView navigationView;
+    private TextInputEditText newProjectName;
+    private MaterialRadioButton cRadioBtn, cppRadioBtn;
     private boolean backPress = false;
     private boolean drawerOpen = false;
 
@@ -49,7 +56,8 @@ public class StartActivity extends AppCompatActivity {
         findViews();
         setupActionBar();
         setupNavigationView();
-//        readPreviousProjects();
+        readPreviousProjects();
+        Log.e("INFO", projectList.toString());
     }
 
     /*
@@ -60,28 +68,28 @@ public class StartActivity extends AppCompatActivity {
         this.drawerLayout = this.findViewById(R.id.drawer_layout);
         this.navigationView = this.findViewById(R.id.nav_view);
         this.toolbar = this.findViewById(R.id.toolbar);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                drawerLayout.openDrawer(GravityCompat.START);
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
+        this.newProjectName = this.findViewById(R.id.create_new_project_name);
+        this.cRadioBtn = this.findViewById(R.id.create_new_project_c_radio);
+        this.cppRadioBtn = this.findViewById(R.id.create_new_project_cpp_radio);
     }
 
     /*
      * Setup custom Action Bar and it callback
      */
     private void setupActionBar() {
-        this.setSupportActionBar(this.toolbar);
-        this.actionBar = this.getSupportActionBar();
-        this.actionBar.setDisplayHomeAsUpEnabled(true);
-        this.actionBar.setHomeAsUpIndicator(R.drawable.action_bar_menu);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            this.toolbar.setTitleTextColor(Color.WHITE);
+            this.setActionBar(this.toolbar);
+            this.actionBar = this.getActionBar();
+            this.actionBar.setTitle("C/C++ compiler for Android");
+            this.actionBar.setDisplayHomeAsUpEnabled(true);
+            this.actionBar.setHomeAsUpIndicator(R.drawable.action_bar_menu);
+        }
     }
 
+    /*
+     * Setup Navigation view Interfaces
+     */
     private void setupNavigationView() {
         this.navigationView.setNavigationItemSelectedListener(menuItem -> {
             drawerLayout.closeDrawers();
@@ -112,9 +120,19 @@ public class StartActivity extends AppCompatActivity {
     }
 
     /*
-     * Create new project after Folat button touched
+     * Show create project dialog
      */
-    public void newProject(View view) {
+    public void addProject(View view) {
+        MaterialDialog materialDialog = new MaterialDialog(this);
+        materialDialog.setContentView(R.layout.create_new_project);
+        materialDialog.setCancelable(true);
+        materialDialog.show();
+    }
+
+    /*
+     * Create new Project after checking dialog
+     */
+    public void createNewProject(View view) {
 
     }
 
@@ -167,7 +185,19 @@ public class StartActivity extends AppCompatActivity {
     }
 
     private void requestStoragePermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            this.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                drawerLayout.openDrawer(Gravity.LEFT);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

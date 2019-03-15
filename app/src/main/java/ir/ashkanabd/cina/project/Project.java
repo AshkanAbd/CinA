@@ -1,6 +1,6 @@
 package ir.ashkanabd.cina.project;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
