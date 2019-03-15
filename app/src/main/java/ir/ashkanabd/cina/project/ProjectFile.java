@@ -18,6 +18,7 @@ public class ProjectFile {
     /*
     Read project info from .cina file
      */
+    @Deprecated
     public String readFile() throws IOException {
         Scanner scn = new Scanner(this.project);
         StringBuilder builder = new StringBuilder();
@@ -31,6 +32,7 @@ public class ProjectFile {
     /*
     write project info in .cina file
      */
+    @Deprecated
     public void writeFile(String json) throws IOException {
         PrintWriter pw = new PrintWriter(this.project);
         pw.println(json);

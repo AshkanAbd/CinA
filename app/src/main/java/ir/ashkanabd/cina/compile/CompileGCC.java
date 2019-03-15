@@ -9,7 +9,7 @@ import java.io.File;
 import java.io.IOException;
 
 /*
-Class for compiling source with GCC
+ * Class for compiling source with GCC
  */
 public class CompileGCC {
     private CompilerSetup compilerSetup;
@@ -18,7 +18,7 @@ public class CompileGCC {
     private File workspace;
 
     /*
-    Check compiler in test it
+     * Check compiler in test it
      */
     public CompileGCC(Activity context) throws IOException {
         this.context = context;
@@ -32,7 +32,7 @@ public class CompileGCC {
     }
 
     /*
-    Compile with given source files and link it to project dir
+     * Compile with given source files and link it to project dir
      */
     public void Compile(File... inputFiles) throws IOException {
         // TODO: 3/15/19 Check compile output and try to link output binary and run program
@@ -52,7 +52,7 @@ public class CompileGCC {
     }
 
     /*
-    Create compile parameter from given source files
+     * Create compile parameter from given source files
      */
     private String createCompileParam(File... inputFiles) {
         StringBuilder builder = new StringBuilder(this.workspace.getAbsolutePath() + "/gcc/bin/aarch64-linux-android-g++");

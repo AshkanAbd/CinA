@@ -3,6 +3,7 @@ package ir.ashkanabd.cina;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -13,7 +14,10 @@ import android.view.Gravity;
 import android.widget.RelativeLayout;
 import android.widget.Toolbar;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.dialog.MaterialDialogs;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import android.util.Log;
@@ -25,9 +29,7 @@ import android.widget.Toast;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 import ir.ashkanabd.cina.project.Project;
-import ir.ashkanabd.cina.project.ProjectFile;
-
-import org.json.JSONException;
+import ir.ashkanabd.cina.project.ProjectManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,6 +47,8 @@ public class StartActivity extends Activity {
     private MaterialRadioButton cRadioBtn, cppRadioBtn;
     private boolean backPress = false;
     private boolean drawerOpen = false;
+    private ProjectManager projectManager;
+    private MaterialDialog materialDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +60,31 @@ public class StartActivity extends Activity {
         findViews();
         setupActionBar();
         setupNavigationView();
-        readPreviousProjects();
+        setupNewProjectDialog();
+        this.projectManager = new ProjectManager();
+        this.projectList = new ArrayList<>();
+        loadProjects();
         Log.e("INFO", projectList.toString());
+    }
+
+    /*
+     * Load new project material dialog
+     */
+    private void setupNewProjectDialog() {
+        materialDialog = new MaterialDialog(this);
+        materialDialog.setContentView(R.layout.create_new_project);
+        materialDialog.setCancelable(true);
+        this.newProjectName = materialDialog.findViewById(R.id.create_new_project_name);
+        this.cRadioBtn = materialDialog.findViewById(R.id.create_new_project_c_radio);
+        this.cppRadioBtn = materialDialog.findViewById(R.id.create_new_project_cpp_radio);
+    }
+
+    /*
+     * Load projects from workspace
+     */
+    private void loadProjects() {
+        projectList.clear();
+        this.projectManager.readPreviousProjects(projectList);
     }
 
     /*
@@ -68,9 +95,6 @@ public class StartActivity extends Activity {
         this.drawerLayout = this.findViewById(R.id.drawer_layout);
         this.navigationView = this.findViewById(R.id.nav_view);
         this.toolbar = this.findViewById(R.id.toolbar);
-        this.newProjectName = this.findViewById(R.id.create_new_project_name);
-        this.cRadioBtn = this.findViewById(R.id.create_new_project_c_radio);
-        this.cppRadioBtn = this.findViewById(R.id.create_new_project_cpp_radio);
     }
 
     /*
@@ -123,52 +147,32 @@ public class StartActivity extends Activity {
      * Show create project dialog
      */
     public void addProject(View view) {
-        MaterialDialog materialDialog = new MaterialDialog(this);
-        materialDialog.setContentView(R.layout.create_new_project);
-        materialDialog.setCancelable(true);
-        materialDialog.show();
+        this.newProjectName.setText("");
+        this.cRadioBtn.setChecked(true);
+        this.cppRadioBtn.setChecked(false);
+        this.materialDialog.show();
     }
 
     /*
      * Create new Project after checking dialog
      */
     public void createNewProject(View view) {
-
-    }
-
-    /*
-     * Read every directory in main workspace and find CinA projects
-     */
-    private void readPreviousProjects() {
-        this.projectList = new ArrayList<>();
-        File workspace = new File(Environment.getExternalStorageDirectory() + "/CinAProjects/");
-        if (!workspace.exists()) {
-            workspace.mkdir();
-        }
-        File likeProjects[] = workspace.listFiles();
-        for (File likeProject : likeProjects) {
-            Object[] objs = isProject(likeProject);
-            if ((boolean) objs[0]) {
-                ProjectFile projectFile = new ProjectFile((File) objs[1]);
-                try {
-                    this.projectList.add(new Project(projectFile.readFile()));
-                } catch (JSONException | IOException ignored) {
-                }
+        String projectName = newProjectName.getText().toString();
+        boolean isC = cRadioBtn.isChecked();
+        try {
+            Project project = this.projectManager.createNewProject(projectName, isC);
+            if (project == null) {
+                return;
             }
+            File cinaFile = new File(project.getDir(), projectName + ".cina");
+            boolean tmp = cinaFile.createNewFile();
+            if (!tmp)
+                throw new IOException();
+            ProjectManager.writeFile(project.toJson().toString(), cinaFile);
+        } catch (IOException e) {
+            // TODO: 3/15/19 Catch IOException
         }
-    }
-
-    /*
-     * Check given File(directory) is project or not
-     */
-    private Object[] isProject(File likeProject) {
-        if (!likeProject.isDirectory())
-            return new Object[]{false};
-        File[] subFiles = likeProject.listFiles((path, name) -> name.endsWith("cina"));
-        if (subFiles.length == 1) {
-            return new Object[]{true, subFiles[0]};
-        }
-        return new Object[]{false};
+        this.materialDialog.cancel();
     }
 
     /*

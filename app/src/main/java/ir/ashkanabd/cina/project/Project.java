@@ -20,6 +20,11 @@ public class Project {
     private List<String> source;
     private Map<String, Object> jsonMap;
 
+    public Project() {
+        this.source = new ArrayList<>();
+        this.jsonMap = new HashMap<>();
+    }
+
     public Project(String name, String lang, String dir, List<String> source) {
         this.name = name;
         this.lang = lang;
