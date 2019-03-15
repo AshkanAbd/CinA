@@ -3,21 +3,20 @@ package ir.ashkanabd.cina;
 import android.Manifest;
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.view.Gravity;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toolbar;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import co.dift.ui.SwipeToAction;
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.google.android.material.dialog.MaterialDialogs;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import android.util.Log;
@@ -29,6 +28,7 @@ import android.widget.Toast;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 import ir.ashkanabd.cina.project.Project;
+import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
 
 import java.io.File;
@@ -50,6 +50,11 @@ public class StartActivity extends Activity {
     private ProjectManager projectManager;
     private MaterialDialog materialDialog;
 
+
+    private SwipeToAction swipeToAction;
+    private RecyclerView recyclerView;
+    private ProjectAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +69,40 @@ public class StartActivity extends Activity {
         this.projectManager = new ProjectManager();
         this.projectList = new ArrayList<>();
         loadProjects();
+        setupListView();
         Log.e("INFO", projectList.toString());
+    }
+
+    /*
+     * Create and load ListView
+     */
+    private void setupListView() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setHasFixedSize(true);
+        adapter = new ProjectAdapter(this.projectList);
+        recyclerView.setAdapter(adapter);
+        swipeToAction = new SwipeToAction(recyclerView, new SwipeToAction.SwipeListener<Project>() {
+            @Override
+            public boolean swipeLeft(Project itemData) {
+                return true;
+            }
+
+            @Override
+            public boolean swipeRight(Project itemData) {
+                return true;
+            }
+
+            @Override
+            public void onClick(Project itemData) {
+
+            }
+
+            @Override
+            public void onLongClick(Project itemData) {
+
+            }
+        });
     }
 
     /*
@@ -96,6 +134,7 @@ public class StartActivity extends Activity {
         this.drawerLayout = this.findViewById(R.id.drawer_layout);
         this.navigationView = this.findViewById(R.id.nav_view);
         this.toolbar = this.findViewById(R.id.toolbar);
+        this.recyclerView = this.findViewById(R.id.projects_recycler_view);
     }
 
     /*
@@ -176,6 +215,8 @@ public class StartActivity extends Activity {
             // TODO: 3/15/19 Catch IOException
         }
         this.materialDialog.cancel();
+        loadProjects();
+        setupListView();
     }
 
     /*
