@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item
+			android:id="@+id/nav_camera"
+			android:icon="@drawable/open_folder"
+			android:title="Open project"/>
+	<item
+			android:id="@+id/nav_gallery"
+			android:icon="@drawable/setting_icon"
+			android:title="Setting"/>
+	<item
+			android:id="@+id/nav_slideshow"
+			android:icon="@drawable/info_icon"
+			android:title="About us"/>
+	<item
+			android:id="@+id/nav_manage"
+			android:icon="@drawable/start_icon"
+			android:title="Rate us"/>
+</menu>
