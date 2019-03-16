@@ -251,6 +251,7 @@ public class StartActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.e("INFO", item.toString());
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(Gravity.LEFT);
