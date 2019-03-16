@@ -5,7 +5,6 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:id="@+id/create_new_project"
-		tools:context=".StartActivity"
 		android:minWidth="260dp"
 		android:padding="20dp">
 
@@ -63,10 +62,10 @@
 	</RadioGroup>
 
 	<com.google.android.material.button.MaterialButton
+			android:id="@+id/create_new_project_button"
 			android:layout_width="match_parent"
 			android:layout_height="50dp"
 			android:text="Create project"
-			android:onClick="createNewProject"
 			android:gravity="center"
 			android:textColor="#FFF"
 			android:layout_below="@id/create_new_project_radio_gp"

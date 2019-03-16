@@ -8,12 +8,16 @@
 		android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 	<TextView
-			android:id="@+id/project_build_res"
+			android:id="@+id/project_nav_header_text_view"
+			android:layout_marginEnd="20dp"
+			android:layout_marginTop="50dp"
+			android:layout_marginStart="20dp"
+			android:layout_marginBottom="20dp"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:textStyle="bold"
 			android:textColor="#FFF"
-			android:layout_margin="20dp"
+			android:lineSpacingExtra="1sp"
+			android:textStyle="bold"
 			android:textSize="15sp"/>
 
 

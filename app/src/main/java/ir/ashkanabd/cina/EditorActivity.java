@@ -6,6 +6,7 @@ import android.os.Build;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import android.os.Bundle;
@@ -15,8 +16,8 @@ import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.view.CodeEditor;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class EditorActivity extends Activity {
@@ -57,8 +58,45 @@ public class EditorActivity extends Activity {
         } catch (IOException e) {
             // TODO: 3/16/19 Catch project file reading error
         }
+        View navigationHeader = navigationView.getHeaderView(0);
+        TextView headerTextView = navigationHeader.findViewById(R.id.project_nav_header_text_view);
+        String projectInfo = "Project name: " + selectedProject.getName() + "\n" +
+                "Description: " + selectedProject.getDescription() + "\n" +
+                "Language: " + selectedProject.getLang() + "\n" +
+                "Files: " + reformatFileStructure(getFileStructure(selectedProject.getSource())) + "\n" +
+                "Build state: Failed\n";
+        headerTextView.setText(projectInfo);
     }
 
+    /*
+     * prepare file structure for show in view
+     */
+    private String reformatFileStructure(String[] fileStructure) {
+        StringBuilder builder = new StringBuilder();
+        for (String str : fileStructure) {
+            builder.append(str).append("\n");
+        }
+        return builder.toString();
+    }
+
+    /*
+     * Create file structure from files in project structure
+     */
+    private String[] getFileStructure(ArrayList<String> src) {
+        String[] fileStructure = new String[src.size()];
+        for (int i = 0; i < src.size(); i++) {
+            String tmp = src.get(i);
+            int index = tmp.indexOf("src");
+            if (index == -1)
+                continue;
+            fileStructure[i] = tmp.substring(index, tmp.length());
+        }
+        return fileStructure;
+    }
+
+    /*
+     * Read given text file info
+     */
     private String readTargetFile(File targetFile) throws IOException {
         Scanner fileReader = new Scanner(targetFile);
         StringBuilder builder = new StringBuilder();

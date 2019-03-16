@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import co.dift.ui.SwipeToAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import androidx.drawerlayout.widget.DrawerLayout;
 import android.util.Log;
@@ -46,6 +47,7 @@ public class StartActivity extends Activity {
     private NavigationView navigationView;
     private TextInputEditText newProjectName, newProjectDescription;
     private MaterialRadioButton cRadioBtn, cppRadioBtn;
+    private MaterialButton newProjectButton;
     private boolean backPress = false;
     private boolean drawerOpen = false;
     private ProjectManager projectManager;
@@ -177,6 +179,8 @@ public class StartActivity extends Activity {
         this.newProjectDescription = newProjectDialog.findViewById(R.id.create_new_project_description);
         this.cRadioBtn = newProjectDialog.findViewById(R.id.create_new_project_c_radio);
         this.cppRadioBtn = newProjectDialog.findViewById(R.id.create_new_project_cpp_radio);
+        this.newProjectButton = newProjectDialog.findViewById(R.id.create_new_project_button);
+        this.newProjectButton.setOnClickListener(this::createNewProject);
     }
 
     /*
