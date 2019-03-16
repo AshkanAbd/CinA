@@ -3,7 +3,6 @@ package ir.ashkanabd.cina;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Build;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,7 +11,13 @@ import androidx.annotation.NonNull;
 import android.os.Bundle;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
+import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.view.CodeEditor;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Scanner;
 
 public class EditorActivity extends Activity {
     private CodeEditor editor;
@@ -20,6 +25,9 @@ public class EditorActivity extends Activity {
     private ActionBar projectActionBar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
+    private Project selectedProject;
+    private File currentFile;
+    private String currentFilePath;
     private boolean drawerIsOpen = false;
 
     @Override
@@ -27,8 +35,38 @@ public class EditorActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
         findViews();
+        prepareActivity(getIntent().getExtras());
         setupActionBar();
         setupNavigationView();
+    }
+
+    /*
+     * Prepare activity for selected Project
+     */
+    private void prepareActivity(Bundle bundle) {
+        selectedProject = (Project) bundle.get("project");
+        try {
+            if (!selectedProject.getSource().isEmpty()) {
+                currentFilePath = selectedProject.getSource().get(0);
+                currentFile = new File(currentFilePath);
+                editor.setText(readTargetFile(currentFile));
+            } else {
+                currentFile = null;
+                currentFilePath = null;
+            }
+        } catch (IOException e) {
+            // TODO: 3/16/19 Catch project file reading error
+        }
+    }
+
+    private String readTargetFile(File targetFile) throws IOException {
+        Scanner fileReader = new Scanner(targetFile);
+        StringBuilder builder = new StringBuilder();
+        while (fileReader.hasNextLine()) {
+            builder.append(fileReader.nextLine()).append("\n");
+        }
+        fileReader.close();
+        return builder.toString();
     }
 
     /*
@@ -48,8 +86,7 @@ public class EditorActivity extends Activity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             setActionBar(projectToolbar);
             projectActionBar = getActionBar();
-            // TODO: 3/16/19 Add file name in actionbar title
-            projectActionBar.setTitle("Hello world");
+            projectActionBar.setTitle(currentFile.getName());
             projectActionBar.setDisplayHomeAsUpEnabled(true);
             projectActionBar.setHomeAsUpIndicator(R.drawable.action_bar_menu);
         }
@@ -60,8 +97,10 @@ public class EditorActivity extends Activity {
      */
     private void setupNavigationView() {
         navigationView.setNavigationItemSelectedListener(item -> {
-            if (item.getItemId())
-                drawerLayout.closeDrawers();
+            if (item.getItemId() == R.id.close_project) {
+                EditorActivity.this.finish();
+            }
+            drawerLayout.closeDrawers();
             return true;
         });
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -89,7 +128,6 @@ public class EditorActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.e("INFO", item.toString());
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(Gravity.LEFT);
