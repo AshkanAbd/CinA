@@ -67,6 +67,10 @@ public class ProjectManager {
             workspace.mkdir();
         }
         File likeProjects[] = workspace.listFiles();
+        if (likeProjects == null) {
+            Log.e("INFO", "Error while reading project");
+            return;
+        }
         for (File likeProject : likeProjects) {
             Object[] objs = isProject(likeProject);
             if ((boolean) objs[0]) {
@@ -121,7 +125,7 @@ public class ProjectManager {
         } else {
             putSampleCode(main, false);
         }
-        List<String> src = new ArrayList<>();
+        ArrayList<String> src = new ArrayList<>();
         src.add(main.getAbsolutePath());
         project.setSource(src);
         return true;
@@ -136,7 +140,7 @@ public class ProjectManager {
             writer.println("#include <stdio.h>");
             writer.println("");
             writer.println("int main(int argc, char** argv){");
-            writer.println("\tprintf(\"Hello world\");");
+            writer.println("    printf(\"Hello world\");");
             writer.println("}");
         } else {
             writer.println("#include <iostream>");
@@ -144,7 +148,7 @@ public class ProjectManager {
             writer.println("using namespace std");
             writer.println("");
             writer.println("int main(int argc, char** argv){");
-            writer.println("\tcout << \"Hello world\" << endl;");
+            writer.println("    cout << \"Hello world\" << endl;");
             writer.println("}");
         }
         writer.close();

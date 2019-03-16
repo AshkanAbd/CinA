@@ -3,6 +3,7 @@ package ir.ashkanabd.cina.compile;
 import android.app.Activity;
 import android.util.Log;
 
+import java.io.Serializable;
 import java.util.Scanner;
 
 import java.io.File;
@@ -11,7 +12,7 @@ import java.io.IOException;
 /*
  * Class for compiling source with GCC
  */
-public class CompileGCC {
+public class CompileGCC implements Serializable {
     private CompilerSetup compilerSetup;
     private Process compileProcess;
     private Activity context;
@@ -23,12 +24,14 @@ public class CompileGCC {
     public CompileGCC(Activity context) throws IOException {
         this.context = context;
         this.compilerSetup = new CompilerSetup(this.context);
+        Log.d("CinA", "Checking compiler");
         if (this.compilerSetup.checkCompiler()) {
+            Log.d("CinA", "Compiler not found...");
             this.compilerSetup.copyCompiler("gcc.zip");
             this.compilerSetup.extractCompiler(this.compilerSetup.getCompilerZip());
         }
         this.workspace = this.compilerSetup.getCompilerZip().getParentFile();
-        Log.i("CinA", "Compiler setup successfully");
+        Log.d("CinA", "Compiler setup successfully");
     }
 
     /*

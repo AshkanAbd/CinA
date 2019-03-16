@@ -5,28 +5,27 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /*
  * Class for controll project info and pars it to json or String
  */
-public class Project {
+public class Project implements Serializable {
     private String name;
     private String lang;
     private String description;
     private String dir;
-    private List<String> source;
-    private Map<String, Object> jsonMap;
+    private ArrayList<String> source;
+    private HashMap<String, Object> jsonMap;
 
     public Project() {
         this.source = new ArrayList<>();
         this.jsonMap = new HashMap<>();
     }
 
-    public Project(String name, String lang, String description, String dir, List<String> source) {
+    public Project(String name, String lang, String description, String dir, ArrayList<String> source) {
         this.name = name;
         this.lang = lang;
         this.description = description;
@@ -85,7 +84,7 @@ public class Project {
         this.jsonMap.put("dir", dir);
     }
 
-    public void setSource(List<String> source) {
+    public void setSource(ArrayList<String> source) {
         this.source = source;
         this.jsonMap.put("src", source);
     }
@@ -111,7 +110,7 @@ public class Project {
         return dir;
     }
 
-    public List<String> getSource() {
+    public ArrayList<String> getSource() {
         return source;
     }
 

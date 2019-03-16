@@ -8,15 +8,15 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /*
-Class for extract and setup compiler e
+ * Class for extract and setup compiler
  */
-public class CompilerSetup {
+public class CompilerSetup implements Serializable {
     private File compilerZipFile;
     private Activity context;
     private String compilerZipPath;
 
     /*
-    Create compiler path and file
+     * Create compiler path and file
      */
     public CompilerSetup(Activity context) {
         this.context = context;
@@ -25,7 +25,7 @@ public class CompilerSetup {
     }
 
     /*
-    check and test compiler
+     * Check and test compiler
      */
     public boolean checkCompiler() {
         if (!this.compilerZipFile.exists())
@@ -39,7 +39,7 @@ public class CompilerSetup {
     }
 
     /*
-    copy from given asset name to phone memory
+     * Copy from given asset name to phone memory
      */
     public void copyCompiler(String assetName) throws IOException {
         if (this.compilerZipFile.exists()) {
@@ -72,7 +72,7 @@ public class CompilerSetup {
     }
 
     /*
-    extract compiler .zip file to internal storage
+     * Extract compiler .zip file to internal storage
      */
     public void extractCompiler(File zipFile) throws IOException {
         ZipInputStream zipInStream = new ZipInputStream(new FileInputStream(zipFile));
