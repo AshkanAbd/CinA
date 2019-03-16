@@ -6,7 +6,8 @@
 		android:layout_height="match_parent"
 		android:id="@+id/create_new_project"
 		tools:context=".StartActivity"
-		android:padding="40dp">
+		android:minWidth="260dp"
+		android:padding="20dp">
 
 	<com.google.android.material.textfield.TextInputEditText
 			android:id="@+id/create_new_project_name"
@@ -36,6 +37,8 @@
 			android:layout_centerHorizontal="true"
 			android:layoutDirection="ltr"
 			android:orientation="horizontal"
+			android:gravity="center"
+			android:minWidth="220dp"
 			android:checkedButton="@+id/create_new_project_c_radio">
 
 		<com.google.android.material.radiobutton.MaterialRadioButton
@@ -70,7 +73,7 @@
 			android:background="@color/colorPrimary"
 			android:textAllCaps="false"
 			android:textSize="17sp"
-			android:layout_marginTop="50dp"
+			android:layout_marginTop="40dp"
 			android:theme="@style/AppTheme"/>
 
 </RelativeLayout>

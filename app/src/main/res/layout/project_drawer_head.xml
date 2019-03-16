@@ -5,14 +5,12 @@
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
 		android:background="?attr/colorPrimaryDark"
-		android:theme="@style/ThemeOverlay.AppCompat.Dark"
-		>
+		android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
 	<TextView
 			android:id="@+id/project_build_res"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:text="Compile logs:"
 			android:textStyle="bold"
 			android:textColor="#FFF"
 			android:layout_margin="20dp"

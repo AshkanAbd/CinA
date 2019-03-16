@@ -27,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import android.widget.Toast;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
+import ir.ashkanabd.cina.compile.CompileGCC;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
@@ -48,20 +49,28 @@ public class StartActivity extends Activity {
     private boolean backPress = false;
     private boolean drawerOpen = false;
     private ProjectManager projectManager;
-    private MaterialDialog materialDialog;
-
-
+    private MaterialDialog newProjectDialog;
+    private MaterialDialog loadingDialog;
     private SwipeToAction swipeToAction;
     private RecyclerView recyclerView;
     private ProjectAdapter adapter;
+    private CompileGCC gcc;
+    private boolean isLoadingDialog = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity);
+        setupLoadingProgress();
+        changeLoadingProgressStatus();
         if (!checkStoragePermission()) {
             requestStoragePermission();
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            while (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                ;
+        }
+        checkCompiler();
         findViews();
         setupActionBar();
         setupNavigationView();
@@ -70,7 +79,46 @@ public class StartActivity extends Activity {
         this.projectList = new ArrayList<>();
         loadProjects();
         setupListView();
+        changeLoadingProgressStatus();
         Log.e("INFO", projectList.toString());
+    }
+
+
+    /*
+     * Setup a loading progress dialog
+     */
+    private void setupLoadingProgress() {
+        loadingDialog = new MaterialDialog(this);
+        loadingDialog.setContentView(R.layout.loading_progress);
+        loadingDialog.cancelable(false);
+        isLoadingDialog = false;
+    }
+
+    /*
+     * Change loading progress  status
+     * If show => cancel,
+     * If cancel => show
+     */
+    private void changeLoadingProgressStatus() {
+        if (isLoadingDialog) {
+            isLoadingDialog = false;
+            loadingDialog.dismiss();
+        } else {
+            isLoadingDialog = true;
+            loadingDialog.show();
+        }
+    }
+
+    /*
+     * Setup GCC
+     */
+    private void checkCompiler() {
+        try {
+            gcc = new CompileGCC(this);
+        } catch (IOException e) {
+            // TODO: 3/16/19 catch gcc setup exceptions
+            Log.e("INFO", "Can't extract compiler");
+        }
     }
 
     /*
@@ -106,7 +154,9 @@ public class StartActivity extends Activity {
 
             @Override
             public void onClick(Project itemData) {
-                StartActivity.this.startActivity(new Intent(StartActivity.this, EditorActivity.class));
+                Intent projectActivity = new Intent(StartActivity.this, EditorActivity.class);
+                projectActivity.putExtra("project", itemData);
+                StartActivity.this.startActivity(projectActivity);
             }
 
             @Override
@@ -120,13 +170,13 @@ public class StartActivity extends Activity {
      * Load new project material dialog
      */
     private void setupNewProjectDialog() {
-        materialDialog = new MaterialDialog(this);
-        materialDialog.setContentView(R.layout.create_new_project);
-        materialDialog.setCancelable(true);
-        this.newProjectName = materialDialog.findViewById(R.id.create_new_project_name);
-        this.newProjectDescription = materialDialog.findViewById(R.id.create_new_project_description);
-        this.cRadioBtn = materialDialog.findViewById(R.id.create_new_project_c_radio);
-        this.cppRadioBtn = materialDialog.findViewById(R.id.create_new_project_cpp_radio);
+        newProjectDialog = new MaterialDialog(this);
+        newProjectDialog.setContentView(R.layout.create_new_project);
+        newProjectDialog.setCancelable(true);
+        this.newProjectName = newProjectDialog.findViewById(R.id.create_new_project_name);
+        this.newProjectDescription = newProjectDialog.findViewById(R.id.create_new_project_description);
+        this.cRadioBtn = newProjectDialog.findViewById(R.id.create_new_project_c_radio);
+        this.cppRadioBtn = newProjectDialog.findViewById(R.id.create_new_project_cpp_radio);
     }
 
     /*
@@ -202,7 +252,7 @@ public class StartActivity extends Activity {
         this.newProjectDescription.setText("");
         this.cRadioBtn.setChecked(true);
         this.cppRadioBtn.setChecked(false);
-        this.materialDialog.show();
+        this.newProjectDialog.show();
     }
 
     /*
@@ -225,7 +275,7 @@ public class StartActivity extends Activity {
         } catch (IOException e) {
             // TODO: 3/15/19 Catch IOException
         }
-        this.materialDialog.cancel();
+        this.newProjectDialog.cancel();
         loadProjects();
         setupListView();
     }
@@ -251,7 +301,6 @@ public class StartActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.e("INFO", item.toString());
         switch (item.getItemId()) {
             case android.R.id.home:
                 drawerLayout.openDrawer(Gravity.LEFT);
@@ -267,7 +316,7 @@ public class StartActivity extends Activity {
             return;
         }
         if (this.backPress) {
-            System.exit(1);
+            finish();
         } else {
             this.backPress = true;
             Toast.makeText(this, "Press back again", Toast.LENGTH_LONG).show();
