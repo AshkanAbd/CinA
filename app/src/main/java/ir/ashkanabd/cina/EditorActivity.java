@@ -60,7 +60,8 @@ public class EditorActivity extends Activity {
      */
     private void setupNavigationView() {
         navigationView.setNavigationItemSelectedListener(item -> {
-            drawerLayout.closeDrawers();
+            if (item.getItemId())
+                drawerLayout.closeDrawers();
             return true;
         });
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
