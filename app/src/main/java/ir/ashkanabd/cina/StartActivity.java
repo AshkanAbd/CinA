@@ -27,7 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.widget.Toast;
 import com.google.android.material.radiobutton.MaterialRadioButton;
-import com.google.android.material.textfield.TextInputEditText;
+import com.rey.material.widget.EditText;
 import ir.ashkanabd.cina.compile.CompileGCC;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
@@ -45,7 +45,7 @@ public class StartActivity extends Activity {
     private Toolbar toolbar;
     private ActionBar actionBar;
     private NavigationView navigationView;
-    private TextInputEditText newProjectName, newProjectDescription;
+    private EditText newProjectName, newProjectDescription;
     private MaterialRadioButton cRadioBtn, cppRadioBtn;
     private MaterialButton newProjectButton;
     private boolean backPress = false;
@@ -266,9 +266,15 @@ public class StartActivity extends Activity {
         String projectName = newProjectName.getText().toString();
         String projectDescription = newProjectDescription.getText().toString();
         boolean isC = cRadioBtn.isChecked();
+        if (projectName.length() > 20) {
+            return;
+        }
         try {
             Project project = this.projectManager.createNewProject(projectName, projectDescription, isC);
             if (project == null) {
+                return;
+            }
+            if (this.projectList.contains(project)) {
                 return;
             }
             File cinaFile = new File(project.getDir(), "." + projectName + ".cina");

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import android.os.Bundle;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import ir.ashkanabd.cina.project.Project;
@@ -39,6 +40,20 @@ public class EditorActivity extends Activity {
         prepareActivity(getIntent().getExtras());
         setupActionBar();
         setupNavigationView();
+    }
+
+    /*
+     * Call navigation layout menu items selected
+     */
+    private boolean navigationItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.project_nav_close) {
+            EditorActivity.this.finish();
+        }
+        if (item.getItemId() == R.id.project_nav_browse) {
+
+        }
+        drawerLayout.closeDrawers();
+        return true;
     }
 
     /*
@@ -131,16 +146,11 @@ public class EditorActivity extends Activity {
     }
 
     /*
-     * setup navigation vir=ew and drawer layout
+     * setup navigation view and drawer layout
      */
     private void setupNavigationView() {
-        navigationView.setNavigationItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.close_project) {
-                EditorActivity.this.finish();
-            }
-            drawerLayout.closeDrawers();
-            return true;
-        });
+        navigationView.setNavigationItemSelectedListener(this::navigationItemSelected);
+
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
@@ -168,7 +178,7 @@ public class EditorActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                drawerLayout.openDrawer(Gravity.LEFT);
+                drawerLayout.openDrawer(GravityCompat.START);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -179,6 +189,8 @@ public class EditorActivity extends Activity {
     public void onBackPressed() {
         if (drawerIsOpen) {
             drawerLayout.closeDrawers();
+        } else {
+            drawerLayout.openDrawer(GravityCompat.START);
         }
     }
 }

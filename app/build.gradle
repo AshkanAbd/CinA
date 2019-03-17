@@ -38,7 +38,6 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:core:2.0.3'
     implementation 'co.dift.ui.swipetoaction:library:1.1'
     implementation 'com.github.rey5137:material:1.2.5'
-    implementation 'com.github.navasmdc:MaterialDesign:1.5@aar'
     implementation 'com.tt:whorlviewlibrary:1.0.3'
     implementation 'com.github.bmelnychuk:atv:1.2.9'
     testImplementation 'junit:junit:4.12'

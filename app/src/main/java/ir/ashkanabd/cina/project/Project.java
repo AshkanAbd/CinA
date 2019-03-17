@@ -129,8 +129,6 @@ public class Project implements Serializable {
         if (!(obj instanceof Project))
             return false;
         Project p = (Project) obj;
-        if (!p.source.equals(this.source))
-            return false;
         if (!p.dir.equals(this.dir))
             return false;
         if (!p.lang.equals(this.lang))
