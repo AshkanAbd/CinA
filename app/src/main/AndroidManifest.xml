@@ -16,14 +16,18 @@
 			tools:replace="android:supportsRtl"
 			android:theme="@style/AppTheme"
 			tools:ignore="GoogleAppIndexingWarning">
-		<activity android:name=".StartActivity">
+		<activity
+				android:name=".StartActivity"
+				android:theme="@style/StartActivityTheme">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
-		<activity android:name=".EditorActivity">
+		<activity
+				android:name=".EditorActivity"
+				android:theme="@style/EditActivity">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>

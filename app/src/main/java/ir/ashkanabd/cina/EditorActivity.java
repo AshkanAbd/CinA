@@ -1,14 +1,14 @@
 package ir.ashkanabd.cina;
 
-import android.app.ActionBar;
-import android.app.Activity;
 import android.os.Build;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toolbar;
 import androidx.annotation.NonNull;
 import android.os.Bundle;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class EditorActivity extends Activity {
+public class EditorActivity extends AppCompatActivity {
     private CodeEditor editor;
     private Toolbar projectToolbar;
     private ActionBar projectActionBar;
@@ -186,13 +186,11 @@ public class EditorActivity extends Activity {
      * setup ActionBar
      */
     private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setActionBar(projectToolbar);
-            projectActionBar = getActionBar();
-            projectActionBar.setTitle(currentFile.getName());
-            projectActionBar.setDisplayHomeAsUpEnabled(true);
-            projectActionBar.setHomeAsUpIndicator(R.drawable.action_bar_menu);
-        }
+        setSupportActionBar(projectToolbar);
+        projectActionBar = getSupportActionBar();
+        projectActionBar.setTitle(currentFile.getName());
+        projectActionBar.setDisplayHomeAsUpEnabled(true);
+        projectActionBar.setHomeAsUpIndicator(R.drawable.action_bar_menu);
     }
 
     /*

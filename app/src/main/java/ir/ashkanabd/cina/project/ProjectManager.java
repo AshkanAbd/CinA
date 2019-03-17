@@ -145,7 +145,7 @@ public class ProjectManager {
         } else {
             writer.println("#include <iostream>");
             writer.println("");
-            writer.println("using namespace std");
+            writer.println("using namespace std;");
             writer.println("");
             writer.println("int main(int argc, char** argv){");
             writer.println("    cout << \"Hello world\" << endl;");

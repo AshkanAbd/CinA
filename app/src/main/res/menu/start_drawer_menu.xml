@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
 	<item
 			android:id="@+id/start_nav_open"
 			android:icon="@drawable/open_folder"
@@ -8,14 +9,12 @@
 			android:id="@+id/start_nav_setting"
 			android:icon="@drawable/setting_icon"
 			android:title="Setting"/>
-	<group>
-		<item
-				android:id="@+id/start_nav_about"
-				android:icon="@drawable/info_icon"
-				android:title="About us"/>
-		<item
-				android:id="@+id/start_nav_rate"
-				android:icon="@drawable/start_icon"
-				android:title="Rate us"/>
-	</group>
+	<item
+			android:id="@+id/start_nav_about"
+			android:icon="@drawable/info_icon"
+			android:title="About us"/>
+	<item
+			android:id="@+id/start_nav_rate"
+			android:icon="@drawable/start_icon"
+			android:title="Rate us"/>
 </menu>

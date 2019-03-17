@@ -1,18 +1,17 @@
 package ir.ashkanabd.cina;
 
 import android.Manifest;
-import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
-import android.widget.Toolbar;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import co.dift.ui.SwipeToAction;
@@ -27,22 +26,24 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.widget.Toast;
 import com.google.android.material.radiobutton.MaterialRadioButton;
+import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
 import ir.ashkanabd.cina.compile.CompileGCC;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
+import ir.ashkanabd.cina.view.ActionBarDrawerToggleCompat;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StartActivity extends Activity {
+public class StartActivity extends AppCompatActivity {
     private List<Project> projectList;
     private FloatingActionButton floatingActionButton;
+    private ActionBarDrawerToggleCompat drawerToggle;
     private DrawerLayout drawerLayout;
-    private Toolbar toolbar;
     private ActionBar actionBar;
     private NavigationView navigationView;
     private EditText newProjectName, newProjectDescription;
@@ -128,6 +129,9 @@ public class StartActivity extends Activity {
      */
     private void setupListView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        DividerItemDecoration divider = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        layoutManager.setSmoothScrollbarEnabled(true);
+        recyclerView.addItemDecoration(divider);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         adapter = new ProjectAdapter(this.projectList);
@@ -198,7 +202,6 @@ public class StartActivity extends Activity {
         this.floatingActionButton = this.findViewById(R.id.new_project_float_btn);
         this.drawerLayout = this.findViewById(R.id.drawer_layout);
         this.navigationView = this.findViewById(R.id.nav_view);
-        this.toolbar = this.findViewById(R.id.toolbar);
         this.recyclerView = this.findViewById(R.id.projects_recycler_view);
     }
 
@@ -206,14 +209,10 @@ public class StartActivity extends Activity {
      * Setup custom Action Bar and it callback
      */
     private void setupActionBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            this.toolbar.setTitleTextColor(Color.WHITE);
-            this.setActionBar(this.toolbar);
-            this.actionBar = this.getActionBar();
-            this.actionBar.setTitle("C/C++ compiler for Android");
-            this.actionBar.setDisplayHomeAsUpEnabled(true);
-            this.actionBar.setHomeAsUpIndicator(R.drawable.action_bar_menu);
-        }
+        this.actionBar = getSupportActionBar();
+        this.actionBar.setTitle("C/C++ compiler for Android");
+        this.actionBar.setDisplayHomeAsUpEnabled(true);
+        this.actionBar.setHomeButtonEnabled(true);
     }
 
     /*
@@ -224,6 +223,29 @@ public class StartActivity extends Activity {
             drawerLayout.closeDrawers();
             return true;
         });
+        DrawerArrowDrawable drawerArrow = new DrawerArrowDrawable(this) {
+            @Override
+            public boolean isLayoutRtl() {
+                return false;
+            }
+        };
+        drawerToggle = new ActionBarDrawerToggleCompat(this, drawerLayout,
+                drawerArrow, R.drawable.back_icon,
+                R.drawable.action_bar_menu) {
+
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                invalidateOptionsMenu();
+            }
+
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                invalidateOptionsMenu();
+
+            }
+        };
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
         this.drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View view, float v) {
@@ -266,7 +288,7 @@ public class StartActivity extends Activity {
         String projectName = newProjectName.getText().toString();
         String projectDescription = newProjectDescription.getText().toString();
         boolean isC = cRadioBtn.isChecked();
-        if (projectName.length() > 20) {
+        if (projectName.length() > 20 || projectName.trim().isEmpty()) {
             return;
         }
         try {
@@ -313,7 +335,11 @@ public class StartActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                drawerLayout.openDrawer(Gravity.LEFT);
+                if (drawerOpen) {
+                    drawerLayout.closeDrawers();
+                } else {
+                    drawerLayout.openDrawer(Gravity.LEFT);
+                }
                 return true;
         }
         return super.onOptionsItemSelected(item);

@@ -4,6 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import com.tt.whorlviewlibrary.WhorlView;
 
+/**
+ * Created just for starting as view creates.
+ * What super class doesn't support it
+ */
 public class LoadingView extends WhorlView {
     public LoadingView(Context context) {
         super(context);

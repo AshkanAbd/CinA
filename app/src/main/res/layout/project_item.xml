@@ -24,9 +24,10 @@
 
 	<RelativeLayout
 			android:tag="reveal-left"
-			android:background="@color/colorPrimary"
 			android:layout_width="match_parent"
-			android:layout_height="85dp">
+			android:layout_height="85dp"
+			android:background="@color/colorPrimary"
+			>
 
 		<androidx.appcompat.widget.AppCompatImageView
 				android:textColor="#fff"
@@ -43,9 +44,9 @@
 
 	<RelativeLayout
 			android:tag="front"
-			android:background="@color/colorAccent"
 			android:layout_width="match_parent"
 			android:layout_height="85dp"
+			android:background="@color/colorAccent"
 			android:padding="@dimen/item_padding">
 
 		<androidx.appcompat.widget.AppCompatTextView
