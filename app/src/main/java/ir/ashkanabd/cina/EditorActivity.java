@@ -2,32 +2,27 @@ package ir.ashkanabd.cina;
 
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.navigation.NavigationView;
-import com.unnamed.b.atv.model.TreeNode;
-import com.unnamed.b.atv.view.AndroidTreeView;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.view.CodeEditor;
-import ir.ashkanabd.cina.Files.FileBrowser;
-import ir.ashkanabd.cina.view.FileView;
+import ir.ashkanabd.cina.view.FileBrowserDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class EditorActivity extends AppCompatActivity {
-    private CodeEditor editor;
+public class EditorActivity extends AppCompatActivityFileBrowserSupport {
+
     private Toolbar projectToolbar;
     private ActionBar projectActionBar;
     private NavigationView navigationView;
@@ -36,11 +31,9 @@ public class EditorActivity extends AppCompatActivity {
     private File currentFile;
     private String currentFilePath;
     private boolean drawerIsOpen = false;
-    private AndroidTreeView androidTreeView;
-    private FileBrowser fileBrowser;
     private MaterialDialog loadingDialog;
-    private MaterialDialog browserDialog;
     private boolean isLoadingDialog = false;
+    private FileBrowserDialog fileBrowserDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +43,7 @@ public class EditorActivity extends AppCompatActivity {
         changeLoadingProgressStatus();
         findViews();
         prepareActivity(getIntent().getExtras());
-        readProjectStructure();
+        fileBrowserDialog = new FileBrowserDialog(this, selectedProject);
         setupActionBar();
         setupNavigationView();
         changeLoadingProgressStatus();
@@ -109,21 +102,6 @@ public class EditorActivity extends AppCompatActivity {
     }
 
     /*
-     * Read project file structure
-     */
-    private void readProjectStructure() {
-        fileBrowser = new FileBrowser(new File(selectedProject.getDir()), selectedProject.getLang(), this);
-        fileBrowser.browse(3);
-        TreeNode tree = fileBrowser.getRoot();
-        androidTreeView = new AndroidTreeView(this, tree);
-        browserDialog = new MaterialDialog(this);
-        browserDialog.setContentView(R.layout.browse_file_layout);
-        RelativeLayout mainLayout = browserDialog.findViewById(R.id.browse_file_main_layout);
-        mainLayout.addView(androidTreeView.getView());
-        browserDialog.cancelable(true);
-    }
-
-    /*
      * Call navigation layout menu items selected
      */
     private boolean navigationItemSelected(MenuItem item) {
@@ -131,7 +109,7 @@ public class EditorActivity extends AppCompatActivity {
             EditorActivity.this.finish();
         }
         if (item.getItemId() == R.id.project_nav_browse) {
-            browserDialog.show();
+            fileBrowserDialog.getBrowserDialog().show();
         }
         drawerLayout.closeDrawers();
         return true;
@@ -161,19 +139,6 @@ public class EditorActivity extends AppCompatActivity {
             fileStructure[i] = tmp.substring(index, tmp.length());
         }
         return fileStructure;
-    }
-
-    /*
-     * Read given text file info
-     */
-    private String readTargetFile(File targetFile) throws IOException {
-        Scanner fileReader = new Scanner(targetFile);
-        StringBuilder builder = new StringBuilder();
-        while (fileReader.hasNextLine()) {
-            builder.append(fileReader.nextLine()).append("\n");
-        }
-        fileReader.close();
-        return builder.toString();
     }
 
     /*
@@ -224,40 +189,6 @@ public class EditorActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    /**
-     * Change file status image
-     *
-     * @param imageView {@link AppCompatImageView} that image should changes
-     * @param expanded  {@link TreeNode#isExpanded()} whether Node is expanded or not
-     */
-    private void changeFileStatus(AppCompatImageView imageView, boolean expanded) {
-        if (expanded) {
-            imageView.setImageResource(R.drawable.close_folder_icon);
-        } else {
-            imageView.setImageResource(R.drawable.open_folder_icon);
-        }
-    }
-
-    /**
-     * Call when On a {@link TreeNode} clicked
-     *
-     * @param node  {@link TreeNode} clicked tree node
-     * @param value {@link File} the file that {@link TreeNode} points to it
-     */
-    public void onNodeClick(TreeNode node, Object value) {
-        File file = (File) value;
-        FileView fileView = (FileView) node.getViewHolder();
-        if (file.isDirectory()) {
-            changeFileStatus(fileView.getView().findViewById(R.id.file_statue_file_layout), node.isExpanded());
-        } else {
-            try {
-                editor.setText(readTargetFile(file));
-            } catch (IOException ignored) {
-            }
-            browserDialog.dismiss();
-        }
     }
 
     @Override

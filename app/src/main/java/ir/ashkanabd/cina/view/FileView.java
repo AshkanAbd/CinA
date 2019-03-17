@@ -6,7 +6,7 @@ import android.view.View;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import com.unnamed.b.atv.model.TreeNode;
-import ir.ashkanabd.cina.EditorActivity;
+import ir.ashkanabd.cina.AppCompatActivityFileBrowserSupport;
 import ir.ashkanabd.cina.R;
 
 import java.io.File;
@@ -15,11 +15,13 @@ import java.io.File;
  * Class for containing each node of {@link com.unnamed.b.atv.view.AndroidTreeView}
  */
 public class FileView extends TreeNode.BaseNodeViewHolder<File> {
-    private EditorActivity context;
+    private AppCompatActivityFileBrowserSupport context;
+    private FileBrowserListeners listeners;
 
-    public FileView(EditorActivity context) {
-        super(context);
-        this.context = context;
+    public FileView(FileBrowserDialog dialog) {
+        super(dialog.getActivity());
+        this.context = dialog.getActivity();
+        this.listeners = dialog.getListeners();
     }
 
     /**
@@ -44,7 +46,7 @@ public class FileView extends TreeNode.BaseNodeViewHolder<File> {
             fileStatus.setVisibility(View.INVISIBLE);
         }
         fileStatus.setPaddingRelative((node.getLevel() - 1) * 50, 0, 0, 0);
-        node.setClickListener(context::onNodeClick);
+        node.setClickListener(listeners::onNodeClick);
         return fileLayout;
     }
 }
