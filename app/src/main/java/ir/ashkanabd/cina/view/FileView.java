@@ -11,6 +11,9 @@ import ir.ashkanabd.cina.R;
 
 import java.io.File;
 
+/**
+ * Class for containing each node of {@link com.unnamed.b.atv.view.AndroidTreeView}
+ */
 public class FileView extends TreeNode.BaseNodeViewHolder<File> {
     private EditorActivity context;
 
@@ -19,6 +22,13 @@ public class FileView extends TreeNode.BaseNodeViewHolder<File> {
         this.context = context;
     }
 
+    /**
+     * Creates a view for node that passes into method
+     *
+     * @param node that view creates for
+     * @param file object that node points to it
+     * @return view that create for node with given file info
+     */
     @Override
     public View createNodeView(TreeNode node, File file) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
