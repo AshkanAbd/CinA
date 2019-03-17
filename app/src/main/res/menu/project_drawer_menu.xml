@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
-			android:id="@+id/compile_project"
+			android:id="@+id/project_nav_compile"
 			android:icon="@drawable/build_icon"
 			android:title="Compile"/>
 	<item
-			android:id="@+id/run_project"
+			android:id="@+id/project_nav_run"
 			android:icon="@drawable/play_icon"
 			android:title="Run"/>
 	<item
-			android:id="@+id/browse_project"
+			android:id="@+id/project_nav_browse"
 			android:icon="@drawable/open_folder"
 			android:title="Browse files"/>
 	<item
-			android:id="@+id/close_project"
+			android:id="@+id/project_nav_close"
 			android:icon="@drawable/close_icon"
 			android:title="Close"/>
 </menu>

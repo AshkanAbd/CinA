@@ -3,7 +3,6 @@ package ir.ashkanabd.cina;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.os.Build;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -12,9 +11,13 @@ import androidx.annotation.NonNull;
 import android.os.Bundle;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.unnamed.b.atv.model.TreeNode;
+import com.unnamed.b.atv.view.AndroidTreeView;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.view.CodeEditor;
+import ir.ashkanabd.cina.view.FileBrowser;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,29 +34,24 @@ public class EditorActivity extends Activity {
     private File currentFile;
     private String currentFilePath;
     private boolean drawerIsOpen = false;
+    private AndroidTreeView androidTreeView;
+    private FileBrowser fileBrowser;
+    private MaterialDialog loadingDialog;
+    private MaterialDialog browserDialog;
+    private boolean isLoadingDialog = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editor);
+        setupLoadingProgress();
+        changeLoadingProgressStatus();
         findViews();
         prepareActivity(getIntent().getExtras());
+        readProjectStructure();
         setupActionBar();
         setupNavigationView();
-    }
-
-    /*
-     * Call navigation layout menu items selected
-     */
-    private boolean navigationItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.project_nav_close) {
-            EditorActivity.this.finish();
-        }
-        if (item.getItemId() == R.id.project_nav_browse) {
-
-        }
-        drawerLayout.closeDrawers();
-        return true;
+        changeLoadingProgressStatus();
     }
 
     /*
@@ -81,6 +79,58 @@ public class EditorActivity extends Activity {
                 "Files: " + reformatFileStructure(getFileStructure(selectedProject.getSource())) + "\n" +
                 "Build state: Failed\n";
         headerTextView.setText(projectInfo);
+    }
+
+    /*
+     * Setup a loading progress dialog
+     */
+    private void setupLoadingProgress() {
+        loadingDialog = new MaterialDialog(this);
+        loadingDialog.setContentView(R.layout.loading_progress);
+        loadingDialog.cancelable(false);
+        isLoadingDialog = false;
+    }
+
+    /*
+     * Change loading progress  status
+     * If show => cancel,
+     * If cancel => show
+     */
+    private void changeLoadingProgressStatus() {
+        if (isLoadingDialog) {
+            isLoadingDialog = false;
+            loadingDialog.dismiss();
+        } else {
+            isLoadingDialog = true;
+            loadingDialog.show();
+        }
+    }
+
+    /*
+     * Read project file structure
+     */
+    private void readProjectStructure() {
+        fileBrowser = new FileBrowser(new File(selectedProject.getDir()));
+        fileBrowser.browse(3);
+        TreeNode tree = fileBrowser.getRoot();
+        androidTreeView = new AndroidTreeView(this, tree);
+        browserDialog = new MaterialDialog(this);
+        browserDialog.setContentView(androidTreeView.getView());
+        browserDialog.cancelable(true);
+    }
+
+    /*
+     * Call navigation layout menu items selected
+     */
+    private boolean navigationItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.project_nav_close) {
+            EditorActivity.this.finish();
+        }
+        if (item.getItemId() == R.id.project_nav_browse) {
+            browserDialog.show();
+        }
+        drawerLayout.closeDrawers();
+        return true;
     }
 
     /*

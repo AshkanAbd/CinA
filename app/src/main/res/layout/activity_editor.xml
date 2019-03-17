@@ -42,7 +42,7 @@
 			android:id="@+id/project_nav_view"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
-			android:layout_gravity="left"
+			android:layout_gravity="start"
 			android:fitsSystemWindows="true"
 			app:menu="@menu/project_drawer_menu"
 			app:headerLayout="@layout/project_drawer_head"/>
