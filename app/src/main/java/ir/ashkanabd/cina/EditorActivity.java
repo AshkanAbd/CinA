@@ -3,11 +3,13 @@ package ir.ashkanabd.cina;
 import android.os.Build;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -18,6 +20,7 @@ import com.unnamed.b.atv.view.AndroidTreeView;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.view.CodeEditor;
 import ir.ashkanabd.cina.view.FileBrowser;
+import ir.ashkanabd.cina.view.FileView;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,12 +113,14 @@ public class EditorActivity extends AppCompatActivity {
      * Read project file structure
      */
     private void readProjectStructure() {
-        fileBrowser = new FileBrowser(new File(selectedProject.getDir()));
+        fileBrowser = new FileBrowser(new File(selectedProject.getDir()), selectedProject.getLang(), this);
         fileBrowser.browse(3);
         TreeNode tree = fileBrowser.getRoot();
         androidTreeView = new AndroidTreeView(this, tree);
         browserDialog = new MaterialDialog(this);
-        browserDialog.setContentView(androidTreeView.getView());
+        browserDialog.setContentView(R.layout.browse_file_layout);
+        RelativeLayout mainLayout = browserDialog.findViewById(R.id.browse_file_main_layout);
+        mainLayout.addView(androidTreeView.getView());
         browserDialog.cancelable(true);
     }
 
@@ -220,6 +225,40 @@ public class EditorActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    /**
+     * Change file status image
+     *
+     * @param imageView {@link AppCompatImageView} that image should changes
+     * @param expanded  {@link TreeNode#isExpanded()} whether Node is expanded or not
+     */
+    private void changeFileStatus(AppCompatImageView imageView, boolean expanded) {
+        if (expanded) {
+            imageView.setImageResource(R.drawable.close_folder_icon);
+        } else {
+            imageView.setImageResource(R.drawable.open_folder_icon);
+        }
+    }
+
+    /**
+     * Call when On a {@link TreeNode} clicked
+     *
+     * @param node  {@link TreeNode} clicked tree node
+     * @param value {@link File} the file that {@link TreeNode} points to it
+     */
+    public void onNodeClick(TreeNode node, Object value) {
+        File file = (File) value;
+        FileView fileView = (FileView) node.getViewHolder();
+        if (file.isDirectory()) {
+            changeFileStatus(fileView.getView().findViewById(R.id.file_statue_file_layout), node.isExpanded());
+        } else {
+            try {
+                editor.setText(readTargetFile(file));
+            } catch (IOException ignored) {
+            }
+            browserDialog.dismiss();
+        }
     }
 
     @Override

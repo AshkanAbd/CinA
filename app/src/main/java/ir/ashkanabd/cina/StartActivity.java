@@ -148,8 +148,8 @@ public class StartActivity extends AppCompatActivity {
                             ProjectManager.removeProject(itemData);
                             loadProjects();
                             setupListView();
-                        })
-                        .setNegativeButton("No", null).setCancelable(false).show();
+                        }).setIcon(R.drawable.denger_icon).setNegativeButton("No", null)
+                        .setCancelable(false).show();
                 return true;
             }
 

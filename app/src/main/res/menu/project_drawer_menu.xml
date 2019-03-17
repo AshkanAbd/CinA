@@ -10,7 +10,7 @@
 			android:title="Run"/>
 	<item
 			android:id="@+id/project_nav_browse"
-			android:icon="@drawable/open_folder"
+			android:icon="@drawable/folder_icon1"
 			android:title="Browse files"/>
 	<item
 			android:id="@+id/project_nav_close"
