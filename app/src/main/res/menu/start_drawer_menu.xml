@@ -3,7 +3,7 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 	<item
 			android:id="@+id/start_nav_open"
-			android:icon="@drawable/folder_icon1"
+			android:icon="@drawable/folder_icon2"
 			android:title="Open project"/>
 	<item
 			android:id="@+id/start_nav_setting"

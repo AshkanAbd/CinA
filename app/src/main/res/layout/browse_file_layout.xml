@@ -1,12 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/browse_file_main_layout"
 		android:layout_width="match_parent"
 		android:layout_height="400dp"
-		android:id="@+id/browse_file_main_layout"
-		android:padding="40dp"
-		android:background="#FFF0F0F0"
-		android:gravity="start">
+		android:paddingBottom="15dp"
+		android:paddingStart="30dp"
+		android:paddingEnd="30dp"
+		android:background="@color/colorPrimary">
 
+	<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/header_browse_file_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:padding="15dp"
+			android:textColor="#FFF"
+			android:text="Browse files"
+			android:textStyle="bold"
+			android:textSize="20sp"
+			/>
+
+	<TextView
+			android:layout_below="@+id/header_browse_file_layout"
+			android:id="@+id/browser_browse_file_layout"
+			android:layout_marginBottom="40dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="#FFF"/>
+
+	<androidx.appcompat.widget.LinearLayoutCompat
+			android:id="@+id/buttons_layout_browse_file_layout"
+			android:layout_width="match_parent"
+			android:layout_height="30dp"
+			android:orientation="horizontal"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentBottom="true"
+			android:gravity="center"
+			app:showDividers="middle"
+			>
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
+
+		<com.rey.material.widget.Button
+				android:id="@+id/new_folder_browse_file_layout"
+				android:background="@drawable/new_folder"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				/>
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
+
+		<com.rey.material.widget.Button
+				android:id="@+id/new_file_browser_file_layout"
+				android:background="@drawable/file_icon1"
+				android:text="+"
+				android:textAlignment="center"
+				android:textColor="@color/colorPrimary"
+				android:textSize="20sp"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				/>
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
+
+		<com.rey.material.widget.Button
+				android:id="@+id/delete_file_browser_file_layout"
+				android:background="@drawable/delete_icon1"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				/>
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
+
+		<com.rey.material.widget.Button
+				android:id="@+id/open_browse_file_layout"
+				android:background="@drawable/edit_icon"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				/>
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
+
+		<com.rey.material.widget.Button
+				android:id="@+id/cancel_browse_file_layout"
+				android:background="@drawable/cancel_icon"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				/>
+
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
+
+	</androidx.appcompat.widget.LinearLayoutCompat>
 
 </RelativeLayout>
