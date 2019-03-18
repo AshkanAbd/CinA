@@ -1,9 +1,7 @@
-package ir.ashkanabd.cina.Files;
+package ir.ashkanabd.cina.view.FileBrowser;
 
 import android.util.Log;
 import com.unnamed.b.atv.model.TreeNode;
-import ir.ashkanabd.cina.view.FileBrowserDialog;
-import ir.ashkanabd.cina.view.FileView;
 
 import java.io.File;
 import java.io.IOException;

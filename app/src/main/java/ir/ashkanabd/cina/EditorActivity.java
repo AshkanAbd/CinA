@@ -6,20 +6,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import android.os.Bundle;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.navigation.NavigationView;
 import ir.ashkanabd.cina.project.Project;
-import ir.ashkanabd.cina.view.CodeEditor;
-import ir.ashkanabd.cina.view.FileBrowserDialog;
+import ir.ashkanabd.cina.view.FileBrowser.AppCompatActivityFileBrowserSupport;
+import ir.ashkanabd.cina.view.FileBrowser.FileBrowserDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class EditorActivity extends AppCompatActivityFileBrowserSupport {
 

@@ -1,6 +1,5 @@
 package ir.ashkanabd.cina.project;
 
-import ir.ashkanabd.cina.Files.ProjectFile;
 import org.json.JSONObject;
 
 import java.io.File;

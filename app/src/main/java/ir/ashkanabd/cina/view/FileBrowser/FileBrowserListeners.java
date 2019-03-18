@@ -1,12 +1,12 @@
-package ir.ashkanabd.cina.view;
+package ir.ashkanabd.cina.view.FileBrowser;
 
 import android.graphics.Color;
 import android.view.View;
+import androidx.appcompat.widget.AppCompatImageView;
 import com.unnamed.b.atv.model.TreeNode;
 import ir.ashkanabd.cina.R;
 
 import java.io.File;
-import java.io.IOException;
 
 public class FileBrowserListeners {
 
@@ -24,14 +24,14 @@ public class FileBrowserListeners {
      * @param value {@link File} the file that {@link TreeNode} points to it
      */
     public void onNodeClick(TreeNode node, Object value) {
-        File file = (File) value;
+//        File file = (File) value;
         FileView fileView = (FileView) node.getViewHolder();
         if (preClickedView != null) {
             preClickedView.setBackgroundColor(Color.WHITE);
         }
         preClickedView = fileView.getView().findViewById(R.id.main_layout_file_layout);
         preClickedView.setBackgroundColor(Color.parseColor("#FFFFFAD6"));
-        if (file.isDirectory()) {
+        /*if (file.isDirectory()) {
             fileBrowserDialog.changeFileStatus(fileView.getView().findViewById(R.id.file_statue_file_layout), node.isExpanded());
         } else {
             try {
@@ -39,6 +39,23 @@ public class FileBrowserListeners {
             } catch (IOException ignored) {
             }
             fileBrowserDialog.getBrowserDialog().dismiss();
+        }*/
+    }
+
+    public void onFileStatusClick(View view) {
+        AppCompatImageView imageView = (AppCompatImageView) view;
+        TreeNode node = (TreeNode) ((View) imageView.getParent()).getTag();
+        if (imageView.getVisibility() == View.VISIBLE) {
+            boolean isOpen = "open".equals(imageView.getTag());
+            if (isOpen) {
+                imageView.setImageDrawable(fileBrowserDialog.getActivity().getResources().getDrawable(R.drawable.close_folder_icon));
+                imageView.setTag("close");
+                fileBrowserDialog.getAndroidTreeView().toggleNode(node);
+            } else {
+                imageView.setImageDrawable(fileBrowserDialog.getActivity().getResources().getDrawable(R.drawable.open_folder_icon));
+                imageView.setTag("open");
+                fileBrowserDialog.getAndroidTreeView().toggleNode(node);
+            }
         }
     }
 }

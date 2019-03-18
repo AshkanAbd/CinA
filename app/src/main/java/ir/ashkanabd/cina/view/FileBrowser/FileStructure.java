@@ -1,4 +1,4 @@
-package ir.ashkanabd.cina.Files;
+package ir.ashkanabd.cina.view.FileBrowser;
 
 import java.util.List;
 import java.util.Arrays;

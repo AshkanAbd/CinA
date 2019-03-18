@@ -1,14 +1,15 @@
-package ir.ashkanabd.cina;
+package ir.ashkanabd.cina.view.FileBrowser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import ir.ashkanabd.cina.view.CodeEditor;
+import ir.ashkanabd.cina.view.FileBrowser.FileBrowserDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
 /**
- * A class that support {@link ir.ashkanabd.cina.view.FileBrowserDialog}
+ * A class that support {@link FileBrowserDialog}
  * Every activity want to use it should extends from this
  */
 public abstract class AppCompatActivityFileBrowserSupport extends AppCompatActivity {
