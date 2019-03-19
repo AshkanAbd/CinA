@@ -24,7 +24,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import android.widget.Toast;
 import com.google.android.material.radiobutton.MaterialRadioButton;
@@ -43,7 +42,6 @@ import java.util.List;
 
 public class StartActivity extends AppCompatActivity {
     private List<Project> projectList;
-    private FloatingActionButton floatingActionButton;
     private ActionBarDrawerToggleCompat drawerToggle;
     private DrawerLayout drawerLayout;
     private ActionBar actionBar;
@@ -202,19 +200,15 @@ public class StartActivity extends AppCompatActivity {
      * Find in XML views from there IDs
      */
     private void findViews() {
-        this.floatingActionButton = this.findViewById(R.id.new_project_float_btn);
         this.drawerLayout = this.findViewById(R.id.drawer_layout);
         this.navigationView = this.findViewById(R.id.nav_view);
         this.recyclerView = this.findViewById(R.id.projects_recycler_view);
         this.mainLayout = this.findViewById(R.id.main_layout_start_activity);
-        this.mainLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadProjects();
-                setupListView();
-                mainLayout.setColorSchemeColors(Color.RED, Color.YELLOW, Color.BLUE);
-                mainLayout.setRefreshing(false);
-            }
+        mainLayout.setColorSchemeColors(Color.BLUE, Color.RED, Color.YELLOW);
+        this.mainLayout.setOnRefreshListener(() -> {
+            loadProjects();
+            setupListView();
+            mainLayout.setRefreshing(false);
         });
     }
 

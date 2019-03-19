@@ -76,7 +76,7 @@
 
 		<com.rey.material.widget.Button
 				android:id="@+id/delete_file_browser_file_layout"
-				android:background="@drawable/delete_icon1"
+				android:background="@drawable/delete_icon"
 				android:layout_width="30dp"
 				android:layout_height="30dp"
 				/>

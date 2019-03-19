@@ -9,32 +9,37 @@
 		android:layout_height="match_parent"
 		android:fitsSystemWindows="true">
 
-	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-			android:id="@+id/main_layout_start_activity"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:soundEffectsEnabled="false">
 
-		<androidx.recyclerview.widget.RecyclerView
-				android:id="@+id/projects_recycler_view"
+	<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent">
+
+		<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+				android:id="@+id/main_layout_start_activity"
 				android:layout_width="match_parent"
 				android:layout_height="match_parent"
-				android:layout_centerHorizontal="true"/>
+				android:soundEffectsEnabled="false">
+
+			<androidx.recyclerview.widget.RecyclerView
+					android:id="@+id/projects_recycler_view"
+					android:layout_width="match_parent"
+					android:layout_height="match_parent"
+					android:layout_centerHorizontal="true"/>
+
+		</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 		<com.google.android.material.floatingactionbutton.FloatingActionButton
+				android:id="@+id/new_project_float_btn"
+				android:layout_width="100dp"
+				android:layout_height="100dp"
+				android:src="@drawable/add_icon"
 				android:layout_alignParentBottom="true"
 				android:layout_alignParentEnd="true"
 				android:layout_marginBottom="30dp"
 				android:layout_marginEnd="30dp"
-				android:layout_width="100dp"
-				android:layout_height="100dp"
 				android:onClick="addProject"
-				android:clickable="true"
-				android:src="@drawable/add_icon"
-				android:id="@+id/new_project_float_btn"
-				android:focusable="true"
-				tools:ignore="VectorDrawableCompat"/>
-	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+				/>
+	</RelativeLayout>
 
 	<com.google.android.material.navigation.NavigationView
 			android:id="@+id/nav_view"

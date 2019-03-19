@@ -182,8 +182,12 @@ class FileBrowserListeners {
         File file = fileBrowserDialog.getFile(preClickedView);
         if (file.isDirectory()) return;
         try {
-            fileBrowserDialog.getActivity().getEditor().setText(fileBrowserDialog.getActivity().readTargetFile(file));
-            fileBrowserDialog.getActivity().getProjectActionBar().setTitle(file.getName());
+            if (fileBrowserDialog.getActivity() instanceof EditorActivity) {
+                EditorActivity ea = (EditorActivity) fileBrowserDialog.getActivity();
+                ea.getEditor().setText(ProjectManager.readTargetFile(file));
+                ea.getProjectActionBar().setTitle(file.getName());
+                ea.setCurrentFile(file);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

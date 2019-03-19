@@ -40,6 +40,7 @@ dependencies {
     implementation 'com.beardedhen:androidbootstrap:2.3.2'
     implementation 'co.dift.ui.swipetoaction:library:1.1'
     implementation 'com.github.rey5137:material:1.2.5'
+    implementation 'com.github.GrenderG:Toasty:1.4.1'
     implementation 'com.github.bmelnychuk:atv:1.2.9'
     implementation 'com.tt:whorlviewlibrary:1.0.3'
     implementation 'com.ikimuhendis:ldrawer:0.1'

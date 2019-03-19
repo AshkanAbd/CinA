@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 	<item
+			android:id="@+id/project_nav_save"
+			android:icon="@drawable/save_icon"
+			android:title="Save"/>
+
+	<item
 			android:id="@+id/project_nav_compile"
 			android:icon="@drawable/build_icon"
 			android:title="Compile"/>

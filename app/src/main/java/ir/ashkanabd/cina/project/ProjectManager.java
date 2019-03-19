@@ -85,6 +85,28 @@ public class ProjectManager {
     }
 
     /*
+     * Read given text file info
+     */
+    public static String readTargetFile(File targetFile) throws IOException {
+        Scanner fileReader = new Scanner(targetFile);
+        StringBuilder builder = new StringBuilder();
+        while (fileReader.hasNextLine()) {
+            builder.append(fileReader.nextLine()).append("\n");
+        }
+        fileReader.close();
+        return builder.toString();
+    }
+
+    /*
+     * Write string to given file
+     */
+    public static void writeTargetFile(File targetFile, String fileInfo) throws IOException {
+        PrintWriter pw = new PrintWriter(targetFile);
+        pw.print(fileInfo);
+        pw.close();
+    }
+
+    /*
      * Create new Project after checking dialog
      */
     @Nullable

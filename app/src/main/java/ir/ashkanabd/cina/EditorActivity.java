@@ -5,15 +5,15 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.material.navigation.NavigationView;
+import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.project.Project;
+import ir.ashkanabd.cina.project.ProjectManager;
 import ir.ashkanabd.cina.view.FileBrowser.AppCompatActivityFileBrowserSupport;
 import ir.ashkanabd.cina.view.FileBrowser.FileBrowserDialog;
 
@@ -58,7 +58,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
             if (!selectedProject.getSource().isEmpty()) {
                 currentFilePath = selectedProject.getSource().get(0);
                 currentFile = new File(currentFilePath);
-                editor.setText(readTargetFile(currentFile));
+                editor.setText(ProjectManager.readTargetFile(currentFile));
             } else {
                 currentFile = null;
                 currentFilePath = null;
@@ -110,10 +110,21 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
      */
     private boolean navigationItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.project_nav_close) {
-            EditorActivity.this.finish();
+            this.finish();
         }
         if (item.getItemId() == R.id.project_nav_browse) {
             fileBrowserDialog.getBrowserDialog().show();
+        }
+        if (item.getItemId() == R.id.project_nav_save) {
+            if (currentFile != null) {
+                try {
+                    String fileInfo = editor.getText().toString();
+                    ProjectManager.writeTargetFile(currentFile, fileInfo);
+                    Toasty.success(this, "Saved successfully", Toasty.LENGTH_SHORT, true).show();
+                } catch (IOException e) {
+                    // TODO: 3/19/19 Handle this exception
+                }
+            }
         }
         drawerLayout.closeDrawers();
         return true;
@@ -164,6 +175,10 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         projectActionBar.setTitle(currentFile.getName());
         projectActionBar.setDisplayHomeAsUpEnabled(true);
         projectActionBar.setHomeAsUpIndicator(R.drawable.action_bar_menu);
+    }
+
+    public void setCurrentFile(File currentFile) {
+        this.currentFile = currentFile;
     }
 
     /*
