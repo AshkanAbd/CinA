@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.rey.material.widget.EditText;
+import com.rey.material.widget.TextView;
 import com.unnamed.b.atv.model.TreeNode;
 import ir.ashkanabd.cina.R;
 import ir.ashkanabd.cina.project.ProjectManager;
@@ -28,13 +29,26 @@ class FileBrowserListeners {
     private View preClickedView;
     private FileBrowserDialog fileBrowserDialog;
     private MaterialDialog fileNameDialog;
+    private MaterialDialog deleteFileDialog;
     private EditText fileNameEditText;
+    private TextView deleteFileTitle;
     private boolean validFileName = false;
     private int createMode = NONE;
 
     FileBrowserListeners(FileBrowserDialog browserDialog) {
         this.fileBrowserDialog = browserDialog;
         setupFileNameDialog();
+        setupDeleteFileDialog();
+    }
+
+    private void setupDeleteFileDialog() {
+        deleteFileDialog = new MaterialDialog(fileBrowserDialog.getActivity());
+        deleteFileDialog.setContentView(R.layout.delete_file_layout);
+        BootstrapButton deleteButton = deleteFileDialog.findViewById(R.id.delete_delete_file_layout);
+        BootstrapButton cancelButton = deleteFileDialog.findViewById(R.id.cancel_delete_file_layout);
+        deleteFileTitle = deleteFileDialog.findViewById(R.id.title_delete_file_layout);
+        deleteButton.setOnClickListener(this::onDeleteFileButtonClick);
+        cancelButton.setOnClickListener(this::onCancelFileButtonClick);
     }
 
     private void setupFileNameDialog() {
@@ -45,7 +59,7 @@ class FileBrowserListeners {
         BootstrapButton cancelButton = fileNameDialog.findViewById(R.id.cancel_button_new_file_name);
         fileNameEditText = fileNameDialog.findViewById(R.id.edit_new_file_name);
         createButton.setOnClickListener(this::onFileCreateButtonClick);
-        cancelButton.setOnClickListener(this::onFileCancelButtonListener);
+        cancelButton.setOnClickListener(this::onFileCancelButtonClick);
         fileNameEditText.addTextChangedListener(new FileNameTextWatcher());
         this.fileNameDialog.setOnDismissListener(this::onCreateNewFileDialogDismiss);
     }
@@ -88,22 +102,36 @@ class FileBrowserListeners {
             String fileName = this.fileNameEditText.getText().toString();
             File file = fileBrowserDialog.getFile(preClickedView);
             File newFile = new File(file, fileName);
-            if (this.createMode == CREATE_FILE)
+            if (this.createMode == CREATE_FILE) {
                 newFile.createNewFile();
-            if (this.createMode == CREATE_FOLDER)
+            }
+            if (this.createMode == CREATE_FOLDER) {
                 newFile.mkdirs();
-            fileBrowserDialog.load();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.fileNameDialog.dismiss();
         fileBrowserDialog.getBrowserDialog().dismiss();
         fileBrowserDialog.load();
+        this.fileNameDialog.dismiss();
         fileBrowserDialog.getBrowserDialog().show();
     }
 
-    private void onFileCancelButtonListener(View view) {
+    private void onFileCancelButtonClick(View view) {
         this.fileNameDialog.dismiss();
+    }
+
+    private void onDeleteFileButtonClick(View view) {
+        File file = fileBrowserDialog.getFile(preClickedView);
+        ProjectManager.remove(file);
+        fileBrowserDialog.getBrowserDialog().dismiss();
+        fileBrowserDialog.load();
+        deleteFileDialog.dismiss();
+        fileBrowserDialog.getBrowserDialog().show();
+    }
+
+    private void onCancelFileButtonClick(View view) {
+        deleteFileDialog.dismiss();
     }
 
     void onNewFileButtonClick(View view) {
@@ -129,10 +157,8 @@ class FileBrowserListeners {
         File file = fileBrowserDialog.getFile(preClickedView);
         if (fileBrowserDialog.getSelectedProject().getDir().equals(file.getAbsolutePath()))
             return;
-        ProjectManager.remove(file);
-        fileBrowserDialog.getBrowserDialog().dismiss();
-        fileBrowserDialog.load();
-        fileBrowserDialog.getBrowserDialog().show();
+        this.deleteFileTitle.setText("Delete " + file.getName() + "?");
+        this.deleteFileDialog.show();
     }
 
     void onOpenButtonClick(View view) {
@@ -148,7 +174,6 @@ class FileBrowserListeners {
     }
 
     void onCancelButtonClick(View view) {
-        fileBrowserDialog.getBrowserDialog().dismiss();
         ((Dialog) fileBrowserDialog.getBrowserDialog()).dismiss();
     }
 

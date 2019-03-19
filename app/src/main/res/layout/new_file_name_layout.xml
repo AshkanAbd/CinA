@@ -26,39 +26,34 @@
 			app:et_helper=""
 			/>
 
-	<TextView
-			android:id="@+id/center_new_file_name_layout"
-			android:layout_width="0dp"
-			android:layout_height="0dp"
-			android:layout_margin="20dp"
-			android:layout_centerInParent="true"/>
 
 	<com.beardedhen.androidbootstrap.BootstrapButton
 			android:id="@+id/create_button_new_file_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_toStartOf="@id/center_new_file_name_layout"
+			android:layout_alignParentEnd="true"
 			android:layout_below="@id/edit_new_file_name"
-			app:materialIcon="md_done"
-			app:bootstrapSize="lg"
+			app:bootstrapText="CREATE"
+			app:bootstrapSize="md"
 			app:bootstrapBrand="success"
 			app:roundedCorners="true"
 			app:buttonMode="regular"
-			app:showOutline="false"
+			app:showOutline="true"
 			/>
 
 	<com.beardedhen.androidbootstrap.BootstrapButton
 			android:id="@+id/cancel_button_new_file_name"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_toEndOf="@id/center_new_file_name_layout"
+			android:layout_marginEnd="20dp"
+			android:layout_toStartOf="@id/create_button_new_file_name"
 			android:layout_below="@id/edit_new_file_name"
-			app:materialIcon="md_clear"
-			app:bootstrapSize="lg"
+			app:bootstrapText="CANCEL"
+			app:bootstrapSize="md"
 			app:bootstrapBrand="danger"
 			app:roundedCorners="true"
 			app:buttonMode="regular"
-			app:showOutline="false"
+			app:showOutline="true"
 			/>
 
 </RelativeLayout>
