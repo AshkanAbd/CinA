@@ -9,10 +9,11 @@
 		android:layout_height="match_parent"
 		android:fitsSystemWindows="true">
 
-	<RelativeLayout
-			android:id="@+id/content_frame"
+	<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+			android:id="@+id/main_layout_start_activity"
 			android:layout_width="match_parent"
-			android:layout_height="match_parent">
+			android:layout_height="match_parent"
+			android:soundEffectsEnabled="false">
 
 		<androidx.recyclerview.widget.RecyclerView
 				android:id="@+id/projects_recycler_view"
@@ -33,7 +34,7 @@
 				android:id="@+id/new_project_float_btn"
 				android:focusable="true"
 				tools:ignore="VectorDrawableCompat"/>
-	</RelativeLayout>
+	</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 	<com.google.android.material.navigation.NavigationView
 			android:id="@+id/nav_view"

@@ -3,6 +3,7 @@ package ir.ashkanabd.cina;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import co.dift.ui.SwipeToAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.button.MaterialButton;
@@ -59,6 +61,7 @@ public class StartActivity extends AppCompatActivity {
     private ProjectAdapter adapter;
     private CompileGCC gcc;
     private boolean isLoadingDialog = false;
+    private SwipeRefreshLayout mainLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,6 +206,16 @@ public class StartActivity extends AppCompatActivity {
         this.drawerLayout = this.findViewById(R.id.drawer_layout);
         this.navigationView = this.findViewById(R.id.nav_view);
         this.recyclerView = this.findViewById(R.id.projects_recycler_view);
+        this.mainLayout = this.findViewById(R.id.main_layout_start_activity);
+        this.mainLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadProjects();
+                setupListView();
+                mainLayout.setColorSchemeColors(Color.RED, Color.YELLOW, Color.BLUE);
+                mainLayout.setRefreshing(false);
+            }
+        });
     }
 
     /*
@@ -299,7 +312,7 @@ public class StartActivity extends AppCompatActivity {
             if (this.projectList.contains(project)) {
                 return;
             }
-            File cinaFile = new File(project.getDir(), "." + projectName + ".cina");
+            File cinaFile = project.getProjectFile();
             boolean tmp = cinaFile.createNewFile();
             if (!tmp)
                 throw new IOException();
