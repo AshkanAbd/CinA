@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-class FileBrowserListeners {
+public class FileBrowserListeners {
 
     private static int NONE = 0;
     private static int CREATE_FILE = 1;
@@ -258,5 +258,9 @@ class FileBrowserListeners {
                     return new Object[]{false, "Invalid file format"};
             return new Object[]{true};
         }
+    }
+
+    public View getPreClickedView() {
+        return preClickedView;
     }
 }

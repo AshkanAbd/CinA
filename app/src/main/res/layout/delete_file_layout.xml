@@ -17,6 +17,7 @@
 			android:layout_height="wrap_content"
 			app:autoSizeMinTextSize="0sp"
 			app:autoSizeMaxTextSize="30sp"
+			app:autoSizeTextType="none"
 			/>
 
 	<com.beardedhen.androidbootstrap.BootstrapButton

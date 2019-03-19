@@ -6,16 +6,18 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,23 +25,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import co.dift.ui.SwipeToAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
+
+import com.rey.material.widget.TextView;
 import ir.ashkanabd.cina.compile.CompileGCC;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
 import ir.ashkanabd.cina.view.ActionBarDrawerToggleCompat;
+import ir.ashkanabd.cina.view.FileBrowser.FileBrowserDialog;
+import ir.ashkanabd.cina.view.FileBrowser.AppCompatActivityFileBrowserSupport;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StartActivity extends AppCompatActivity {
+public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private List<Project> projectList;
     private ActionBarDrawerToggleCompat drawerToggle;
     private DrawerLayout drawerLayout;
@@ -53,12 +61,16 @@ public class StartActivity extends AppCompatActivity {
     private ProjectManager projectManager;
     private MaterialDialog newProjectDialog;
     private MaterialDialog loadingDialog;
+    private MaterialDialog deleteProjectDialog;
     private SwipeToAction swipeToAction;
     private RecyclerView recyclerView;
     private ProjectAdapter adapter;
     private CompileGCC gcc;
     private boolean isLoadingDialog = false;
     private SwipeRefreshLayout mainLayout;
+    private FileBrowserDialog fileBrowserDialog;
+    private TextView titleDeleteProject;
+    private Project deletingProject = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +78,7 @@ public class StartActivity extends AppCompatActivity {
         setContentView(R.layout.start_activity);
         setupLoadingProgress();
         changeLoadingProgressStatus();
+        TypefaceProvider.registerDefaultIconSets();
         if (!checkStoragePermission()) {
             requestStoragePermission();
         }
@@ -82,6 +95,8 @@ public class StartActivity extends AppCompatActivity {
         this.projectList = new ArrayList<>();
         loadProjects();
         setupListView();
+        setupBrowseProjectDialog();
+        setupDeleteProjectDialog();
         changeLoadingProgressStatus();
         Log.e("INFO", projectList.toString());
     }
@@ -91,6 +106,39 @@ public class StartActivity extends AppCompatActivity {
         super.onResume();
         loadProjects();
         setupListView();
+    }
+
+
+    private void setupBrowseProjectDialog() {
+        this.fileBrowserDialog = new FileBrowserDialog(this, null,
+                Environment.getExternalStorageDirectory().getAbsolutePath(), "cina") {
+            @Override
+            protected void setupDialogViewListeners(RelativeLayout view) {
+                super.setupDialogViewListeners(view);
+                LinearLayoutCompat linearLayout = view.findViewById(R.id.buttons_layout_browse_file_layout);
+                BootstrapButton openButton = linearLayout.findViewById(R.id.open_browse_file_layout);
+                BootstrapButton createFileButton = linearLayout.findViewById(R.id.new_file_browser_file_layout);
+                BootstrapButton createDirButton = linearLayout.findViewById(R.id.new_folder_browse_file_layout);
+                BootstrapButton deleteButton = linearLayout.findViewById(R.id.delete_file_browser_file_layout);
+                createDirButton.setVisibility(View.INVISIBLE);
+                createFileButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.INVISIBLE);
+                openButton.setOnClickListener(StartActivity.this::onProjectOpenListener);
+            }
+        };
+    }
+
+    private void onProjectOpenListener(View view) {
+        try {
+            File file = fileBrowserDialog.getFile(fileBrowserDialog.getListeners().getPreClickedView());
+            if (file.isFile()) {
+                Project project = new Project(ProjectManager.readFile(file));
+                this.projectList.add(project);
+                setupListView();
+            }
+        } catch (Exception ignored) {
+        }
+        fileBrowserDialog.getBrowserDialog().dismiss();
     }
 
     /*
@@ -130,6 +178,23 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
+    private void setupDeleteProjectDialog() {
+        deleteProjectDialog = new MaterialDialog(this);
+        deleteProjectDialog.setContentView(R.layout.delete_file_layout);
+        titleDeleteProject = deleteProjectDialog.findViewById(R.id.title_delete_file_layout);
+        BootstrapButton deleteButton = deleteProjectDialog.findViewById(R.id.delete_delete_file_layout);
+        BootstrapButton cancelButton = deleteProjectDialog.findViewById(R.id.cancel_delete_file_layout);
+        deleteButton.setOnClickListener(view -> {
+            if (deletingProject == null) return;
+            ProjectManager.removeProject(deletingProject);
+            loadProjects();
+            setupListView();
+            deletingProject = null;
+            deleteProjectDialog.dismiss();
+        });
+        cancelButton.setOnClickListener(view -> deleteProjectDialog.dismiss());
+    }
+
     /*
      * Create and load ListView
      */
@@ -148,14 +213,17 @@ public class StartActivity extends AppCompatActivity {
                 /*
                  * Remove Item
                  */
-                new AlertDialog.Builder(StartActivity.this).setTitle("Remove Project?")
+                /*new AlertDialog.Builder(StartActivity.this).setTitle("Remove Project?")
                         .setMessage("Are you sure to remove project " + itemData.getName() + "?")
                         .setPositiveButton("Yes", (dialog, which) -> {
                             ProjectManager.removeProject(itemData);
                             loadProjects();
                             setupListView();
                         }).setIcon(R.drawable.denger_icon).setNegativeButton("No", null)
-                        .setCancelable(false).show();
+                        .setCancelable(false).show();*/
+                titleDeleteProject.setText("Remove project " + itemData.getName() + "?");
+                deletingProject = itemData;
+                deleteProjectDialog.show();
                 return true;
             }
 
@@ -213,6 +281,7 @@ public class StartActivity extends AppCompatActivity {
         this.mainLayout.setOnRefreshListener(() -> {
             loadProjects();
             setupListView();
+            fileBrowserDialog.load();
             mainLayout.setRefreshing(false);
         });
     }
@@ -232,6 +301,9 @@ public class StartActivity extends AppCompatActivity {
      */
     private void setupNavigationView() {
         this.navigationView.setNavigationItemSelectedListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.start_nav_open) {
+                fileBrowserDialog.getBrowserDialog().show();
+            }
             drawerLayout.closeDrawers();
             return true;
         });
@@ -350,7 +422,7 @@ public class StartActivity extends AppCompatActivity {
                 if (drawerOpen) {
                     drawerLayout.closeDrawers();
                 } else {
-                    drawerLayout.openDrawer(Gravity.LEFT);
+                    drawerLayout.openDrawer(GravityCompat.START);
                 }
                 return true;
         }

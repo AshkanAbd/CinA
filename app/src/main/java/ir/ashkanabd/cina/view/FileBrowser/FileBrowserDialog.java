@@ -22,19 +22,23 @@ public class FileBrowserDialog {
     private AndroidTreeView androidTreeView;
     private MaterialDialog browserDialog;
     private FileBrowserListeners listeners;
+    private String[] fileFormat;
+    private String root;
 
     /*
      * Read project file structure
      */
-    public FileBrowserDialog(AppCompatActivityFileBrowserSupport activity, Project selectedProject) {
+    public FileBrowserDialog(AppCompatActivityFileBrowserSupport activity, Project selectedProject, String root, String... fileFormat) {
         this.activity = activity;
+        this.root = root;
         this.selectedProject = selectedProject;
+        this.fileFormat = fileFormat;
         this.listeners = new FileBrowserListeners(this);
         load();
     }
 
-    void load() {
-        fileBrowser = new FileBrowser(new File(selectedProject.getDir()), this, selectedProject.getLang());
+    public void load() {
+        fileBrowser = new FileBrowser(new File(root), this, fileFormat);
         fileBrowser.browse(3);
         androidTreeView = new AndroidTreeView(activity, fileBrowser.getRoot());
         androidTreeView.setUseAutoToggle(false);
@@ -58,14 +62,13 @@ public class FileBrowserDialog {
         } else {
             params = new RelativeLayout.LayoutParams(subLayout.getLayoutParams());
         }
-        params.setMargins(0, (int) CodeEditor.pxFromDp(getActivity(), 10), 0, 0);
         params.addRule(RelativeLayout.ALIGN_TOP, R.id.browser_browse_file_layout);
-        params.addRule(RelativeLayout.ABOVE, R.id.buttons_layout_browse_file_layout);
+        params.addRule(RelativeLayout.ALIGN_BOTTOM, R.id.browser_browse_file_layout);
         subLayout.setLayoutParams(params);
         return subLayout;
     }
 
-    private void setupDialogViewListeners(RelativeLayout view) {
+    protected void setupDialogViewListeners(RelativeLayout view) {
         LinearLayoutCompat linearLayout = view.findViewById(R.id.buttons_layout_browse_file_layout);
         BootstrapButton cancelButton = linearLayout.findViewById(R.id.cancel_browse_file_layout);
         BootstrapButton openButton = linearLayout.findViewById(R.id.open_browse_file_layout);
@@ -86,7 +89,7 @@ public class FileBrowserDialog {
         this.getBrowserDialog().setOnDismissListener(listeners::onFileBrowserDialogDismiss);
     }
 
-    File getFile(View view) {
+    public File getFile(View view) {
         TreeNode treeNode = (TreeNode) view.getTag();
         return (File) treeNode.getValue();
     }

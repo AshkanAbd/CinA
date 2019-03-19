@@ -25,9 +25,10 @@
 	<TextView
 			android:layout_below="@+id/header_browse_file_layout"
 			android:id="@+id/browser_browse_file_layout"
-			android:layout_marginBottom="45dp"
+			android:layout_marginBottom="15dp"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
+			android:layout_above="@id/buttons_layout_browse_file_layout"
 			android:background="#FFF"/>
 
 	<androidx.appcompat.widget.LinearLayoutCompat

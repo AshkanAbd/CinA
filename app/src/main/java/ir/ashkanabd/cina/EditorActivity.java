@@ -43,7 +43,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         TypefaceProvider.registerDefaultIconSets();
         findViews();
         prepareActivity(getIntent().getExtras());
-        fileBrowserDialog = new FileBrowserDialog(this, selectedProject);
+        fileBrowserDialog = new FileBrowserDialog(this, selectedProject, selectedProject.getDir(), selectedProject.getLang());
         setupActionBar();
         setupNavigationView();
         changeLoadingProgressStatus();
