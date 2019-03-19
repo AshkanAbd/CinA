@@ -6,15 +6,26 @@
 		android:layout_height="match_parent"
 		android:layout_margin="20dp">
 
+	<com.rey.material.widget.ImageView
+			android:id="@+id/icon_delete_file_layout"
+			android:layout_width="36dp"
+			android:layout_height="wrap_content"
+			android:layout_alignTop="@id/title_delete_file_layout"
+			android:layout_alignBottom="@id/title_delete_file_layout"
+			android:layout_marginEnd="10dp"
+			android:src="@drawable/danger_icon"
+			/>
+
 	<com.rey.material.widget.TextView
 			android:id="@+id/title_delete_file_layout"
 			android:layout_width="match_parent"
+			android:layout_height="48dp"
+			android:layout_toEndOf="@id/icon_delete_file_layout"
 			android:textColor="@color/black"
 			android:textSize="20sp"
 			android:paddingTop="10dp"
 			android:paddingBottom="10dp"
 			android:layout_marginBottom="20dp"
-			android:layout_height="wrap_content"
 			app:autoSizeMinTextSize="0sp"
 			app:autoSizeMaxTextSize="30sp"
 			app:autoSizeTextType="none"

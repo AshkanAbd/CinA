@@ -217,9 +217,9 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
                             ProjectManager.removeProject(itemData);
                             loadProjects();
                             setupListView();
-                        }).setIcon(R.drawable.denger_icon).setNegativeButton("No", null)
+                        }).setIcon(R.drawable.danger_icon).setNegativeButton("No", null)
                         .setCancelable(false).show();*/
-                titleDeleteProject.setText("Remove project " + itemData.getName() + "?");
+                titleDeleteProject.setText("Remove project \"" + itemData.getName() + "\"?");
                 deletingProject = itemData;
                 deleteProjectDialog.show();
                 return true;

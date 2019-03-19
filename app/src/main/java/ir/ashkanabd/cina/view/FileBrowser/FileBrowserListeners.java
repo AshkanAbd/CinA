@@ -9,6 +9,9 @@ import android.view.View;
 import androidx.appcompat.widget.AppCompatImageView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
+import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
+import com.beardedhen.androidbootstrap.api.view.BootstrapBrandView;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.TextView;
 import com.unnamed.b.atv.model.TreeNode;
@@ -78,6 +81,43 @@ public class FileBrowserListeners {
         }
         preClickedView = fileView.getView().findViewById(R.id.main_layout_file_layout);
         preClickedView.setBackgroundColor(Color.parseColor("#FFFFFAD6"));
+        setButtonsColor(node);
+    }
+
+    private void setButtonsColor(TreeNode node) {
+        File file = (File) node.getValue();
+        if (fileBrowserDialog.getSelectedProject() != null) {
+            if (fileBrowserDialog.getSelectedProject().getDir().equals(file.getAbsolutePath())) {
+                fileBrowserDialog.getDeleteButton().setEnabled(false);
+                fileBrowserDialog.getDeleteButton().setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+            } else {
+                fileBrowserDialog.getDeleteButton().setEnabled(true);
+                fileBrowserDialog.getDeleteButton().setBootstrapBrand(DefaultBootstrapBrand.DANGER);
+            }
+        }
+        if (file.isFile()) {
+            fileBrowserDialog.getCreateDirButton().setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+            fileBrowserDialog.getCreateDirButton().setEnabled(false);
+            fileBrowserDialog.getCreateFileButton().setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+            fileBrowserDialog.getCreateFileButton().setEnabled(false);
+        } else {
+            fileBrowserDialog.getCreateDirButton().setBootstrapBrand(DefaultBootstrapBrand.PRIMARY);
+            fileBrowserDialog.getCreateDirButton().setEnabled(true);
+            fileBrowserDialog.getCreateFileButton().setBootstrapBrand(DefaultBootstrapBrand.INFO);
+            fileBrowserDialog.getCreateFileButton().setEnabled(true);
+        }
+        if (file.isDirectory()) {
+            fileBrowserDialog.getOpenButton().setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+            fileBrowserDialog.getOpenButton().setEnabled(false);
+        } else {
+            fileBrowserDialog.getOpenButton().setBootstrapBrand(DefaultBootstrapBrand.SUCCESS);
+            fileBrowserDialog.getOpenButton().setEnabled(true);
+        }
+        fileBrowserDialog.getCreateFileButton().setPadding(0, 0, 0, 0);
+        fileBrowserDialog.getCreateDirButton().setPadding(0, 0, 0, 0);
+        fileBrowserDialog.getCancelButton().setPadding(0, 0, 0, 0);
+        fileBrowserDialog.getOpenButton().setPadding(0, 0, 0, 0);
+        fileBrowserDialog.getDeleteButton().setPadding(0, 0, 0, 0);
     }
 
     void onFileStatusClick(View view) {
@@ -173,7 +213,7 @@ public class FileBrowserListeners {
         File file = fileBrowserDialog.getFile(preClickedView);
         if (fileBrowserDialog.getSelectedProject().getDir().equals(file.getAbsolutePath()))
             return;
-        this.deleteFileTitle.setText("Delete " + file.getName() + "?");
+        this.deleteFileTitle.setText("Delete file \"" + file.getName() + "\"?");
         this.deleteFileDialog.show();
     }
 
@@ -195,7 +235,7 @@ public class FileBrowserListeners {
     }
 
     void onCancelButtonClick(View view) {
-        ((Dialog) fileBrowserDialog.getBrowserDialog()).dismiss();
+        fileBrowserDialog.getBrowserDialog().dismiss();
     }
 
     void onFileBrowserDialogDismiss(DialogInterface dialogInterface) {

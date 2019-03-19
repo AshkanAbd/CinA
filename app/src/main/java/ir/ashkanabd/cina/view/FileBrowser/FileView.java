@@ -42,6 +42,8 @@ public class FileView extends TreeNode.BaseNodeViewHolder<File> {
         if (file.isDirectory()) {
             fileType.setImageResource(R.drawable.folder_icon);
             fileStatus.setTag("close");
+            if (node.isLeaf())
+                fileStatus.setVisibility(View.INVISIBLE);
         } else {
             fileType.setImageResource(R.drawable.file_icon);
             fileStatus.setVisibility(View.INVISIBLE);

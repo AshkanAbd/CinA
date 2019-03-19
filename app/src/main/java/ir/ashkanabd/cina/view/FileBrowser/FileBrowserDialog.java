@@ -23,6 +23,11 @@ public class FileBrowserDialog {
     private FileBrowserListeners listeners;
     private String[] fileFormat;
     private String root;
+    private BootstrapButton cancelButton;
+    private BootstrapButton openButton;
+    private BootstrapButton createFileButton;
+    private BootstrapButton createDirButton;
+    private BootstrapButton deleteButton;
 
     /*
      * Read project file structure
@@ -69,11 +74,11 @@ public class FileBrowserDialog {
 
     protected void setupDialogViewListeners(RelativeLayout view) {
         LinearLayoutCompat linearLayout = view.findViewById(R.id.buttons_layout_browse_file_layout);
-        BootstrapButton cancelButton = linearLayout.findViewById(R.id.cancel_browse_file_layout);
-        BootstrapButton openButton = linearLayout.findViewById(R.id.open_browse_file_layout);
-        BootstrapButton createFileButton = linearLayout.findViewById(R.id.new_file_browser_file_layout);
-        BootstrapButton createDirButton = linearLayout.findViewById(R.id.new_folder_browse_file_layout);
-        BootstrapButton deleteButton = linearLayout.findViewById(R.id.delete_file_browser_file_layout);
+        cancelButton = linearLayout.findViewById(R.id.cancel_browse_file_layout);
+        openButton = linearLayout.findViewById(R.id.open_browse_file_layout);
+        createFileButton = linearLayout.findViewById(R.id.new_file_browser_file_layout);
+        createDirButton = linearLayout.findViewById(R.id.new_folder_browse_file_layout);
+        deleteButton = linearLayout.findViewById(R.id.delete_file_browser_file_layout);
         cancelButton.setPadding(0, 0, 0, 0);
         openButton.setPadding(0, 0, 0, 0);
         createFileButton.setPadding(0, 0, 0, 0);
@@ -115,5 +120,25 @@ public class FileBrowserDialog {
 
     public FileBrowser getFileBrowser() {
         return fileBrowser;
+    }
+
+    public BootstrapButton getCancelButton() {
+        return cancelButton;
+    }
+
+    public BootstrapButton getOpenButton() {
+        return openButton;
+    }
+
+    public BootstrapButton getCreateFileButton() {
+        return createFileButton;
+    }
+
+    public BootstrapButton getCreateDirButton() {
+        return createDirButton;
+    }
+
+    public BootstrapButton getDeleteButton() {
+        return deleteButton;
     }
 }
