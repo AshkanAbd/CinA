@@ -7,11 +7,16 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,12 +25,6 @@ import co.dift.ui.SwipeToAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.navigation.NavigationView;
-import androidx.drawerlayout.widget.DrawerLayout;
-import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
-
-import android.widget.Toast;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
@@ -87,6 +86,12 @@ public class StartActivity extends AppCompatActivity {
         Log.e("INFO", projectList.toString());
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadProjects();
+        setupListView();
+    }
 
     /*
      * Setup a loading progress dialog

@@ -23,9 +23,9 @@ import java.util.regex.Pattern;
 
 class FileBrowserListeners {
 
-    static int NONE = 0;
-    static int CREATE_FILE = 1;
-    static int CREATE_FOLDER = 2;
+    private static int NONE = 0;
+    private static int CREATE_FILE = 1;
+    private static int CREATE_FOLDER = 2;
 
     private View preClickedView;
     private FileBrowserDialog fileBrowserDialog;
