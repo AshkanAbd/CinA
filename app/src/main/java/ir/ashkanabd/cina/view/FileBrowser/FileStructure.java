@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.io.File;
 import java.io.IOException;
 
-public class FileStructure {
+public class FileStructure implements Cloneable {
 
     private File baseFile;
 
@@ -77,5 +77,15 @@ public class FileStructure {
         if (!file.isDirectory())
             throw new IOException("Only directory allowed");
         return true;
+    }
+
+    @Override
+    public Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

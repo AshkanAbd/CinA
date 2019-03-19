@@ -89,8 +89,9 @@ public class FileBrowser {
                         if (file.isDirectory()) {
                             nextNode = new TreeNode(file).setViewHolder(new FileView(dialog));
                             tree.addChild(nextNode);
-                            structure.changeDir(file);
-                            browse(deep + 1, max, nextNode, structure);
+                            FileStructure fs = (FileStructure) structure.clone();
+                            fs.changeDir(file);
+                            browse(deep + 1, max, nextNode, fs);
                         } else {
                             if (checkFileName(file.getName())) {
                                 nextNode = new TreeNode(file).setViewHolder(new FileView(dialog));
