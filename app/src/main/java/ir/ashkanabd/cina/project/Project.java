@@ -18,6 +18,7 @@ public class Project implements Serializable {
     private String lang;
     private String description;
     private String dir;
+    private String out;
     private ArrayList<String> source;
     private HashMap<String, Object> jsonMap;
 
@@ -26,11 +27,12 @@ public class Project implements Serializable {
         this.jsonMap = new HashMap<>();
     }
 
-    public Project(String name, String lang, String description, String dir, ArrayList<String> source) {
+    public Project(String name, String lang, String description, String dir, String out, ArrayList<String> source) {
         this.name = name;
         this.lang = lang;
         this.description = description;
         this.dir = dir;
+        this.out = out;
         this.source = source;
         this.jsonMap = new HashMap<>();
         this.jsonMap.put("name", name);
@@ -38,6 +40,7 @@ public class Project implements Serializable {
         this.jsonMap.put("description", description);
         this.jsonMap.put("dir", dir);
         this.jsonMap.put("src", source);
+        this.jsonMap.put("out", out);
     }
 
     public Project(String json) throws JSONException {
@@ -49,6 +52,7 @@ public class Project implements Serializable {
             this.name = jsonObject.getString("name");
             this.lang = jsonObject.getString("lang");
             this.dir = jsonObject.getString("dir");
+            this.out = jsonObject.getString("out");
             if (jsonObject.has("description")) {
                 this.description = jsonObject.getString("description");
             } else {
@@ -63,6 +67,7 @@ public class Project implements Serializable {
             this.jsonMap.put("name", name);
             this.jsonMap.put("lang", lang);
             this.jsonMap.put("dir", dir);
+            this.jsonMap.put("out", out);
             this.jsonMap.put("description", description);
             this.jsonMap.put("src", source);
         } catch (Exception ignored) {
@@ -103,6 +108,15 @@ public class Project implements Serializable {
     public void setDescription(String description) {
         this.description = description;
         this.jsonMap.put("description", description);
+    }
+
+    public void setOut(String out) {
+        this.out = out;
+        this.jsonMap.put("out", out);
+    }
+
+    public String getOut() {
+        return out;
     }
 
     public String getDescription() {

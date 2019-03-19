@@ -139,6 +139,10 @@ public class ProjectManager {
         File srcDir = new File(projectDir, "src/");
         tmp = srcDir.mkdir();
         if (!tmp) return false;
+        File outDir = new File(projectDir, "out/");
+        tmp = outDir.mkdirs();
+        project.setOut(outDir.getAbsolutePath());
+        if (!tmp) return false;
         File main = isC ? new File(srcDir, "main.c") : new File(srcDir, "main.cpp");
         tmp = main.createNewFile();
         if (!tmp) return false;

@@ -15,7 +15,6 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -32,7 +31,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
-
 import com.rey.material.widget.TextView;
 import ir.ashkanabd.cina.compile.CompileGCC;
 import ir.ashkanabd.cina.project.Project;

@@ -40,6 +40,14 @@ public class ReadProjectFile extends ProjectFile {
         return null;
     }
 
+    public String getProjectOut() {
+        try {
+            return this.projectJson.getString("out");
+        } catch (JSONException ignored) {
+        }
+        return null;
+    }
+
     public String[] getSourceFiles() {
         try {
             JSONArray srcFiles = this.projectJson.getJSONArray("src");

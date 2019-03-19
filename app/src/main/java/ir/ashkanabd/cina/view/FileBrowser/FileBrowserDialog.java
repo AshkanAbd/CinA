@@ -10,7 +10,6 @@ import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 import ir.ashkanabd.cina.R;
 import ir.ashkanabd.cina.project.Project;
-import ir.ashkanabd.cina.view.CodeEditor;
 
 import java.io.File;
 

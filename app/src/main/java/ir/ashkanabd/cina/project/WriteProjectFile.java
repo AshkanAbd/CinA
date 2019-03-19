@@ -37,6 +37,10 @@ public class WriteProjectFile extends ProjectFile {
         this.jsonMap.put("dir", dir);
     }
 
+    public void addProjectOut(String dir) {
+        this.jsonMap.put("out", dir);
+    }
+
     public void addSourceFiles(String... src) {
         List<String> srcList = Arrays.asList(src);
         this.jsonMap.put("src", srcList);
