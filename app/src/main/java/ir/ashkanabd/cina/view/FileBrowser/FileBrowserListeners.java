@@ -12,6 +12,7 @@ import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.TextView;
 import com.unnamed.b.atv.model.TreeNode;
+import ir.ashkanabd.cina.EditorActivity;
 import ir.ashkanabd.cina.R;
 import ir.ashkanabd.cina.project.ProjectManager;
 
@@ -108,6 +109,8 @@ class FileBrowserListeners {
             if (this.createMode == CREATE_FOLDER) {
                 newFile.mkdirs();
             }
+            fileBrowserDialog.getSelectedProject().addSource(newFile.getAbsolutePath());
+            effectingChangesOnProject();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -121,9 +124,22 @@ class FileBrowserListeners {
         this.fileNameDialog.dismiss();
     }
 
+    private void effectingChangesOnProject() {
+        try {
+            ProjectManager.writeFile(fileBrowserDialog.getSelectedProject().toString(), fileBrowserDialog.getSelectedProject().getProjectFile());
+            if (fileBrowserDialog.getActivity() instanceof EditorActivity) {
+                ((EditorActivity) fileBrowserDialog.getActivity()).showProjectInfo();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void onDeleteFileButtonClick(View view) {
         File file = fileBrowserDialog.getFile(preClickedView);
         ProjectManager.remove(file);
+        fileBrowserDialog.getSelectedProject().removeSource(file.getAbsolutePath());
+        effectingChangesOnProject();
         fileBrowserDialog.getBrowserDialog().dismiss();
         fileBrowserDialog.load();
         deleteFileDialog.dismiss();
@@ -167,6 +183,7 @@ class FileBrowserListeners {
         if (file.isDirectory()) return;
         try {
             fileBrowserDialog.getActivity().getEditor().setText(fileBrowserDialog.getActivity().readTargetFile(file));
+            fileBrowserDialog.getActivity().getProjectActionBar().setTitle(file.getName());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -212,8 +229,8 @@ class FileBrowserListeners {
                 FileBrowserListeners.this.validFileName = false;
                 return;
             }
-            if (len > 10) {
-                FileBrowserListeners.this.fileNameEditText.setHelper("too long name = " + len + " characters");
+            if (len > 30) {
+                FileBrowserListeners.this.fileNameEditText.setHelper("too long name: " + len + " characters");
                 FileBrowserListeners.this.validFileName = false;
                 return;
             }

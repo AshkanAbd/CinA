@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import android.os.Bundle;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -23,7 +24,6 @@ import java.util.ArrayList;
 public class EditorActivity extends AppCompatActivityFileBrowserSupport {
 
     private Toolbar projectToolbar;
-    private ActionBar projectActionBar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
     private Project selectedProject;
@@ -66,6 +66,10 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         } catch (IOException e) {
             // TODO: 3/16/19 Catch project file reading error
         }
+        showProjectInfo();
+    }
+
+    public void showProjectInfo() {
         View navigationHeader = navigationView.getHeaderView(0);
         TextView headerTextView = navigationHeader.findViewById(R.id.project_nav_header_text_view);
         String projectInfo = "Project name: " + selectedProject.getName() + "\n" +

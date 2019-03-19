@@ -5,12 +5,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /*
- * Class for controll project info and pars it to json or String
+ * Class for control project info and pars it to json or String
  */
 public class Project implements Serializable {
     private String name;
@@ -89,6 +90,16 @@ public class Project implements Serializable {
         this.jsonMap.put("src", source);
     }
 
+    public void addSource(String src) {
+        this.source.add(src);
+        this.jsonMap.put("src", this.source);
+    }
+
+    public void removeSource(String src) {
+        if (this.source.remove(src))
+            this.jsonMap.put("src", this.source);
+    }
+
     public void setDescription(String description) {
         this.description = description;
         this.jsonMap.put("description", description);
@@ -116,6 +127,10 @@ public class Project implements Serializable {
 
     public JSONObject toJson() {
         return new JSONObject(this.jsonMap);
+    }
+
+    public File getProjectFile() {
+        return new File(getDir(), "." + getName() + ".cina");
     }
 
     @NonNull

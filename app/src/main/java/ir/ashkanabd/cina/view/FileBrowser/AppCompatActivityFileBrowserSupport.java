@@ -1,5 +1,6 @@
 package ir.ashkanabd.cina.view.FileBrowser;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import ir.ashkanabd.cina.view.CodeEditor;
 
@@ -12,7 +13,9 @@ import java.util.Scanner;
  * Every activity want to use it should extends from this
  */
 public abstract class AppCompatActivityFileBrowserSupport extends AppCompatActivity {
+
     protected CodeEditor editor;
+    protected ActionBar projectActionBar;
 
     /*
      * Read given text file info
@@ -29,5 +32,9 @@ public abstract class AppCompatActivityFileBrowserSupport extends AppCompatActiv
 
     public CodeEditor getEditor() {
         return editor;
+    }
+
+    public ActionBar getProjectActionBar() {
+        return projectActionBar;
     }
 }
