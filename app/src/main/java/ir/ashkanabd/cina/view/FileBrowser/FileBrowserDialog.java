@@ -1,10 +1,14 @@
 package ir.ashkanabd.cina.view.FileBrowser;
 
-import android.view.ViewGroup;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
-import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.unnamed.b.atv.model.TreeNode;
 import com.unnamed.b.atv.view.AndroidTreeView;
 import ir.ashkanabd.cina.R;
@@ -29,18 +33,27 @@ public class FileBrowserDialog {
         this.activity = activity;
         this.selectedProject = selectedProject;
         this.listeners = new FileBrowserListeners(this);
+        load();
+    }
 
+    void load() {
         fileBrowser = new FileBrowser(new File(selectedProject.getDir()), this, selectedProject.getLang());
         fileBrowser.browse(3);
-        TreeNode tree = fileBrowser.getRoot();
-
-        androidTreeView = new AndroidTreeView(activity, tree);
+        androidTreeView = new AndroidTreeView(activity, fileBrowser.getRoot());
         androidTreeView.setUseAutoToggle(false);
+        setupDialog();
+    }
 
+    private void setupDialog() {
         browserDialog = new MaterialDialog(activity);
-        browserDialog.setContentView(R.layout.browse_file_layout);
+        browserDialog.setContentView(R.layout.browse_file_layout1);
         RelativeLayout mainLayout = browserDialog.findViewById(R.id.browse_file_main_layout);
+        mainLayout.addView(setupDialogView());
+        setupDialogViewListeners(mainLayout);
+        browserDialog.cancelable(true);
+    }
 
+    private View setupDialogView() {
         ScrollView subLayout = (ScrollView) androidTreeView.getView();
         RelativeLayout.LayoutParams params;
         if (subLayout.getLayoutParams() == null) {
@@ -52,15 +65,37 @@ public class FileBrowserDialog {
         params.addRule(RelativeLayout.ALIGN_TOP, R.id.browser_browse_file_layout);
         params.addRule(RelativeLayout.ABOVE, R.id.buttons_layout_browse_file_layout);
         subLayout.setLayoutParams(params);
-        mainLayout.addView(subLayout);
-        browserDialog.cancelable(true);
+        return subLayout;
     }
 
-    public void reload() {
-        fileBrowser = new FileBrowser(new File(selectedProject.getDir()), this, selectedProject.getLang());
-        fileBrowser.browse(3);
-        TreeNode tree = fileBrowser.getRoot();
-        androidTreeView.setRoot(tree);
+    private void setupDialogViewListeners(RelativeLayout view) {
+        LinearLayoutCompat linearLayout = view.findViewById(R.id.buttons_layout_browse_file_layout);
+        BootstrapButton cancelButton = linearLayout.findViewById(R.id.cancel_browse_file_layout);
+        BootstrapButton openButton = linearLayout.findViewById(R.id.open_browse_file_layout);
+        BootstrapButton createFileButton = linearLayout.findViewById(R.id.new_file_browser_file_layout);
+        BootstrapButton createDirButton = linearLayout.findViewById(R.id.new_folder_browse_file_layout);
+        BootstrapButton deleteButton = linearLayout.findViewById(R.id.delete_file_browser_file_layout);
+        cancelButton.setPadding(0, 0, 0, 0);
+        openButton.setPadding(0, 0, 0, 0);
+        createFileButton.setPadding(0, 0, 0, 0);
+        createDirButton.setPadding(0, 0, 0, 0);
+        deleteButton.setPadding(0, 0, 0, 0);
+        cancelButton.setOnClickListener(listeners::onCancelButtonClick);
+        openButton.setOnClickListener(listeners::onOpenButtonClick);
+        createFileButton.setOnClickListener(listeners::onNewFileButtonClick);
+        createDirButton.setOnClickListener(listeners::onNewDirButtonClick);
+        deleteButton.setOnClickListener(listeners::onDeleteButtonClick);
+
+        this.getBrowserDialog().setOnDismissListener(listeners::onFileBrowserDialogDismiss);
+    }
+
+    File getFile(View view) {
+        TreeNode treeNode = (TreeNode) view.getTag();
+        return (File) treeNode.getValue();
+    }
+
+    public Project getSelectedProject() {
+        return selectedProject;
     }
 
     public MaterialDialog getBrowserDialog() {
@@ -77,5 +112,9 @@ public class FileBrowserDialog {
 
     public AndroidTreeView getAndroidTreeView() {
         return androidTreeView;
+    }
+
+    public FileBrowser getFileBrowser() {
+        return fileBrowser;
     }
 }

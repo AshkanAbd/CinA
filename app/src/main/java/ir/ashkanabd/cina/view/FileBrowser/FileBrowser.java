@@ -29,7 +29,7 @@ public class FileBrowser {
      */
     public FileBrowser(File rootFile, FileBrowserDialog dialog, String... fileFormat) {
         try {
-            this.projectLang = fileFormat;
+            createFormats(fileFormat);
             this.dialog = dialog;
             root = TreeNode.root();
             TreeNode tmp = new TreeNode(rootFile).setViewHolder(new FileView(dialog));
@@ -38,6 +38,21 @@ public class FileBrowser {
         } catch (IOException ignored) {
             // Never will happens
         }
+    }
+
+    /**
+     * Change file for format in needed formats.
+     * <br/>For example C++ -> Cpp
+     *
+     * @param fileFormat
+     */
+    private void createFormats(String... fileFormat) {
+        this.projectLang = new String[fileFormat.length];
+        for (int i = 0; i < fileFormat.length; i++) {
+            String str = fileFormat[i];
+            projectLang[i] = str.replace('+', 'p');
+        }
+        System.out.println();
     }
 
     /**
@@ -75,7 +90,7 @@ public class FileBrowser {
                             nextNode = new TreeNode(file).setViewHolder(new FileView(dialog));
                             tree.addChild(nextNode);
                             structure.changeDir(file);
-                            browse(deep + 1, max, nextNode, fileStructure);
+                            browse(deep + 1, max, nextNode, structure);
                         } else {
                             if (checkFileName(file.getName())) {
                                 nextNode = new TreeNode(file).setViewHolder(new FileView(dialog));
@@ -97,7 +112,7 @@ public class FileBrowser {
      * @param fileName
      * @return return true if fileName matches otherwise return false
      */
-    private boolean checkFileName(String fileName) {
+    boolean checkFileName(String fileName) {
         for (String format : this.projectLang) {
             if (fileName.endsWith("." + format.toLowerCase()) || fileName.endsWith("." + format)) {
                 return true;

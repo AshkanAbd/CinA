@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.material.navigation.NavigationView;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.view.FileBrowser.AppCompatActivityFileBrowserSupport;
@@ -39,6 +40,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         setContentView(R.layout.activity_editor);
         setupLoadingProgress();
         changeLoadingProgressStatus();
+        TypefaceProvider.registerDefaultIconSets();
         findViews();
         prepareActivity(getIntent().getExtras());
         fileBrowserDialog = new FileBrowserDialog(this, selectedProject);

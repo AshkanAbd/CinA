@@ -33,7 +33,7 @@ public class ProjectManager {
         Log.e("INFO", "REMOVE PROJECT");
     }
 
-    private static void remove(File file) {
+    public static void remove(File file) {
         if (!file.isDirectory()) {
             file.delete();
             return;

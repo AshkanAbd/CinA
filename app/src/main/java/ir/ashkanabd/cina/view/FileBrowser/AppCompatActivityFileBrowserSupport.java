@@ -2,7 +2,6 @@ package ir.ashkanabd.cina.view.FileBrowser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import ir.ashkanabd.cina.view.CodeEditor;
-import ir.ashkanabd.cina.view.FileBrowser.FileBrowserDialog;
 
 import java.io.File;
 import java.io.IOException;
