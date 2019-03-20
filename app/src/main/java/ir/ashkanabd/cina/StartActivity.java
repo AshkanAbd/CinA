@@ -32,13 +32,13 @@ import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.TextView;
-import ir.ashkanabd.cina.compile.CompileGCC;
+import ir.ashkanabd.cina.compileAndRun.GCCCompiler;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
 import ir.ashkanabd.cina.view.ActionBarDrawerToggleCompat;
-import ir.ashkanabd.cina.view.FileBrowser.FileBrowserDialog;
-import ir.ashkanabd.cina.view.FileBrowser.AppCompatActivityFileBrowserSupport;
+import ir.ashkanabd.cina.view.filebrowser.FileBrowserDialog;
+import ir.ashkanabd.cina.view.filebrowser.AppCompatActivityFileBrowserSupport;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +63,6 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private SwipeToAction swipeToAction;
     private RecyclerView recyclerView;
     private ProjectAdapter adapter;
-    private CompileGCC gcc;
     private boolean isLoadingDialog = false;
     private SwipeRefreshLayout mainLayout;
     private FileBrowserDialog fileBrowserDialog;
@@ -76,34 +75,36 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         setContentView(R.layout.start_activity);
         setupLoadingProgress();
         changeLoadingProgressStatus();
-        TypefaceProvider.registerDefaultIconSets();
-        if (!checkStoragePermission()) {
-            requestStoragePermission();
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            while (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                ;
-        }
-        checkCompiler();
-        findViews();
-        setupActionBar();
-        setupNavigationView();
-        setupNewProjectDialog();
-        this.projectManager = new ProjectManager();
-        this.projectList = new ArrayList<>();
-        loadProjects();
-        setupListView();
-        setupBrowseProjectDialog();
-        setupDeleteProjectDialog();
-        changeLoadingProgressStatus();
-        Log.e("INFO", projectList.toString());
+        new Handler().postDelayed(() -> {
+            TypefaceProvider.registerDefaultIconSets();
+            if (!checkStoragePermission()) {
+                requestStoragePermission();
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                while (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                    ;
+            }
+            checkCompiler();
+            findViews();
+            setupActionBar();
+            setupNavigationView();
+            setupNewProjectDialog();
+            this.projectManager = new ProjectManager();
+            this.projectList = new ArrayList<>();
+            loadProjects();
+            setupListView();
+            setupBrowseProjectDialog();
+            setupDeleteProjectDialog();
+            changeLoadingProgressStatus();
+            Log.e("INFO", projectList.toString());
+        }, 1500);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadProjects();
-        setupListView();
+//        loadProjects();
+//        setupListView();
     }
 
 
@@ -169,8 +170,8 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
      */
     private void checkCompiler() {
         try {
-            gcc = new CompileGCC(this);
-        } catch (IOException e) {
+            new GCCCompiler(this);
+        } catch (Exception e) {
             // TODO: 3/16/19 catch gcc setup exceptions
             Log.e("INFO", "Can't extract compiler");
         }
@@ -277,10 +278,12 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         this.mainLayout = this.findViewById(R.id.main_layout_start_activity);
         mainLayout.setColorSchemeColors(Color.BLUE, Color.RED, Color.YELLOW);
         this.mainLayout.setOnRefreshListener(() -> {
-            loadProjects();
-            setupListView();
-            fileBrowserDialog.load();
-            mainLayout.setRefreshing(false);
+            new Handler().postDelayed(() -> {
+                loadProjects();
+                setupListView();
+                fileBrowserDialog.load();
+                mainLayout.setRefreshing(false);
+            }, 1000);
         });
     }
 

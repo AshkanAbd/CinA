@@ -1,4 +1,4 @@
-package ir.ashkanabd.cina.view.FileBrowser;
+package ir.ashkanabd.cina.view.filebrowser;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;

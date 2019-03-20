@@ -1,6 +1,8 @@
 package ir.ashkanabd.cina;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -12,14 +14,16 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.material.navigation.NavigationView;
 import es.dmoral.toasty.Toasty;
+import ir.ashkanabd.cina.compileAndRun.GCCCompiler;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectManager;
-import ir.ashkanabd.cina.view.FileBrowser.AppCompatActivityFileBrowserSupport;
-import ir.ashkanabd.cina.view.FileBrowser.FileBrowserDialog;
+import ir.ashkanabd.cina.view.filebrowser.AppCompatActivityFileBrowserSupport;
+import ir.ashkanabd.cina.view.filebrowser.FileBrowserDialog;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class EditorActivity extends AppCompatActivityFileBrowserSupport {
 
@@ -33,6 +37,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     private MaterialDialog loadingDialog;
     private boolean isLoadingDialog = false;
     private FileBrowserDialog fileBrowserDialog;
+    private GCCCompiler gccCompiler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +45,25 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         setContentView(R.layout.activity_editor);
         setupLoadingProgress();
         changeLoadingProgressStatus();
-        TypefaceProvider.registerDefaultIconSets();
-        findViews();
-        prepareActivity(getIntent().getExtras());
-        fileBrowserDialog = new FileBrowserDialog(this, selectedProject, selectedProject.getDir(), selectedProject.getLang());
-        setupActionBar();
-        setupNavigationView();
-        changeLoadingProgressStatus();
+        new Handler().postDelayed(() -> {
+            TypefaceProvider.registerDefaultIconSets();
+            checkCompiler();
+            findViews();
+            prepareActivity(getIntent().getExtras());
+            fileBrowserDialog = new FileBrowserDialog(this, selectedProject, selectedProject.getDir(), selectedProject.getLang());
+            setupActionBar();
+            setupNavigationView();
+            changeLoadingProgressStatus();
+        }, 1500);
+    }
+
+    private void checkCompiler() {
+        try {
+            gccCompiler = new GCCCompiler(this);
+        } catch (IOException e) {
+            // TODO: 3/20/19 Handle exception
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -124,6 +141,46 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
                 } catch (IOException e) {
                     // TODO: 3/19/19 Handle this exception
                 }
+            }
+        }
+        if (item.getItemId() == R.id.project_nav_compile) {
+            try {
+                Object[] objs = this.gccCompiler.compile(selectedProject);
+                String stdout = (String) objs[1];
+                String stderr = (String) objs[2];
+                if ((boolean) objs[0]) {
+                    if (stdout.isEmpty()) {
+                        Toasty.success(this, "Compiled successfully", Toasty.LENGTH_LONG, true).show();
+                    } else {
+                        Toasty.warning(this, "Compiled with warnings: " + stdout, Toasty.LENGTH_LONG, false).show();
+                    }
+                } else {
+                    Toasty.error(this, "Compile error: " + stderr, Toasty.LENGTH_LONG, false).show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toasty.error(this, e.toString(), Toasty.LENGTH_LONG, true).show();
+            }
+        }
+        if (item.getItemId() == R.id.project_nav_run) {
+            try {
+                Object[] objs = this.gccCompiler.run(selectedProject);
+                if (objs == null) {
+                    Toasty.error(this, "Project not compiled", Toasty.LENGTH_LONG, true).show();
+                    return true;
+                }
+                String stdout = (String) objs[0];
+                String stderr = (String) objs[1];
+                if (!stdout.isEmpty()) {
+                    Toasty.info(this, stdout, Toasty.LENGTH_LONG, false).show();
+                }
+                if (!stderr.isEmpty()) {
+                    Log.w("CinA", stderr);
+                    Toasty.warning(this, stderr, Toasty.LENGTH_LONG, false).show();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toasty.error(this, e.toString(), Toasty.LENGTH_LONG, true).show();
             }
         }
         drawerLayout.closeDrawers();

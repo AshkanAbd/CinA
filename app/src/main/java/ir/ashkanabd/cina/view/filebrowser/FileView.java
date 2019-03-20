@@ -1,4 +1,4 @@
-package ir.ashkanabd.cina.view.FileBrowser;
+package ir.ashkanabd.cina.view.filebrowser;
 
 import android.content.Context;
 import android.view.LayoutInflater;

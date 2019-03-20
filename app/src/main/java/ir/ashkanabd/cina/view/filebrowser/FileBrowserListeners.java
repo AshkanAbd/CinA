@@ -1,6 +1,5 @@
-package ir.ashkanabd.cina.view.FileBrowser;
+package ir.ashkanabd.cina.view.filebrowser;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.text.Editable;
@@ -9,9 +8,7 @@ import android.view.View;
 import androidx.appcompat.widget.AppCompatImageView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
-import com.beardedhen.androidbootstrap.api.view.BootstrapBrandView;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.TextView;
 import com.unnamed.b.atv.model.TreeNode;

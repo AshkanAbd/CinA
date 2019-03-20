@@ -139,6 +139,14 @@ public class Project implements Serializable {
         return source;
     }
 
+    public File[] getSourceAsFile() {
+        File[] files = new File[source.size()];
+        for (int i = 0; i < source.size(); i++) {
+            files[i] = new File(source.get(i));
+        }
+        return files;
+    }
+
     public JSONObject toJson() {
         return new JSONObject(this.jsonMap);
     }

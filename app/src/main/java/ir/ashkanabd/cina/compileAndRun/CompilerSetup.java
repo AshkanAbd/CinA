@@ -1,4 +1,4 @@
-package ir.ashkanabd.cina.compile;
+package ir.ashkanabd.cina.compileAndRun;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
@@ -10,7 +10,7 @@ import java.util.zip.ZipInputStream;
 /*
  * Class for extract and setup compiler
  */
-public class CompilerSetup implements Serializable {
+public class CompilerSetup {
     private File compilerZipFile;
     private Activity context;
     private String compilerZipPath;
@@ -83,13 +83,14 @@ public class CompilerSetup implements Serializable {
         while ((zipEntry = zipInStream.getNextEntry()) != null) {
             fileName = zipEntry.getName();
             File tmp = new File(zipFile.getParentFile(), fileName);
-            tmp.setReadable(true, false);
-            tmp.setWritable(true, false);
-            tmp.setExecutable(true, false);
             if (zipEntry.isDirectory()) {
                 tmp.mkdirs();
                 continue;
             }
+            tmp.createNewFile();
+            tmp.setReadable(true, false);
+            tmp.setWritable(true, false);
+            tmp.setExecutable(true, false);
             FileOutputStream fileOutStream = new FileOutputStream(tmp);
             while ((count = zipInStream.read(bytes)) != -1) {
                 fileOutStream.write(bytes, 0, count);

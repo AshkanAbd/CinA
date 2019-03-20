@@ -1,4 +1,4 @@
-package ir.ashkanabd.cina.view.FileBrowser;
+package ir.ashkanabd.cina.view.filebrowser;
 
 import android.util.Log;
 import com.unnamed.b.atv.model.TreeNode;
@@ -87,6 +87,8 @@ public class FileBrowser {
                         TreeNode nextNode;
                         checkedFiles.add(file);
                         if (file.isDirectory()) {
+                            if (dialog.getSelectedProject() != null && file.getAbsolutePath().equals(dialog.getSelectedProject().getOut()))
+                                continue;
                             nextNode = new TreeNode(file).setViewHolder(new FileView(dialog));
                             tree.addChild(nextNode);
                             FileStructure fs = (FileStructure) structure.clone();
