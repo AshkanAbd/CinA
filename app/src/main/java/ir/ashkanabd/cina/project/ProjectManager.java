@@ -76,8 +76,9 @@ public class ProjectManager {
             if ((boolean) objs[0]) {
                 try {
                     projectList.add(new Project(ProjectManager.readFile((File) objs[1])));
-                } catch (JSONException | IOException ignored) {
+                } catch (JSONException | IOException e) {
                     Log.e("INFO", "Error while reading project");
+                    e.printStackTrace();
                     // TODO: 3/15/19 Catch project reading error
                 }
             }

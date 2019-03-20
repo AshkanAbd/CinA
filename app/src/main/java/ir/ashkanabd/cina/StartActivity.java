@@ -32,6 +32,8 @@ import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.TextView;
+import es.dmoral.toasty.Toasty;
+import ir.ashkanabd.cina.backgroundTasks.StartTask;
 import ir.ashkanabd.cina.compileAndRun.GCCCompiler;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
@@ -68,6 +70,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private FileBrowserDialog fileBrowserDialog;
     private TextView titleDeleteProject;
     private Project deletingProject = null;
+    private StartTask startTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,29 +78,31 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         setContentView(R.layout.start_activity);
         setupLoadingProgress();
         changeLoadingProgressStatus();
-        new Handler().postDelayed(() -> {
-            TypefaceProvider.registerDefaultIconSets();
-            if (!checkStoragePermission()) {
-                requestStoragePermission();
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                while (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
-                    ;
-            }
-            checkCompiler();
-            findViews();
-            setupActionBar();
-            setupNavigationView();
-            setupNewProjectDialog();
-            this.projectManager = new ProjectManager();
-            this.projectList = new ArrayList<>();
-            loadProjects();
-            setupListView();
-            setupBrowseProjectDialog();
-            setupDeleteProjectDialog();
-            changeLoadingProgressStatus();
-            Log.e("INFO", projectList.toString());
-        }, 1500);
+        TypefaceProvider.registerDefaultIconSets();
+        startTask = new StartTask(loadingDialog);
+        startTask.setTasks(this::onActivityStart, this::changeListView);
+        findViews();
+        setupActionBar();
+        setupNavigationView();
+        setupNewProjectDialog();
+        this.projectManager = new ProjectManager();
+        this.projectList = new ArrayList<>();
+        setupListView();
+        setupBrowseProjectDialog();
+        setupDeleteProjectDialog();
+        new Handler().postDelayed(startTask::execute, 2000);
+    }
+
+    private void onActivityStart() {
+        if (!checkStoragePermission()) {
+            requestStoragePermission();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            while (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                ;
+        }
+        checkCompiler();
+        loadProjects();
     }
 
     @Override
@@ -194,6 +199,11 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         cancelButton.setOnClickListener(view -> deleteProjectDialog.dismiss());
     }
 
+    private void changeListView() {
+        adapter = new ProjectAdapter(this.projectList);
+        recyclerView.setAdapter(adapter);
+    }
+
     /*
      * Create and load ListView
      */
@@ -276,13 +286,15 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         this.navigationView = this.findViewById(R.id.nav_view);
         this.recyclerView = this.findViewById(R.id.projects_recycler_view);
         this.mainLayout = this.findViewById(R.id.main_layout_start_activity);
-        mainLayout.setColorSchemeColors(Color.BLUE, Color.RED, Color.YELLOW);
+        mainLayout.setColorSchemeColors(Color.BLUE, Color.RED);
         this.mainLayout.setOnRefreshListener(() -> {
             new Handler().postDelayed(() -> {
-                loadProjects();
-                setupListView();
-                fileBrowserDialog.load();
-                mainLayout.setRefreshing(false);
+                StartTask st = new StartTask(null);
+                st.setTasks(this::loadProjects, () -> {
+                    changeListView();
+                    mainLayout.setRefreshing(false);
+                });
+                st.execute();
             }, 1000);
         });
     }
@@ -440,7 +452,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
             finish();
         } else {
             this.backPress = true;
-            Toast.makeText(this, "Press back again", Toast.LENGTH_LONG).show();
+            Toasty.warning(this, "Press back again", Toast.LENGTH_LONG).show();
             new Handler().postDelayed(() -> StartActivity.this.backPress = false, 2000);
         }
     }

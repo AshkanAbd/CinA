@@ -14,6 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.material.navigation.NavigationView;
 import es.dmoral.toasty.Toasty;
+import ir.ashkanabd.cina.backgroundTasks.StartTask;
 import ir.ashkanabd.cina.compileAndRun.GCCCompiler;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectManager;
@@ -23,7 +24,6 @@ import ir.ashkanabd.cina.view.filebrowser.FileBrowserDialog;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class EditorActivity extends AppCompatActivityFileBrowserSupport {
 
@@ -38,6 +38,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     private boolean isLoadingDialog = false;
     private FileBrowserDialog fileBrowserDialog;
     private GCCCompiler gccCompiler;
+    private StartTask startTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +46,22 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         setContentView(R.layout.activity_editor);
         setupLoadingProgress();
         changeLoadingProgressStatus();
-        new Handler().postDelayed(() -> {
-            TypefaceProvider.registerDefaultIconSets();
-            checkCompiler();
-            findViews();
-            prepareActivity(getIntent().getExtras());
-            fileBrowserDialog = new FileBrowserDialog(this, selectedProject, selectedProject.getDir(), selectedProject.getLang());
-            setupActionBar();
-            setupNavigationView();
-            changeLoadingProgressStatus();
-        }, 1500);
+        startTask = new StartTask(loadingDialog);
+        startTask.setTasks(this::onStartTask, this::onPostStartTask);
+        new Handler().postDelayed(startTask::execute, 2000);
+    }
+
+    private void onStartTask() {
+        TypefaceProvider.registerDefaultIconSets();
+        checkCompiler();
+    }
+
+    private void onPostStartTask() {
+        findViews();
+        prepareActivity(getIntent().getExtras());
+        fileBrowserDialog = new FileBrowserDialog(this, selectedProject, selectedProject.getDir(), selectedProject.getLang());
+        setupActionBar();
+        setupNavigationView();
     }
 
     private void checkCompiler() {
