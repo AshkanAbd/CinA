@@ -19,7 +19,7 @@
 			app:et_labelEnable="true"
 			app:et_labelTextSize="12sp"
 			app:et_labelTextColor="@color/colorPrimary"
-			app:et_supportMode="charCounter"
+			app:et_supportMode="helperWithError"
 			app:et_supportTextColor="@color/colorPrimary"
 			app:et_supportMaxChars="20"
 			app:et_supportTextErrorColor="@color/colorAccent"

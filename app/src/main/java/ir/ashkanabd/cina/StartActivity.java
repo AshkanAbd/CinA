@@ -8,6 +8,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextWatcher;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +51,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private List<Project> projectList;
@@ -71,12 +78,14 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private TextView titleDeleteProject;
     private Project deletingProject = null;
     private ActivityStartTask activityStartTask;
+    private boolean validProjectName = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity);
         setupLoadingProgress();
+        setupActionBar();
         changeLoadingProgressStatus();
         TypefaceProvider.registerDefaultIconSets();
         activityStartTask = new ActivityStartTask(loadingDialog);
@@ -88,7 +97,6 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
 
     private void preActivityStart() {
         findViews();
-        setupActionBar();
         setupNavigationView();
         setupNewProjectDialog();
         this.projectManager = new ProjectManager();
@@ -114,8 +122,11 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     @Override
     protected void onResume() {
         super.onResume();
-//        loadProjects();
-//        setupListView();
+        try {
+            loadProjects();
+            changeListView(null);
+        } catch (Exception ignored) {
+        }
     }
 
 
@@ -266,6 +277,42 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         this.cppRadioBtn = newProjectDialog.findViewById(R.id.create_new_project_cpp_radio);
         this.newProjectButton = newProjectDialog.findViewById(R.id.create_new_project_button);
         this.newProjectButton.setOnClickListener(this::createNewProject);
+        this.newProjectName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                String str = editable.toString();
+                Pattern pattern = Pattern.compile("[a-zA-Z0-9_+-.]+");
+                Matcher matcher = pattern.matcher(str);
+                if (!matcher.matches()) {
+                    validProjectName = true;
+                    newProjectName.setError("Invalid project name.");
+                } else {
+                    validProjectName = false;
+                    newProjectName.clearError();
+                }
+                String charCount = str.length() + " / " + 20;
+                SpannableString span = new SpannableString(charCount);
+                if (str.length() > 20) {
+                    span.setSpan(new ForegroundColorSpan(Color.parseColor("#D81B60")), 0,
+                            charCount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    newProjectName.setHelper(span);
+                } else {
+                    span.setSpan(new ForegroundColorSpan(Color.parseColor("#008577")), 0,
+                            charCount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    newProjectName.setHelper(span);
+                }
+            }
+        });
     }
 
     /*

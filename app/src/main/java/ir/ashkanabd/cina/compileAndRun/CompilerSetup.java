@@ -28,8 +28,6 @@ public class CompilerSetup {
      * Check and test compiler
      */
     public boolean checkCompiler() {
-        if (!this.compilerZipFile.exists())
-            return false;
         File gccDir = new File(this.compilerZipFile.getParent() + "/gcc");
         if (!gccDir.exists())
             return false;

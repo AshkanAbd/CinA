@@ -3,6 +3,7 @@ package ir.ashkanabd.cina;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -80,6 +81,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         compileDialog.setContentView(R.layout.compile_layout);
         compilerOutput = compileDialog.findViewById(R.id.compiler_out_compile_layout);
         compilerOutput.setText("");
+        compilerOutput.setMovementMethod(new ScrollingMovementMethod());
         compileDialog.setCancelable(false);
         compileDialog.setOnDismissListener((obj) -> {
             compilerOutput.setText("");

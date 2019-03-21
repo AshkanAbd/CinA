@@ -21,15 +21,15 @@
 			app:whorlview_sweepAngle="90"/>
 
 	<com.rey.material.widget.TextView
-			android:layout_height="48dp"
-			android:layout_width="match_parent"
-			android:layout_toEndOf="@id/loading_progress_view"
-			android:layout_centerVertical="true"
-			android:gravity="center_vertical"
-			android:paddingStart="20dp"
-			android:textColor="#000"
-			android:text="Loading..."
-			android:textSize="20sp"
+            android:layout_height="48dp"
+            android:layout_width="match_parent"
+            android:layout_toEndOf="@id/loading_progress_view"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:textColor="#000"
+            android:text="Loading..."
+            android:textSize="15sp"
 			/>
 
 </RelativeLayout>
