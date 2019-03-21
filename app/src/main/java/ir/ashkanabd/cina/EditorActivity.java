@@ -6,15 +6,19 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.material.navigation.NavigationView;
+
 import es.dmoral.toasty.Toasty;
-import ir.ashkanabd.cina.backgroundTasks.StartTask;
+import ir.ashkanabd.cina.backgroundTasks.ActivityStartTask;
+import ir.ashkanabd.cina.backgroundTasks.GccTask;
 import ir.ashkanabd.cina.compileAndRun.GCCCompiler;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectManager;
@@ -38,7 +42,10 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     private boolean isLoadingDialog = false;
     private FileBrowserDialog fileBrowserDialog;
     private GCCCompiler gccCompiler;
-    private StartTask startTask;
+    private ActivityStartTask activityStartTask;
+    private GccTask compileTask;
+    private MaterialDialog compileDialog;
+    private TextView compilerOutput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +53,37 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         setContentView(R.layout.activity_editor);
         setupLoadingProgress();
         changeLoadingProgressStatus();
-        startTask = new StartTask(loadingDialog);
-        startTask.setTasks(this::onStartTask, this::onPostStartTask);
-        new Handler().postDelayed(startTask::execute, 2000);
+        activityStartTask = new ActivityStartTask(loadingDialog);
+        activityStartTask.setOnTaskStarted(this::onStartTask);
+        activityStartTask.setOnPostStartTask(this::onPostStartTask);
+        new Handler().postDelayed(activityStartTask::execute, 1000);
     }
 
-    private void onStartTask() {
+    private Object onStartTask(Object... o) {
         TypefaceProvider.registerDefaultIconSets();
         checkCompiler();
+        return null;
     }
 
-    private void onPostStartTask() {
+    private void onPostStartTask(Object o) {
         findViews();
         prepareActivity(getIntent().getExtras());
         fileBrowserDialog = new FileBrowserDialog(this, selectedProject, selectedProject.getDir(), selectedProject.getLang());
         setupActionBar();
         setupNavigationView();
+        setupCompileDialog();
+    }
+
+    private void setupCompileDialog() {
+        compileDialog = new MaterialDialog(this);
+        compileDialog.setContentView(R.layout.compile_layout);
+        compilerOutput = compileDialog.findViewById(R.id.compiler_out_compile_layout);
+        compilerOutput.setText("");
+        compileDialog.setCancelable(false);
+        compileDialog.setOnDismissListener((obj) -> {
+            compilerOutput.setText("");
+            compileDialog.setCancelable(false);
+        });
     }
 
     private void checkCompiler() {
@@ -151,23 +173,11 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
             }
         }
         if (item.getItemId() == R.id.project_nav_compile) {
-            try {
-                Object[] objs = this.gccCompiler.compile(selectedProject);
-                String stdout = (String) objs[1];
-                String stderr = (String) objs[2];
-                if ((boolean) objs[0]) {
-                    if (stdout.isEmpty()) {
-                        Toasty.success(this, "Compiled successfully", Toasty.LENGTH_LONG, true).show();
-                    } else {
-                        Toasty.warning(this, "Compiled with warnings: " + stdout, Toasty.LENGTH_LONG, false).show();
-                    }
-                } else {
-                    Toasty.error(this, "Compile error: " + stderr, Toasty.LENGTH_LONG, false).show();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                Toasty.error(this, e.toString(), Toasty.LENGTH_LONG, true).show();
-            }
+            compileTask = new GccTask(compileDialog);
+            compileTask.setOnTaskStarted(this::compileTask);
+            compileTask.setOnPostStartTask(this::compileTaskResult);
+            compileTask.setOnUpdateTask(this::compileProgress);
+            compileTask.execute();
         }
         if (item.getItemId() == R.id.project_nav_run) {
             try {
@@ -192,6 +202,48 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         }
         drawerLayout.closeDrawers();
         return true;
+    }
+
+    private Object compileTask(Object... o) {
+        compileTask.updateProgress("Linking source...\n");
+        long startTime = 0;
+        StringBuilder builder = new StringBuilder();
+        try {
+            Thread.sleep(500);
+            compileTask.updateProgress("Starting compile...\n");
+            Thread.sleep(500);
+            startTime = System.currentTimeMillis();
+            Object[] objs = gccCompiler.compile(selectedProject);
+            String stdout = (String) objs[1];
+            String stderr = (String) objs[2];
+            if ((boolean) objs[0]) {
+                if (!stdout.isEmpty()) {
+                    builder.append("Compiled with warnings: ").append(stdout).append("\n");
+                } else {
+                    builder.append("Compiled successfully.\n");
+                }
+            } else {
+                builder.append("Compile error: ").append(stderr).append("\n");
+            }
+        } catch (Exception e) {
+            String err = e.getMessage();
+            builder.append("Unknown error: ").append(err).append("\n");
+        }
+        long endTime = System.currentTimeMillis();
+        return new Object[]{builder.toString(), (endTime - startTime) / 1000.0};
+    }
+
+    private void compileTaskResult(Object result) {
+        Object[] objs = (Object[]) result;
+        double endTime = (double) objs[1];
+        String compileMsg = (String) objs[0];
+        compilerOutput.setText(compilerOutput.getText().toString() + compileMsg);
+        compilerOutput.setText(compilerOutput.getText().toString() + "Task ends in " + Double.toString(endTime) + "s");
+    }
+
+    private void compileProgress(Object... o) {
+        String msg = (String) o[0];
+        compilerOutput.setText(compilerOutput.getText().toString() + msg);
     }
 
     /*
