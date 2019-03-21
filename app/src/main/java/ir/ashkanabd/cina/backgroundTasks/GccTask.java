@@ -6,7 +6,7 @@ import androidx.annotation.Nullable;
 
 public class GccTask extends CinaBackgroundTask<Void, Object, Object> {
 
-    private MaterialDialog loadingDialog;
+    protected MaterialDialog loadingDialog;
 
     public GccTask(@Nullable MaterialDialog loadingDialog) {
         this.loadingDialog = loadingDialog;

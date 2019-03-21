@@ -9,7 +9,7 @@ public abstract class CinaBackgroundTask<A, B, C> extends AsyncTask<A, B, C> {
 
     protected CinaBackgroundTask.OnBeforeTask onBeforeTask;
     protected CinaBackgroundTask.OnTaskStarted onTaskStarted;
-    protected CinaBackgroundTask.OnPostTask onPostStartTask;
+    protected CinaBackgroundTask.OnPostTask onPostTask;
     protected CinaBackgroundTask.OnUpdateTask onUpdateTask;
 
     @Override
@@ -30,16 +30,14 @@ public abstract class CinaBackgroundTask<A, B, C> extends AsyncTask<A, B, C> {
 
     @Override
     protected void onPostExecute(C c) {
-        if (onPostStartTask != null)
-            onPostStartTask.onPost(c);
-        super.onPostExecute(c);
+        if (onPostTask != null)
+            onPostTask.onPost(c);
     }
 
     @Override
     protected void onProgressUpdate(B... values) {
         if (onUpdateTask != null)
             onUpdateTask.onUpdate(values);
-        super.onProgressUpdate(values);
     }
 
     public void setOnBeforeTask(@Nullable CinaBackgroundTask.OnBeforeTask onBeforeTask) {
@@ -50,8 +48,8 @@ public abstract class CinaBackgroundTask<A, B, C> extends AsyncTask<A, B, C> {
         this.onTaskStarted = onTaskStarted;
     }
 
-    public void setOnPostStartTask(@Nullable CinaBackgroundTask.OnPostTask onPostStartTask) {
-        this.onPostStartTask = onPostStartTask;
+    public void setOnPostTask(@Nullable CinaBackgroundTask.OnPostTask onPostStartTask) {
+        this.onPostTask = onPostStartTask;
     }
 
     public void setOnUpdateTask(@Nullable CinaBackgroundTask.OnUpdateTask onUpdateTask) {

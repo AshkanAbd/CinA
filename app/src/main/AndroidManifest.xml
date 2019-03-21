@@ -13,9 +13,9 @@
 			android:label="@string/app_name"
 			android:roundIcon="@mipmap/ic_launcher_round"
 			android:supportsRtl="false"
-			tools:replace="android:supportsRtl"
 			android:theme="@style/AppTheme"
-			tools:ignore="GoogleAppIndexingWarning">
+			tools:ignore="GoogleAppIndexingWarning"
+			tools:replace="android:supportsRtl">
 		<activity
 				android:name=".StartActivity"
 				android:theme="@style/StartActivityTheme">
@@ -32,6 +32,7 @@
 				<action android:name="android.intent.action.MAIN"/>
 			</intent-filter>
 		</activity>
+		<activity android:name=".RunActivity"></activity>
 	</application>
 
 </manifest>

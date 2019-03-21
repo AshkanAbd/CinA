@@ -34,7 +34,7 @@ import com.rey.material.widget.EditText;
 import com.rey.material.widget.TextView;
 import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.backgroundTasks.ActivityStartTask;
-import ir.ashkanabd.cina.compileAndRun.GCCCompiler;
+import ir.ashkanabd.cina.compileAndRun.GccCompiler;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
@@ -81,7 +81,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         TypefaceProvider.registerDefaultIconSets();
         activityStartTask = new ActivityStartTask(loadingDialog);
         activityStartTask.setOnTaskStarted(this::onActivityStart);
-        activityStartTask.setOnPostStartTask(this::changeListView);
+        activityStartTask.setOnPostTask(this::changeListView);
         activityStartTask.setOnBeforeTask(this::preActivityStart);
         new Handler().postDelayed(activityStartTask::execute, 2000);
     }
@@ -181,7 +181,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
      */
     private void checkCompiler() {
         try {
-            new GCCCompiler(this);
+            new GccCompiler(this);
         } catch (Exception e) {
             // TODO: 3/16/19 catch gcc setup exceptions
             Log.e("INFO", "Can't extract compiler");
@@ -289,7 +289,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         this.mainLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
             ActivityStartTask st = new ActivityStartTask(null);
             st.setOnTaskStarted(this::loadProjects);
-            st.setOnPostStartTask((c) -> {
+            st.setOnPostTask((c) -> {
                 changeListView(c);
                 mainLayout.setRefreshing(false);
             });

@@ -2,6 +2,7 @@ package ir.ashkanabd.cina.compileAndRun;
 
 import android.app.Activity;
 import android.util.Log;
+import androidx.appcompat.app.AppCompatActivity;
 import ir.ashkanabd.cina.project.Project;
 
 import java.io.*;
@@ -10,7 +11,7 @@ import java.util.Scanner;
 /*
  * Class for compiling source with GCC
  */
-public class GCCCompiler {
+public class GccCompiler {
     private CompilerSetup compilerSetup;
     private Activity context;
     private File workspace;
@@ -18,7 +19,7 @@ public class GCCCompiler {
     /*
      * Check compiler in test it
      */
-    public GCCCompiler(Activity context) throws IOException {
+    public GccCompiler(Activity context) throws IOException {
         this.context = context;
         this.compilerSetup = new CompilerSetup(this.context);
         Log.d("CinA", "Checking compiler");
@@ -54,7 +55,7 @@ public class GCCCompiler {
     /*
      * Run compiled program
      */
-    public Object[] run(Project project) throws IOException {
+    public static Object[] run(AppCompatActivity context, Project project) throws IOException {
         String internalPath = project.getOut() + "/" + project.getName();
         File internalFile = new File(internalPath);
         if (!internalFile.exists()) return null;
