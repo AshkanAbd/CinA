@@ -125,9 +125,26 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         }
         checkCompiler();
         loadProjects();
-        connection = new Connection(this);
-        connection.connectDatabase();
+        connection = new Connection();
         return null;
+    }
+
+    /*
+     * Check user login
+     */
+    private void connectServer() {
+        ActivityTask connectionTask = new ActivityTask(loadingDialog);
+        connection = new Connection();
+        connectionTask.setOnTaskStarted(a -> {
+            connection.connectDatabase(StartActivity.this);
+            return null;
+        });
+        connectionTask.setOnPostTask(c -> {
+            if (connection.getNeedNetwork()) {
+                Toasty.error(StartActivity.this, StartActivity.this.getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
+            }
+        });
+        connectionTask.execute();
     }
 
     @Override
@@ -245,9 +262,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private void changeListView(Object o) {
         adapter = new ProjectAdapter(this.projectList);
         recyclerView.setAdapter(adapter);
-        if (connection.getNeedNetwork()) {
-            Toasty.error(this, this.getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
-        }
+        connectServer();
     }
 
     /*
@@ -389,31 +404,39 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     }
 
     /*
+     * Setup Setup Navigation item selection
+     */
+    private boolean itemSelectedListener(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.start_nav_open) {
+            fileBrowserDialog.getBrowserDialog().show();
+        }
+        if (menuItem.getItemId() == R.id.start_nav_setting) {
+            startActivity(new Intent(this, SettingActivity.class));
+        }
+        drawerLayout.closeDrawers();
+        return true;
+    }
+
+    /*
      * Setup Navigation view Interfaces
      */
     private void setupNavigationView() {
-        this.navigationView.setNavigationItemSelectedListener(menuItem -> {
-            if (menuItem.getItemId() == R.id.start_nav_open) {
-                fileBrowserDialog.getBrowserDialog().show();
-            }
-            drawerLayout.closeDrawers();
-            return true;
-        });
+        this.navigationView.setNavigationItemSelectedListener(this::itemSelectedListener);
+
         DrawerArrowDrawable drawerArrow = new DrawerArrowDrawable(this) {
             @Override
             public boolean isLayoutRtl() {
                 return false;
             }
         };
-        drawerToggle = new ActionBarDrawerToggleCompat(this, drawerLayout,
-                drawerArrow, R.drawable.back_icon,
-                R.drawable.action_bar_menu) {
-
+        drawerToggle = new ActionBarDrawerToggleCompat(this, drawerLayout, drawerArrow, R.drawable.back_icon, R.drawable.action_bar_menu) {
+            @Override
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
                 invalidateOptionsMenu();
             }
 
+            @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 invalidateOptionsMenu();

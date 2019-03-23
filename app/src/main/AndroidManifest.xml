@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="com.farsitel.bazaar.permission.PAY_THROUGH_BAZAAR"/>
 
     <application
             android:allowBackup="true"
@@ -34,8 +35,15 @@
             </intent-filter>
         </activity>
         <activity
-                android:theme="@style/EditActivity"
-                android:name=".RunActivity">
+                android:name=".RunActivity"
+                android:theme="@style/EditActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+                android:theme="@style/StartActivityTheme"
+                android:name=".SettingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>

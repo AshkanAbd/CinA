@@ -1,8 +1,8 @@
 package ir.ashkanabd.cina.database;
 
+import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
 import com.backendless.Backendless;
 import com.backendless.exceptions.BackendlessException;
 import com.backendless.persistence.DataQueryBuilder;
@@ -15,13 +15,11 @@ import java.util.Date;
 import java.util.List;
 
 public class Connection implements Serializable {
-    private AppCompatActivity activity;
     private Boolean validUser;
     private Boolean needNetwork;
     private UserData userData;
 
-    public Connection(AppCompatActivity activity) {
-        this.activity = activity;
+    public Connection() {
         this.validUser = false;
         this.needNetwork = false;
         this.userData = null;
@@ -30,14 +28,14 @@ public class Connection implements Serializable {
     /*
      * Connect to database and check user.
      */
-    public void connectDatabase() {
+    public void connectDatabase(Context context) {
         String userFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/.user.info";
         File userFile = new File(userFilePath);
-        Backendless.setUrl(DataBaseDefaults.SERVER_URL);
-        Backendless.initApp(activity.getApplicationContext(), DataBaseDefaults.APPLICATION_ID, DataBaseDefaults.API_KEY);
+        Backendless.setUrl(Encryption.decrypt(DataBaseDefaults.SERVER_URL));
+        Backendless.initApp(context.getApplicationContext(), Encryption.decrypt(DataBaseDefaults.APPLICATION_ID), Encryption.decrypt(DataBaseDefaults.API_KEY));
         Backendless.Data.mapTableToClass("UserData", UserData.class);
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause("phone_id = '" + Encryption.encrypt(UserData.getDeviceID(activity)) + "'");
+        queryBuilder.setWhereClause("phone_id = '" + Encryption.encrypt(UserData.getDeviceID(context)) + "'");
         try {
             if (!userFile.exists()) {
                 userFile.createNewFile();
@@ -56,7 +54,7 @@ public class Connection implements Serializable {
                 /*
                  * Create new user in server
                  */
-                UserData userData = new UserData(UserData.getDeviceID(activity)
+                UserData userData = new UserData(UserData.getDeviceID(context)
                         , UserData.getString(Calendar.getInstance().getTime()), "7");
                 userData = Backendless.Data.of(UserData.class).save(UserData.encryptData(userData));
                 UserData.writeFile(userFile, userData);
@@ -109,5 +107,9 @@ public class Connection implements Serializable {
 
     public Boolean getNeedNetwork() {
         return needNetwork;
+    }
+
+    public UserData getUserData() {
+        return userData;
     }
 }

@@ -15,11 +15,13 @@ public class GccCompiler {
     private CompilerSetup compilerSetup;
     private Activity context;
     private File workspace;
+    private String compileParams;
 
     /*
      * Check compiler in test it
      */
     public GccCompiler(Activity context) throws IOException {
+        this.compileParams = "";
         this.context = context;
         this.compilerSetup = new CompilerSetup(this.context);
         Log.d("CinA", "Checking compiler");
@@ -54,6 +56,13 @@ public class GccCompiler {
     }
 
     /*
+     * Set compile params tp add in compile time
+     */
+    public void setCompileParams(String compileParams) {
+        this.compileParams = compileParams;
+    }
+
+    /*
      * Create compile parameter from given source files
      */
     private String createCompileParam(Project project) {
@@ -63,10 +72,11 @@ public class GccCompiler {
             builder.append(" ");
             builder.append(file.getAbsoluteFile());
         }
-        builder.append(" -o ").append(project.getName()).append(" -pie");
+        builder.append(" -o ").append(project.getName()).append(" -pie ");
         if (project.getLang().equalsIgnoreCase("C++")) {
-            builder.append(" -std=c++11");
+            builder.append("-std=c++11 ");
         }
+        builder.append(compileParams);
         return builder.toString();
     }
 }

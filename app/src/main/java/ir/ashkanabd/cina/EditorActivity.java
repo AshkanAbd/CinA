@@ -1,6 +1,7 @@
 package ir.ashkanabd.cina;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
@@ -51,6 +52,8 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     private TextView compilerOutput;
     private boolean compiled = false;
     private Connection connection;
+    private SharedPreferences sharedPreferences;
+    private String compileParams;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +86,21 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         setupActionBar();
         setupNavigationView();
         setupCompileDialog();
+        getCompileParams();
+    }
+
+    /*
+     *
+     */
+    private void getCompileParams() {
+        sharedPreferences = getSharedPreferences("compile_params", MODE_PRIVATE);
+        String key;
+        if (selectedProject.getLang().equalsIgnoreCase("c++")) {
+            key = "c++";
+        } else {
+            key = "c";
+        }
+        compileParams = sharedPreferences.getString(key, "");
     }
 
     /*
@@ -192,7 +210,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         }
         if (item.getItemId() == R.id.project_nav_compile) {
             if (!connection.isValid()) {
-                Toasty.error(this, this.getString(R.string.invalid_user), Toasty.LENGTH_SHORT, true).show();
+                Toasty.error(this, this.getString(R.string.invalid_user), Toasty.LENGTH_LONG, true).show();
                 return true;
             }
 
@@ -226,6 +244,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
      * compile task in background
      */
     private Object compileTask(Object... o) {
+        gccCompiler.setCompileParams(compileParams);
         compileTask.updateProgress("Linking source...\n");
         long startTime = 0;
         StringBuilder builder = new StringBuilder();
