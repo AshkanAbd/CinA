@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">CinA</string>
+    <string name="invalid_project_file_selecting">Invalid project file selected</string>
+    <string name="compiler_setup_exception">Couldn\'t setup compiler, maybe not enough space left in device</string>
+    <string name="remove_project">Remove project</string>
+    <string name="invalid_project_name">Invalid project name.</string>
+    <string name="start_activity_title">C/C++ compiler for Android</string>
+    <string name="project_create_error">Couldn\'t create project, maybe not enough space left in device</string>
+    <string name="back_for_exit">Press back again</string>
+    <string name="invalid_source_file">Invalid source file.</string>
+    <string name="project_name_show">Project name:</string>
+    <string name="project_description_show">Description:</string>
+    <string name="project_language_show">Language:</string>
+    <string name="project_files_show">Files:</string>
+    <string name="failed_build_status">Build state: Failed</string>
+    <string name="success_build_status">Build state: Success</string>
+    <string name="save_successful">Saved successfully</string>
+    <string name="save_failed">Couldn\'t save file</string>
+    <string name="not_compiled_project">Proejct is not compiled yet.</string>
+    <string name="no_user_login">We couldn\'t found Info about user account, Please connect Internet and try again.
+    </string>
+    <string name="invalid_user">Your account has been expired, Upgrade your account please</string>
 </resources>

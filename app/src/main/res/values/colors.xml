@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="white">#FFF</color>
     <color name="black">#000</color>
+    <color name="code_editor_line_number">#FFF0F0F0</color>
+    <color name="code_editor_current_line">#FFFFFAD6</color>
 </resources>

@@ -18,9 +18,10 @@ import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.material.navigation.NavigationView;
 
 import es.dmoral.toasty.Toasty;
-import ir.ashkanabd.cina.backgroundTasks.ActivityStartTask;
+import ir.ashkanabd.cina.backgroundTasks.ActivityTask;
 import ir.ashkanabd.cina.backgroundTasks.GccTask;
 import ir.ashkanabd.cina.compileAndRun.GccCompiler;
+import ir.ashkanabd.cina.database.Connection;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectManager;
 import ir.ashkanabd.cina.view.filebrowser.AppCompatActivityFileBrowserSupport;
@@ -44,10 +45,12 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     private boolean isLoadingDialog = false;
     private FileBrowserDialog fileBrowserDialog;
     private GccCompiler gccCompiler;
-    private ActivityStartTask activityStartTask;
+    private ActivityTask activityStartTask;
     private GccTask compileTask;
     private MaterialDialog compileDialog;
     private TextView compilerOutput;
+    private boolean compiled = false;
+    private Connection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,18 +58,24 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         setContentView(R.layout.activity_editor);
         setupLoadingProgress();
         changeLoadingProgressStatus();
-        activityStartTask = new ActivityStartTask(loadingDialog);
+        activityStartTask = new ActivityTask(loadingDialog);
         activityStartTask.setOnTaskStarted(this::onStartTask);
         activityStartTask.setOnPostTask(this::onPostStartTask);
         new Handler().postDelayed(activityStartTask::execute, 1000);
     }
 
+    /*
+     * Background task for checking GCC on activity starts.
+     */
     private Object onStartTask(Object... o) {
         TypefaceProvider.registerDefaultIconSets();
         checkCompiler();
         return null;
     }
 
+    /*
+     * Calls on activity start after doing background.
+     */
     private void onPostStartTask(Object o) {
         findViews();
         prepareActivity(getIntent().getExtras());
@@ -76,6 +85,9 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         setupCompileDialog();
     }
 
+    /*
+     * Setup dialog for show compile progress.
+     */
     private void setupCompileDialog() {
         compileDialog = new MaterialDialog(this);
         compileDialog.setContentView(R.layout.compile_layout);
@@ -93,8 +105,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         try {
             gccCompiler = new GccCompiler(this);
         } catch (IOException e) {
-            // TODO: 3/20/19 Handle exception
-            e.printStackTrace();
+            Toasty.error(this, this.getString(R.string.compiler_setup_exception), Toasty.LENGTH_SHORT, true).show();
         }
     }
 
@@ -102,6 +113,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
      * Prepare activity for selected Project
      */
     private void prepareActivity(Bundle bundle) {
+        connection = (Connection) bundle.get("connection");
         selectedProject = (Project) bundle.get("project");
         try {
             if (!selectedProject.getSource().isEmpty()) {
@@ -113,19 +125,22 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
                 currentFilePath = null;
             }
         } catch (IOException e) {
-            // TODO: 3/16/19 Catch project file reading error
+            Toasty.error(this, this.getString(R.string.invalid_source_file), Toasty.LENGTH_SHORT, true).show();
         }
         showProjectInfo();
     }
 
+    /*
+     * Show project info at start
+     */
     public void showProjectInfo() {
         View navigationHeader = navigationView.getHeaderView(0);
         headerTextView = navigationHeader.findViewById(R.id.project_nav_header_text_view);
-        String projectInfo = "Project name: " + selectedProject.getName() + "\n" +
-                "Description: " + selectedProject.getDescription() + "\n" +
-                "Language: " + selectedProject.getLang() + "\n" +
-                "Files: " + reformatFileStructure(getFileStructure(selectedProject.getSource())) + "\n" +
-                "Build state: Failed\n";
+        String projectInfo = this.getString(R.string.project_name_show) + selectedProject.getName() + "\n" +
+                this.getString(R.string.project_description_show) + selectedProject.getDescription() + "\n" +
+                this.getString(R.string.project_language_show) + selectedProject.getLang() + "\n" +
+                this.getString(R.string.project_files_show) + reformatFileStructure(getFileStructure(selectedProject.getSource())) + "\n" +
+                this.getString(R.string.failed_build_status) + "\n";
         headerTextView.setText(projectInfo);
     }
 
@@ -169,13 +184,21 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
                 try {
                     String fileInfo = editor.getText().toString();
                     ProjectManager.writeTargetFile(currentFile, fileInfo);
-                    Toasty.success(this, "Saved successfully", Toasty.LENGTH_SHORT, true).show();
+                    Toasty.success(this, this.getString(R.string.save_successful), Toasty.LENGTH_SHORT, true).show();
                 } catch (IOException e) {
-                    // TODO: 3/19/19 Handle this exception
+                    Toasty.error(this, this.getString(R.string.save_failed), Toasty.LENGTH_SHORT, true).show();
                 }
             }
         }
         if (item.getItemId() == R.id.project_nav_compile) {
+            if (!connection.isValid()) {
+                Toasty.error(this, this.getString(R.string.invalid_user), Toasty.LENGTH_SHORT, true).show();
+                return true;
+            }
+
+            /*
+             * Start compile project in background thread
+             */
             compileTask = new GccTask(compileDialog);
             compileTask.setOnTaskStarted(this::compileTask);
             compileTask.setOnPostTask(this::compileTaskResult);
@@ -183,14 +206,25 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
             compileTask.execute();
         }
         if (item.getItemId() == R.id.project_nav_run) {
-            Intent runIntent = new Intent(this, RunActivity.class);
-            runIntent.putExtra("project", selectedProject);
-            startActivity(runIntent);
+            /*
+             * Check for project compiled or not.
+             * If compiled then run.
+             */
+            if (compiled) {
+                Intent runIntent = new Intent(this, RunActivity.class);
+                runIntent.putExtra("project", selectedProject);
+                startActivity(runIntent);
+            } else {
+                Toasty.error(this, this.getString(R.string.not_compiled_project), Toasty.LENGTH_LONG, true).show();
+            }
         }
         drawerLayout.closeDrawers();
         return true;
     }
 
+    /*
+     * compile task in background
+     */
     private Object compileTask(Object... o) {
         compileTask.updateProgress("Linking source...\n");
         long startTime = 0;
@@ -222,24 +256,32 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         return new Object[]{builder.toString(), (endTime - startTime) / 1000.0, success};
     }
 
+    /*
+     * Show compile result in UI thread
+     */
     private void compileTaskResult(Object result) {
         Object[] objs = (Object[]) result;
         double endTime = (double) objs[1];
         String compileMsg = (String) objs[0];
         String headerText = headerTextView.getText().toString();
         if ((boolean) objs[2]) {
-            headerText = headerText.replace("Build state: Failed", "Build state: Success");
+            headerText = headerText.replace(this.getString(R.string.failed_build_status), this.getString(R.string.success_build_status));
+            this.compiled = true;
         } else {
-            headerText = headerText.replace("Build state: Success", "Build state: Failed");
+            headerText = headerText.replace(this.getString(R.string.success_build_status), this.getString(R.string.failed_build_status));
+            this.compiled = false;
         }
         headerTextView.setText(headerText);
-        compilerOutput.setText(compilerOutput.getText().toString() + compileMsg);
-        compilerOutput.setText(compilerOutput.getText().toString() + "Task ends in " + Double.toString(endTime) + "s");
+        String msg = compilerOutput.getText().toString() + compileMsg + "Task ends in " + Double.toString(endTime) + "s";
+        compilerOutput.setText(msg);
     }
 
+    /*
+     * Show GCC output while compiling in UI thread
+     */
     private void compileProgress(Object... o) {
-        String msg = (String) o[0];
-        compilerOutput.setText(compilerOutput.getText().toString() + msg);
+        String msg = compilerOutput.getText().toString() + o[0];
+        compilerOutput.setText(msg);
     }
 
     /*

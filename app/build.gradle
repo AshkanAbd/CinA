@@ -44,6 +44,16 @@ dependencies {
     implementation 'com.github.bmelnychuk:atv:1.2.9'
     implementation 'com.tt:whorlviewlibrary:1.0.3'
     implementation 'com.ikimuhendis:ldrawer:0.1'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'com.backendless:backendless:5.0.2'
+    implementation('io.socket:socket.io-client:1.0.0') {
+        //      excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
+    implementation('io.socket:socket.io-client:1.0.0') {
+//       excluding org.json which is provided by Android
+        exclude group: 'org.json', module: 'json'
+    }
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.2-alpha02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'

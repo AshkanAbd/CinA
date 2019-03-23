@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -184,7 +185,7 @@ public class ProjectManager {
     /*
      * Read project info from .cina file
      */
-    public static String readFile(File project) throws IOException {
+    public static String readFile(File project) throws FileNotFoundException {
         Scanner scn = new Scanner(project);
         StringBuilder builder = new StringBuilder();
         while (scn.hasNextLine()) {

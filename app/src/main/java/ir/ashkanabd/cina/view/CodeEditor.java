@@ -2,13 +2,13 @@ package ir.ashkanabd.cina.view;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.text.Layout;
 import android.text.Selection;
 import android.util.AttributeSet;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
+import ir.ashkanabd.cina.R;
 
 public class CodeEditor extends AppCompatEditText {
 
@@ -16,27 +16,27 @@ public class CodeEditor extends AppCompatEditText {
 
     public CodeEditor(Context context) {
         super(context);
-        initialize();
+        initialize(context);
     }
 
     public CodeEditor(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initialize();
+        initialize(context);
     }
 
     public CodeEditor(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initialize();
+        initialize(context);
     }
 
     /*
      * Initialize Paint for Line number and current line
      */
-    public void initialize() {
+    public void initialize(Context context) {
         p1 = new Paint(getPaint());
-        p1.setColor(Color.parseColor("#FFFFFAD6"));
+        p1.setColor(context.getResources().getColor(R.color.code_editor_current_line));
         p2 = new Paint(getPaint());
-        p2.setColor(Color.parseColor("#FFF0F0F0"));
+        p2.setColor(context.getResources().getColor(R.color.code_editor_line_number));
     }
 
     @Override

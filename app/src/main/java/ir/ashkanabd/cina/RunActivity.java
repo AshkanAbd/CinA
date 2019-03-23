@@ -7,7 +7,6 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import ir.ashkanabd.cina.backgroundTasks.CinaBackgroundTask;
 import ir.ashkanabd.cina.compileAndRun.GccRun;
 import ir.ashkanabd.cina.project.Project;
 
@@ -29,6 +28,9 @@ public class RunActivity extends AppCompatActivity {
         run();
     }
 
+    /*
+     * Setup and run program on background thread.
+     */
     private void run() {
         try {
             gccRun = new GccRun(this, runningProject);
@@ -40,16 +42,24 @@ public class RunActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * Method that calls after running.
+     */
     private void setEnd(Object o) {
         int exitValue = (int) o;
         String outputTextString = outputTextView.getText().toString();
-        outputTextView.setText(outputTextString + "\nProgram finished with exit code " + exitValue + ".\n");
+        String msg = outputTextString + "\nProgram finished with exit code " + exitValue + ".\n";
+        outputTextView.setText(msg);
         userEditText.setEnabled(false);
     }
 
+    /*
+     * Method that calls on running progress(Show program output in UI thread).
+     */
     private void setOutput(Object... o) {
         String str = (String) o[0];
-        outputTextView.setText(outputTextView.getText() + str);
+        String msg = outputTextView.getText().toString() + str;
+        outputTextView.setText(msg);
     }
 
     private void findViews() {
@@ -67,11 +77,16 @@ public class RunActivity extends AppCompatActivity {
 
             }
 
+            /*
+             * Detect EOL and clear edit text and put it on text view(user can't change it).
+             * Then send it to background thread for program.
+             */
             @Override
             public void afterTextChanged(Editable s) {
                 String str = s.toString();
                 if (str.endsWith("\n")) {
-                    userTextView.setText(userTextView.getText().toString() + str);
+                    String msg = userTextView.getText().toString() + str;
+                    userTextView.setText(msg);
                     gccRun.writeUserInput(str);
                     userEditText.setText("");
                 }

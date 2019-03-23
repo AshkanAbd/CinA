@@ -4,11 +4,11 @@ package ir.ashkanabd.cina.backgroundTasks;
 import androidx.annotation.Nullable;
 import com.afollestad.materialdialogs.MaterialDialog;
 
-public class ActivityStartTask extends CinaBackgroundTask<Void, Void, Void> {
+public class ActivityTask extends CinaBackgroundTask<Void, Void, Void> {
 
     private MaterialDialog loadingDialog;
 
-    public ActivityStartTask(@Nullable MaterialDialog loadingDialog) {
+    public ActivityTask(@Nullable MaterialDialog loadingDialog) {
         this.loadingDialog = loadingDialog;
     }
 

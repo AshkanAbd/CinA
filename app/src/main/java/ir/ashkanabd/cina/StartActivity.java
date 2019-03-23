@@ -13,7 +13,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -38,16 +37,19 @@ import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.TextView;
 import es.dmoral.toasty.Toasty;
-import ir.ashkanabd.cina.backgroundTasks.ActivityStartTask;
+import ir.ashkanabd.cina.backgroundTasks.ActivityTask;
 import ir.ashkanabd.cina.compileAndRun.GccCompiler;
+import ir.ashkanabd.cina.database.Connection;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
 import ir.ashkanabd.cina.view.ActionBarDrawerToggleCompat;
 import ir.ashkanabd.cina.view.filebrowser.FileBrowserDialog;
 import ir.ashkanabd.cina.view.filebrowser.AppCompatActivityFileBrowserSupport;
+import org.json.JSONException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +79,9 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private FileBrowserDialog fileBrowserDialog;
     private TextView titleDeleteProject;
     private Project deletingProject = null;
-    private ActivityStartTask activityStartTask;
+    private ActivityTask activityStartTask;
     private boolean validProjectName = false;
+    private Connection connection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +91,16 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         setupActionBar();
         changeLoadingProgressStatus();
         TypefaceProvider.registerDefaultIconSets();
-        activityStartTask = new ActivityStartTask(loadingDialog);
+        activityStartTask = new ActivityTask(loadingDialog);
         activityStartTask.setOnTaskStarted(this::onActivityStart);
         activityStartTask.setOnPostTask(this::changeListView);
         activityStartTask.setOnBeforeTask(this::preActivityStart);
         new Handler().postDelayed(activityStartTask::execute, 2000);
     }
 
+    /*
+     * Tasks on starting activity before background task
+     */
     private void preActivityStart() {
         findViews();
         setupNavigationView();
@@ -106,6 +112,9 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         setupDeleteProjectDialog();
     }
 
+    /*
+     * Background tasks on starting activity
+     */
     private Object onActivityStart(Object... o) {
         if (!checkStoragePermission()) {
             requestStoragePermission();
@@ -116,6 +125,8 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         }
         checkCompiler();
         loadProjects();
+        connection = new Connection(this);
+        connection.connectDatabase();
         return null;
     }
 
@@ -129,7 +140,9 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         }
     }
 
-
+    /*
+     * Setup file browse dialog for searching and opening projects
+     */
     private void setupBrowseProjectDialog() {
         this.fileBrowserDialog = new FileBrowserDialog(this, null,
                 Environment.getExternalStorageDirectory().getAbsolutePath(), "cina") {
@@ -149,6 +162,9 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         };
     }
 
+    /*
+     * When a project selected to open
+     */
     private void onProjectOpenListener(View view) {
         try {
             File file = fileBrowserDialog.getFile(fileBrowserDialog.getListeners().getPreClickedView());
@@ -157,7 +173,12 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
                 this.projectList.add(project);
                 setupListView();
             }
-        } catch (Exception ignored) {
+        } catch (FileNotFoundException ignored) {
+            /*
+             * Ignore: a true will be selected...
+             */
+        } catch (JSONException e) {
+            Toasty.error(this, this.getString(R.string.invalid_project_file_selecting), Toasty.LENGTH_SHORT, true).show();
         }
         fileBrowserDialog.getBrowserDialog().dismiss();
     }
@@ -194,11 +215,13 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         try {
             new GccCompiler(this);
         } catch (Exception e) {
-            // TODO: 3/16/19 catch gcc setup exceptions
-            Log.e("INFO", "Can't extract compiler");
+            Toasty.error(this, this.getString(R.string.compiler_setup_exception), Toasty.LENGTH_SHORT).show();
         }
     }
 
+    /*
+     * Setup dialog for deleting project when swipe to right
+     */
     private void setupDeleteProjectDialog() {
         deleteProjectDialog = new MaterialDialog(this);
         deleteProjectDialog.setContentView(R.layout.delete_file_layout);
@@ -216,9 +239,15 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         cancelButton.setOnClickListener(view -> deleteProjectDialog.dismiss());
     }
 
+    /*
+     * Update projects list in UI thread
+     */
     private void changeListView(Object o) {
         adapter = new ProjectAdapter(this.projectList);
         recyclerView.setAdapter(adapter);
+        if (connection.getNeedNetwork()) {
+            Toasty.error(this, this.getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     /*
@@ -239,7 +268,8 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
                 /*
                  * Remove Item
                  */
-                titleDeleteProject.setText("Remove project \"" + itemData.getName() + "\"?");
+                String msg = StartActivity.this.getString(R.string.remove_project) + itemData.getName() + "?";
+                titleDeleteProject.setText(msg);
                 deletingProject = itemData;
                 deleteProjectDialog.show();
                 return true;
@@ -254,6 +284,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
             public void onClick(Project itemData) {
                 Intent projectActivity = new Intent(StartActivity.this, EditorActivity.class);
                 projectActivity.putExtra("project", itemData);
+                projectActivity.putExtra("connection", connection);
                 StartActivity.this.startActivity(projectActivity);
             }
 
@@ -288,26 +319,29 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
 
             }
 
+            /*
+             * Check for project name
+             */
             @Override
             public void afterTextChanged(Editable editable) {
                 String str = editable.toString();
                 Pattern pattern = Pattern.compile("[a-zA-Z0-9_+-.]+");
                 Matcher matcher = pattern.matcher(str);
                 if (!matcher.matches()) {
-                    validProjectName = true;
-                    newProjectName.setError("Invalid project name.");
-                } else {
                     validProjectName = false;
+                    newProjectName.setError(StartActivity.this.getString(R.string.invalid_project_name));
+                } else {
+                    validProjectName = true;
                     newProjectName.clearError();
                 }
                 String charCount = str.length() + " / " + 20;
                 SpannableString span = new SpannableString(charCount);
                 if (str.length() > 20) {
-                    span.setSpan(new ForegroundColorSpan(Color.parseColor("#D81B60")), 0,
+                    span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0,
                             charCount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     newProjectName.setHelper(span);
                 } else {
-                    span.setSpan(new ForegroundColorSpan(Color.parseColor("#008577")), 0,
+                    span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)), 0,
                             charCount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     newProjectName.setHelper(span);
                 }
@@ -334,7 +368,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         this.mainLayout = this.findViewById(R.id.main_layout_start_activity);
         mainLayout.setColorSchemeColors(Color.BLUE, Color.RED);
         this.mainLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
-            ActivityStartTask st = new ActivityStartTask(null);
+            ActivityTask st = new ActivityTask(null);
             st.setOnTaskStarted(this::loadProjects);
             st.setOnPostTask((c) -> {
                 changeListView(c);
@@ -349,7 +383,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
      */
     private void setupActionBar() {
         this.actionBar = getSupportActionBar();
-        this.actionBar.setTitle("C/C++ compiler for Android");
+        this.actionBar.setTitle(this.getString(R.string.start_activity_title));
         this.actionBar.setDisplayHomeAsUpEnabled(true);
         this.actionBar.setHomeButtonEnabled(true);
     }
@@ -430,7 +464,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         String projectName = newProjectName.getText().toString();
         String projectDescription = newProjectDescription.getText().toString();
         boolean isC = cRadioBtn.isChecked();
-        if (projectName.length() > 20 || projectName.trim().isEmpty()) {
+        if (projectName.length() > 20 || projectName.trim().isEmpty() || !validProjectName) {
             return;
         }
         try {
@@ -447,7 +481,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
                 throw new IOException();
             ProjectManager.writeFile(project.toJson().toString(), cinaFile);
         } catch (IOException e) {
-            // TODO: 3/15/19 Catch IOException
+            Toasty.error(this, this.getString(R.string.project_create_error), Toasty.LENGTH_SHORT, true).show();
         }
         this.newProjectDialog.cancel();
         loadProjects();
@@ -497,7 +531,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
             finish();
         } else {
             this.backPress = true;
-            Toasty.warning(this, "Press back again", Toast.LENGTH_LONG).show();
+            Toasty.warning(this, this.getString(R.string.back_for_exit), Toast.LENGTH_LONG).show();
             new Handler().postDelayed(() -> StartActivity.this.backPress = false, 2000);
         }
     }
