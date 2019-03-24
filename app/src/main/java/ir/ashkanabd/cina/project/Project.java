@@ -170,8 +170,6 @@ public class Project implements Serializable {
             return false;
         if (!p.lang.equals(this.lang))
             return false;
-        if (!p.name.equals(this.name))
-            return false;
-        return true;
+        return p.name.equals(this.name);
     }
 }

@@ -92,8 +92,8 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         changeLoadingProgressStatus();
         TypefaceProvider.registerDefaultIconSets();
         activityStartTask = new ActivityTask(loadingDialog);
-        activityStartTask.setOnTaskStarted(this::onActivityStart);
-        activityStartTask.setOnPostTask(this::changeListView);
+        activityStartTask.setOnTaskStarted(o -> onActivityStart());
+        activityStartTask.setOnPostTask(o -> changeListView());
         activityStartTask.setOnBeforeTask(this::preActivityStart);
         new Handler().postDelayed(activityStartTask::execute, 2000);
     }
@@ -115,7 +115,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     /*
      * Background tasks on starting activity
      */
-    private Object onActivityStart(Object... o) {
+    private Object onActivityStart() {
         if (!checkStoragePermission()) {
             requestStoragePermission();
         }
@@ -152,7 +152,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         super.onResume();
         try {
             loadProjects();
-            changeListView(null);
+            changeListView();
         } catch (Exception ignored) {
         }
     }
@@ -174,7 +174,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
                 createDirButton.setVisibility(View.INVISIBLE);
                 createFileButton.setVisibility(View.INVISIBLE);
                 deleteButton.setVisibility(View.INVISIBLE);
-                openButton.setOnClickListener(StartActivity.this::onProjectOpenListener);
+                openButton.setOnClickListener(v -> onProjectOpenListener());
             }
         };
     }
@@ -182,7 +182,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     /*
      * When a project selected to open
      */
-    private void onProjectOpenListener(View view) {
+    private void onProjectOpenListener() {
         try {
             File file = fileBrowserDialog.getFile(fileBrowserDialog.getListeners().getPreClickedView());
             if (file.isFile()) {
@@ -259,7 +259,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     /*
      * Update projects list in UI thread
      */
-    private void changeListView(Object o) {
+    private void changeListView() {
         adapter = new ProjectAdapter(this.projectList);
         recyclerView.setAdapter(adapter);
         connectServer();
@@ -367,9 +367,17 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     /*
      * Load projects from workspace
      */
-    private Object loadProjects(Object... o) {
+    private Object loadProjects() {
         projectList.clear();
-        this.projectManager.readPreviousProjects(projectList);
+        try {
+            this.projectManager.readPreviousProjects(projectList);
+        } catch (IOException e) {
+            Toasty.error(this, getString(R.string.project_error) + getString(R.string.permission_error2)
+                    , Toasty.LENGTH_SHORT, true).show();
+        } catch (JSONException e) {
+            Toasty.error(this, getString(R.string.project_error) + getString(R.string.project_structure_error)
+                    , Toasty.LENGTH_SHORT, true).show();
+        }
         return null;
     }
 
@@ -384,9 +392,9 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         mainLayout.setColorSchemeColors(Color.BLUE, Color.RED);
         this.mainLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
             ActivityTask st = new ActivityTask(null);
-            st.setOnTaskStarted(this::loadProjects);
-            st.setOnPostTask((c) -> {
-                changeListView(c);
+            st.setOnTaskStarted(o -> loadProjects());
+            st.setOnPostTask(c -> {
+                changeListView();
                 mainLayout.setRefreshing(false);
             });
             st.execute();
@@ -518,10 +526,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
-        if (this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }
-        return false;
+        return this.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestStoragePermission() {

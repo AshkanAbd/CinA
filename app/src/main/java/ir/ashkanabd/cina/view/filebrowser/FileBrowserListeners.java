@@ -1,6 +1,6 @@
 package ir.ashkanabd.cina.view.filebrowser;
 
-import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,6 +12,7 @@ import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.TextView;
 import com.unnamed.b.atv.model.TreeNode;
+import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.EditorActivity;
 import ir.ashkanabd.cina.R;
 import ir.ashkanabd.cina.project.ProjectManager;
@@ -48,8 +49,8 @@ public class FileBrowserListeners {
         BootstrapButton deleteButton = deleteFileDialog.findViewById(R.id.delete_delete_file_layout);
         BootstrapButton cancelButton = deleteFileDialog.findViewById(R.id.cancel_delete_file_layout);
         deleteFileTitle = deleteFileDialog.findViewById(R.id.title_delete_file_layout);
-        deleteButton.setOnClickListener(this::onDeleteFileButtonClick);
-        cancelButton.setOnClickListener(this::onCancelFileButtonClick);
+        deleteButton.setOnClickListener(v -> onDeleteFileButtonClick());
+        cancelButton.setOnClickListener(v -> onCancelFileButtonClick());
     }
 
     private void setupFileNameDialog() {
@@ -59,25 +60,24 @@ public class FileBrowserListeners {
         BootstrapButton createButton = fileNameDialog.findViewById(R.id.create_button_new_file_name);
         BootstrapButton cancelButton = fileNameDialog.findViewById(R.id.cancel_button_new_file_name);
         fileNameEditText = fileNameDialog.findViewById(R.id.edit_new_file_name);
-        createButton.setOnClickListener(this::onFileCreateButtonClick);
-        cancelButton.setOnClickListener(this::onFileCancelButtonClick);
+        createButton.setOnClickListener(v -> onFileCreateButtonClick());
+        cancelButton.setOnClickListener(v -> onFileCancelButtonClick());
         fileNameEditText.addTextChangedListener(new FileNameTextWatcher());
-        this.fileNameDialog.setOnDismissListener(this::onCreateNewFileDialogDismiss);
+        this.fileNameDialog.setOnDismissListener(o -> onCreateNewFileDialogDismiss());
     }
 
     /**
      * Call when On a {@link TreeNode} clicked
      *
-     * @param node  {@link TreeNode} clicked tree node
-     * @param value {@link File} the file that {@link TreeNode} points to it
+     * @param node {@link TreeNode} clicked tree node
      */
-    void onNodeClick(TreeNode node, Object value) {
+    void onNodeClick(TreeNode node) {
         FileView fileView = (FileView) node.getViewHolder();
         if (preClickedView != null) {
             preClickedView.setBackgroundColor(Color.WHITE);
         }
         preClickedView = fileView.getView().findViewById(R.id.main_layout_file_layout);
-        preClickedView.setBackgroundColor(Color.parseColor("#FFFFFAD6"));
+        preClickedView.setBackgroundColor(Resources.getSystem().getColor(R.color.file_browser_clicked_node_background));
         setButtonsColor(node);
     }
 
@@ -134,7 +134,7 @@ public class FileBrowserListeners {
         }
     }
 
-    private void onFileCreateButtonClick(View view) {
+    private void onFileCreateButtonClick() {
         try {
             if (!validFileName) return;
             String fileName = this.fileNameEditText.getText().toString();
@@ -149,7 +149,8 @@ public class FileBrowserListeners {
             fileBrowserDialog.getSelectedProject().addSource(newFile.getAbsolutePath());
             effectingChangesOnProject();
         } catch (IOException e) {
-            e.printStackTrace();
+            Toasty.error(fileBrowserDialog.getActivity(), Resources.getSystem().getString(R.string.permission_error1)
+                    , Toasty.LENGTH_SHORT, true).show();
         }
         fileBrowserDialog.getBrowserDialog().dismiss();
         fileBrowserDialog.load();
@@ -157,7 +158,7 @@ public class FileBrowserListeners {
         fileBrowserDialog.getBrowserDialog().show();
     }
 
-    private void onFileCancelButtonClick(View view) {
+    private void onFileCancelButtonClick() {
         this.fileNameDialog.dismiss();
     }
 
@@ -168,11 +169,12 @@ public class FileBrowserListeners {
                 ((EditorActivity) fileBrowserDialog.getActivity()).showProjectInfo();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Toasty.error(fileBrowserDialog.getActivity(), Resources.getSystem().getString(R.string.invalid_source_file)
+                    , Toasty.LENGTH_SHORT, true).show();
         }
     }
 
-    private void onDeleteFileButtonClick(View view) {
+    private void onDeleteFileButtonClick() {
         File file = fileBrowserDialog.getFile(preClickedView);
         ProjectManager.remove(file);
         fileBrowserDialog.getSelectedProject().removeSource(file.getAbsolutePath());
@@ -183,38 +185,39 @@ public class FileBrowserListeners {
         fileBrowserDialog.getBrowserDialog().show();
     }
 
-    private void onCancelFileButtonClick(View view) {
+    private void onCancelFileButtonClick() {
         deleteFileDialog.dismiss();
     }
 
-    void onNewFileButtonClick(View view) {
+    void onNewFileButtonClick() {
         if (preClickedView == null) return;
         File file = fileBrowserDialog.getFile(preClickedView);
         if (!file.isDirectory()) return;
         createMode = CREATE_FILE;
-        fileNameEditText.setHint("Enter file name");
+        fileNameEditText.setHint(Resources.getSystem().getString(R.string.get_new_file_name));
         this.fileNameDialog.show();
     }
 
-    void onNewDirButtonClick(View view) {
+    void onNewDirButtonClick() {
         if (preClickedView == null) return;
         File file = fileBrowserDialog.getFile(preClickedView);
         if (!file.isDirectory()) return;
         createMode = CREATE_FOLDER;
-        fileNameEditText.setHint("Enter folder name");
+        fileNameEditText.setHint(Resources.getSystem().getString(R.string.get_new_folder_name));
         this.fileNameDialog.show();
     }
 
-    void onDeleteButtonClick(View view) {
+    void onDeleteButtonClick() {
         if (preClickedView == null) return;
         File file = fileBrowserDialog.getFile(preClickedView);
         if (fileBrowserDialog.getSelectedProject().getDir().equals(file.getAbsolutePath()))
             return;
-        this.deleteFileTitle.setText("Delete file \"" + file.getName() + "\"?");
+        String msg = Resources.getSystem().getString(R.string.delete_file) + file.getName() + "?";
+        this.deleteFileTitle.setText(msg);
         this.deleteFileDialog.show();
     }
 
-    void onOpenButtonClick(View view) {
+    void onOpenButtonClick() {
         if (preClickedView == null) return;
         File file = fileBrowserDialog.getFile(preClickedView);
         if (file.isDirectory()) return;
@@ -226,23 +229,24 @@ public class FileBrowserListeners {
                 ea.setCurrentFile(file);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Toasty.error(fileBrowserDialog.getActivity(), Resources.getSystem().getString(R.string.invalid_source_file)
+                    , Toasty.LENGTH_SHORT, true).show();
         }
         fileBrowserDialog.getBrowserDialog().dismiss();
     }
 
-    void onCancelButtonClick(View view) {
+    void onCancelButtonClick() {
         fileBrowserDialog.getBrowserDialog().dismiss();
     }
 
-    void onFileBrowserDialogDismiss(DialogInterface dialogInterface) {
+    void onFileBrowserDialogDismiss() {
         if (preClickedView != null)
             preClickedView.setBackgroundColor(Color.WHITE);
         preClickedView = null;
         createMode = NONE;
     }
 
-    public void onCreateNewFileDialogDismiss(DialogInterface dialog) {
+    public void onCreateNewFileDialogDismiss() {
         fileNameEditText.setError("");
         fileNameEditText.setText("");
         fileNameEditText.setHelper("");
@@ -266,12 +270,12 @@ public class FileBrowserListeners {
             int len = str.length();
             Object[] objs = checkFileName(str);
             if (!(boolean) objs[0]) {
-                FileBrowserListeners.this.fileNameEditText.setHelper("Error: \"" + objs[1] + "\"");
+                FileBrowserListeners.this.fileNameEditText.setHelper(Resources.getSystem().getString(R.string.error) + objs[1]);
                 FileBrowserListeners.this.validFileName = false;
                 return;
             }
             if (len > 30) {
-                FileBrowserListeners.this.fileNameEditText.setHelper("too long name: " + len + " characters");
+                FileBrowserListeners.this.fileNameEditText.setHelper(Resources.getSystem().getString(R.string.too_long_name) + len);
                 FileBrowserListeners.this.validFileName = false;
                 return;
             }
@@ -285,14 +289,15 @@ public class FileBrowserListeners {
                 fileNamePattern = Pattern.compile("[a-zA-Z0-9_]+\\.[a-zA-Z]+");
             if (FileBrowserListeners.this.createMode == FileBrowserListeners.CREATE_FOLDER)
                 fileNamePattern = Pattern.compile("[a-zA-Z0-9_]+");
-            if (fileNamePattern == null) return new Object[]{true, "Unknown error"};
+            if (fileNamePattern == null)
+                return new Object[]{true, Resources.getSystem().getString(R.string.unknown_error)};
             Matcher fileNameMatcher = fileNamePattern.matcher(str);
             if (!fileNameMatcher.matches()) {
-                return new Object[]{false, "Invalid name"};
+                return new Object[]{false, Resources.getSystem().getString(R.string.invalid_file_name)};
             }
             if (FileBrowserListeners.this.createMode == FileBrowserListeners.CREATE_FILE)
                 if (!FileBrowserListeners.this.fileBrowserDialog.getFileBrowser().checkFileName(str))
-                    return new Object[]{false, "Invalid file format"};
+                    return new Object[]{false, Resources.getSystem().getString(R.string.invalid_file_format)};
             return new Object[]{true};
         }
     }

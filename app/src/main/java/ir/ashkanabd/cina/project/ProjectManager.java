@@ -62,7 +62,7 @@ public class ProjectManager {
     /*
      * Read every directory in main workspace and find CinA projects
      */
-    public void readPreviousProjects(@NonNull List<Project> projectList) {
+    public void readPreviousProjects(@NonNull List<Project> projectList) throws JSONException, IOException {
         workspace = new File(Environment.getExternalStorageDirectory() + "/CinAProjects/");
         if (!workspace.exists()) {
             workspace.mkdir();
@@ -79,8 +79,7 @@ public class ProjectManager {
                     projectList.add(new Project(ProjectManager.readFile((File) objs[1])));
                 } catch (JSONException | IOException e) {
                     Log.e("INFO", "Error while reading project");
-                    e.printStackTrace();
-                    // TODO: 3/15/19 Catch project reading error
+                    throw e;
                 }
             }
         }

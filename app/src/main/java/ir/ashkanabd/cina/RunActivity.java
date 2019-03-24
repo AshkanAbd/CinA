@@ -7,6 +7,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.compileAndRun.GccRun;
 import ir.ashkanabd.cina.project.Project;
 
@@ -38,7 +39,7 @@ public class RunActivity extends AppCompatActivity {
             gccRun.setOnPostTask(this::setEnd);
             gccRun.execute();
         } catch (Exception e) {
-            e.printStackTrace();
+            Toasty.error(this, this.getString(R.string.run_compiled_file_error), Toasty.LENGTH_LONG, true).show();
         }
     }
 

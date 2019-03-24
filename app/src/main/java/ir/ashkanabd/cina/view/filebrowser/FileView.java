@@ -49,7 +49,7 @@ public class FileView extends TreeNode.BaseNodeViewHolder<File> {
             fileStatus.setVisibility(View.INVISIBLE);
         }
         fileStatus.setPaddingRelative((node.getLevel() - 1) * 50, 0, 0, 0);
-        node.setClickListener(listeners::onNodeClick);
+        node.setClickListener((n, v) -> listeners.onNodeClick(n));
         fileStatus.setOnClickListener(listeners::onFileStatusClick);
         fileLayout.setTag(node);
         return fileLayout;

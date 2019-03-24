@@ -8,16 +8,13 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.google.android.material.navigation.NavigationView;
-
 import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.backgroundTasks.ActivityTask;
 import ir.ashkanabd.cina.backgroundTasks.GccTask;
@@ -31,6 +28,7 @@ import ir.ashkanabd.cina.view.filebrowser.FileBrowserDialog;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EditorActivity extends AppCompatActivityFileBrowserSupport {
 
@@ -62,15 +60,15 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         setupLoadingProgress();
         changeLoadingProgressStatus();
         activityStartTask = new ActivityTask(loadingDialog);
-        activityStartTask.setOnTaskStarted(this::onStartTask);
-        activityStartTask.setOnPostTask(this::onPostStartTask);
+        activityStartTask.setOnTaskStarted(o -> onStartTask());
+        activityStartTask.setOnPostTask(o -> onPostStartTask());
         new Handler().postDelayed(activityStartTask::execute, 1000);
     }
 
     /*
      * Background task for checking GCC on activity starts.
      */
-    private Object onStartTask(Object... o) {
+    private Object onStartTask() {
         TypefaceProvider.registerDefaultIconSets();
         checkCompiler();
         return null;
@@ -79,9 +77,9 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     /*
      * Calls on activity start after doing background.
      */
-    private void onPostStartTask(Object o) {
+    private void onPostStartTask() {
         findViews();
-        prepareActivity(getIntent().getExtras());
+        prepareActivity(Objects.requireNonNull(getIntent().getExtras()));
         fileBrowserDialog = new FileBrowserDialog(this, selectedProject, selectedProject.getDir(), selectedProject.getLang());
         setupActionBar();
         setupNavigationView();
@@ -90,7 +88,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     }
 
     /*
-     *
+     * Get compile params from SharedPreferences
      */
     private void getCompileParams() {
         sharedPreferences = getSharedPreferences("compile_params", MODE_PRIVATE);
@@ -134,7 +132,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         connection = (Connection) bundle.get("connection");
         selectedProject = (Project) bundle.get("project");
         try {
-            if (!selectedProject.getSource().isEmpty()) {
+            if (!Objects.requireNonNull(selectedProject).getSource().isEmpty()) {
                 currentFilePath = selectedProject.getSource().get(0);
                 currentFile = new File(currentFilePath);
                 editor.setText(ProjectManager.readTargetFile(currentFile));
@@ -200,7 +198,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
         if (item.getItemId() == R.id.project_nav_save) {
             if (currentFile != null) {
                 try {
-                    String fileInfo = editor.getText().toString();
+                    String fileInfo = Objects.requireNonNull(editor.getText()).toString();
                     ProjectManager.writeTargetFile(currentFile, fileInfo);
                     Toasty.success(this, this.getString(R.string.save_successful), Toasty.LENGTH_SHORT, true).show();
                 } catch (IOException e) {
@@ -218,7 +216,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
              * Start compile project in background thread
              */
             compileTask = new GccTask(compileDialog);
-            compileTask.setOnTaskStarted(this::compileTask);
+            compileTask.setOnTaskStarted((o) -> compileTask());
             compileTask.setOnPostTask(this::compileTaskResult);
             compileTask.setOnUpdateTask(this::compileProgress);
             compileTask.execute();
@@ -243,7 +241,7 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     /*
      * compile task in background
      */
-    private Object compileTask(Object... o) {
+    private Object compileTask() {
         gccCompiler.setCompileParams(compileParams);
         compileTask.updateProgress("Linking source...\n");
         long startTime = 0;

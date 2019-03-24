@@ -3,22 +3,22 @@
 	<item
 			android:id="@+id/project_nav_save"
 			android:icon="@drawable/save_icon"
-			android:title="Save"/>
+			android:title="@string/Save"/>
 
 	<item
 			android:id="@+id/project_nav_compile"
 			android:icon="@drawable/build_icon"
-			android:title="Compile"/>
+			android:title="@string/Compile"/>
 	<item
 			android:id="@+id/project_nav_run"
 			android:icon="@drawable/play_icon"
-			android:title="Run"/>
+			android:title="@string/Run"/>
 	<item
 			android:id="@+id/project_nav_browse"
 			android:icon="@drawable/folder_icon2"
-			android:title="Browse files"/>
+			android:title="@string/Browse_files"/>
 	<item
 			android:id="@+id/project_nav_close"
 			android:icon="@drawable/close_icon"
-			android:title="Close"/>
+			android:title="@string/Close"/>
 </menu>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
+                xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/black">
 
@@ -9,7 +9,7 @@
             android:id="@+id/program_text_view_run_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="Project:~$ "
+            android:hint="@string/run_layout_project_output_hint"
             android:textColor="#f00"
             android:textColorHint="#ae0000"
             android:textSize="12sp"
@@ -24,11 +24,11 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:background="#6b6b6b"
-            android:text="-     -     -"
+            android:text="@string/run_layout_IO_seprator"
             android:textColor="#000"
             android:gravity="center"
             android:textSize="8sp"
-    />
+            tools:ignore="SmallSp"/>
 
     <TextView
             android:id="@+id/user_text_view_run_layout"
@@ -49,7 +49,7 @@
             android:layout_height="match_parent"
             android:layout_below="@id/user_text_view_run_layout"
             android:textColorHint="#8c8c8c"
-            android:hint="User:~$ "
+            android:hint="@string/run_layout_user_input_hint"
             android:background="@color/black"
             android:gravity="top"
             android:inputType="textMultiLine|textNoSuggestions|none"

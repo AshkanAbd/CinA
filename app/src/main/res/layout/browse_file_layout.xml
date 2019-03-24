@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="15dp"
-        android:text="Browse files"
+        android:text="@string/browse_files_label"
         android:textColor="#FFF"
         android:textSize="20sp"
         android:textStyle="bold" />

@@ -44,7 +44,6 @@ public class CodeEditor extends AppCompatEditText {
         /*
          * Change color of line number position
          */
-        int baseline = getBaseline();
         for (int i = 0; i < getLineCount(); i++) {
             canvas.drawRect(0, (i * getLineHeight()) + getPaddingTop() - 5, getPaddingLeft()
                     , ((i + 1) * getLineHeight() + 1) + getPaddingTop() + 5, p2);
@@ -62,7 +61,7 @@ public class CodeEditor extends AppCompatEditText {
         /*
          * Put line number in there position
          */
-        baseline = getBaseline();
+        int baseline = getBaseline();
         for (int i = 0; i < getLineCount(); i++) {
             canvas.drawText(Integer.toString(i + 1), 10, baseline, getPaint());
             baseline += getLineHeight();

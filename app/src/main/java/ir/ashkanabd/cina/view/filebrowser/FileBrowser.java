@@ -57,54 +57,51 @@ public class FileBrowser {
 
     /**
      * start for browsing in storage
-     *
-     * @param deep how much search inside {@link FileBrowser#root }
      */
-    public void browse(int deep) {
+    public void browse() {
         checkedFiles = new HashSet<>();
-        root = browse(0, deep, root.getChildren().get(0), fileStructure);
+        root = browse(root.getChildren().get(0), fileStructure);
         root = root.getRoot();
     }
 
     /**
      * DFS algorithm for browsing in storage
      *
-     * @param deep
-     * @param max
      * @param tree
      * @param structure
      * @return a {@link TreeNode} that contains file structure in given directory and searching language and max deep
      */
-    private TreeNode browse(int deep, int max, TreeNode tree, FileStructure structure) {
-        if (max < 0 || deep < max) {
-            try {
-                File[] childFiles = structure.getListAsFile();
-                if (childFiles == null || childFiles.length == 0) {
-                    return tree;
-                }
-                for (File file : childFiles) {
-                    if (!checkedFiles.contains(file)) {
-                        TreeNode nextNode;
-                        checkedFiles.add(file);
-                        if (file.isDirectory()) {
-                            if (dialog.getSelectedProject() != null && file.getAbsolutePath().equals(dialog.getSelectedProject().getOut()))
-                                continue;
+    private TreeNode browse(TreeNode tree, FileStructure structure) {
+        try {
+            File[] childFiles = structure.getListAsFile();
+            if (childFiles == null || childFiles.length == 0) {
+                return tree;
+            }
+            for (File file : childFiles) {
+                if (!checkedFiles.contains(file)) {
+                    TreeNode nextNode;
+                    checkedFiles.add(file);
+                    if (file.isDirectory()) {
+                        if (file.isHidden())
+                            continue;
+                        if (dialog.getSelectedProject() != null && file.getAbsolutePath().equals(dialog.getSelectedProject().getOut()))
+                            continue;
+                        nextNode = new TreeNode(file).setViewHolder(new FileView(dialog));
+                        tree.addChild(nextNode);
+                        FileStructure fs = (FileStructure) structure.clone();
+                        fs.changeDir(file);
+                        browse(nextNode, fs);
+                    } else {
+                        if (checkFileName(file.getName())) {
                             nextNode = new TreeNode(file).setViewHolder(new FileView(dialog));
                             tree.addChild(nextNode);
-                            FileStructure fs = (FileStructure) structure.clone();
-                            fs.changeDir(file);
-                            browse(deep + 1, max, nextNode, fs);
-                        } else {
-                            if (checkFileName(file.getName())) {
-                                nextNode = new TreeNode(file).setViewHolder(new FileView(dialog));
-                                tree.addChild(nextNode);
-                            }
                         }
                     }
                 }
-            } catch (IOException e) {
-                Log.e("CinA", "Permission denied");
             }
+        } catch (IOException e) {
+            Log.e("CinA", "Permission denied");
+            // Just for log...
         }
         return tree;
     }
@@ -112,7 +109,7 @@ public class FileBrowser {
     /**
      * Check fileName matches with {@link FileBrowser#projectLang}
      *
-     * @param fileName
+     * @param fileName check with format
      * @return return true if fileName matches otherwise return false
      */
     boolean checkFileName(String fileName) {

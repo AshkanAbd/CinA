@@ -1,6 +1,8 @@
 package ir.ashkanabd.cina.compileAndRun;
 
 import android.content.Context;
+import es.dmoral.toasty.Toasty;
+import ir.ashkanabd.cina.R;
 import ir.ashkanabd.cina.backgroundTasks.GccTask;
 import ir.ashkanabd.cina.project.Project;
 
@@ -19,9 +21,11 @@ public class GccRun extends GccTask {
     private Scanner stdErr;
     private PrintWriter stdIn;
     private String userInput;
+    private Context context;
 
     public GccRun(Context context, Project project) throws IOException {
         super(null);
+        this.context = context;
         userInput = null;
         String internalPath = project.getOut() + "/" + project.getName();
         File internalFile = new File(internalPath);
@@ -93,9 +97,8 @@ public class GccRun extends GccTask {
             stdOut = new Scanner(runningProcess.getInputStream());
             stdErr = new Scanner(runningProcess.getErrorStream());
             stdIn = new PrintWriter(runningProcess.getOutputStream(), true);
-        } catch (Exception e) {
-            e.printStackTrace();
-            // TODO: 3/21/19 catch Exception
+        } catch (IOException e) {
+            Toasty.error(context, context.getString(R.string.run_compiled_file_error), Toasty.LENGTH_SHORT, true).show();
         }
     }
 

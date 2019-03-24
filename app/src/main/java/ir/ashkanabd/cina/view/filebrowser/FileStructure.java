@@ -1,5 +1,8 @@
 package ir.ashkanabd.cina.view.filebrowser;
 
+import android.content.res.Resources;
+import ir.ashkanabd.cina.R;
+
 import java.util.List;
 import java.util.Arrays;
 
@@ -25,14 +28,14 @@ public class FileStructure implements Cloneable {
 
     public File[] getListAsFile() throws IOException {
         if (!this.baseFile.canRead()) {
-            throw new IOException("Can't read folder,Permission Error");
+            throw new IOException(Resources.getSystem().getString(R.string.permission_error));
         }
         return this.baseFile.listFiles();
     }
 
     public String[] getListAsString() throws IOException {
         if (!this.baseFile.canRead()) {
-            throw new IOException("Can't read folder,Permission Error");
+            throw new IOException(Resources.getSystem().getString(R.string.permission_error));
         }
         return this.baseFile.list();
     }
@@ -47,7 +50,7 @@ public class FileStructure implements Cloneable {
                 return true;
             }
         }
-        throw new IOException("Directory don't exist");
+        throw new IOException(Resources.getSystem().getString(R.string.directory_not_exist_error));
     }
 
     public boolean changeDir(int index) throws IOException {
@@ -59,7 +62,7 @@ public class FileStructure implements Cloneable {
                 return true;
             }
         }
-        throw new IOException("Directory don't exist");
+        throw new IOException(Resources.getSystem().getString(R.string.directory_not_exist_error));
     }
 
     public boolean changeDir(File file) throws IOException {
@@ -71,14 +74,14 @@ public class FileStructure implements Cloneable {
                 return true;
             }
         }
-        throw new IOException("Directory don't exist");
+        throw new IOException(Resources.getSystem().getString(R.string.directory_not_exist_error));
     }
 
     private boolean checkFile(File file) throws IOException {
         if (!file.exists())
-            throw new IOException("Directory doesn't exist");
+            throw new IOException(Resources.getSystem().getString(R.string.directory_not_exist_error));
         if (!file.isDirectory())
-            throw new IOException("Only directory allowed");
+            throw new IOException(Resources.getSystem().getString(R.string.dir_only_error));
         return true;
     }
 
@@ -87,7 +90,9 @@ public class FileStructure implements Cloneable {
         try {
             return super.clone();
         } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
+            /*
+             * Never will happened
+             */
         }
         return null;
     }

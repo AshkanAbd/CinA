@@ -43,7 +43,7 @@ public class FileBrowserDialog {
 
     public void load() {
         fileBrowser = new FileBrowser(new File(root), this, fileFormat);
-        fileBrowser.browse(3);
+        fileBrowser.browse();
         androidTreeView = new AndroidTreeView(activity, fileBrowser.getRoot());
         androidTreeView.setUseAutoToggle(false);
         setupDialog();
@@ -84,13 +84,13 @@ public class FileBrowserDialog {
         createFileButton.setPadding(0, 0, 0, 0);
         createDirButton.setPadding(0, 0, 0, 0);
         deleteButton.setPadding(0, 0, 0, 0);
-        cancelButton.setOnClickListener(listeners::onCancelButtonClick);
-        openButton.setOnClickListener(listeners::onOpenButtonClick);
-        createFileButton.setOnClickListener(listeners::onNewFileButtonClick);
-        createDirButton.setOnClickListener(listeners::onNewDirButtonClick);
-        deleteButton.setOnClickListener(listeners::onDeleteButtonClick);
+        cancelButton.setOnClickListener(v->listeners.onCancelButtonClick());
+        openButton.setOnClickListener(v -> listeners.onOpenButtonClick());
+        createFileButton.setOnClickListener(v -> listeners.onNewFileButtonClick());
+        createDirButton.setOnClickListener(v -> listeners.onNewDirButtonClick());
+        deleteButton.setOnClickListener(v -> listeners.onDeleteButtonClick());
 
-        this.getBrowserDialog().setOnDismissListener(listeners::onFileBrowserDialogDismiss);
+        this.getBrowserDialog().setOnDismissListener(o -> listeners.onFileBrowserDialogDismiss());
     }
 
     public File getFile(View view) {

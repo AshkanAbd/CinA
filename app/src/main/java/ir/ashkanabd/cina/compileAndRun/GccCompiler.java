@@ -2,7 +2,6 @@ package ir.ashkanabd.cina.compileAndRun;
 
 import android.app.Activity;
 import android.util.Log;
-import androidx.appcompat.app.AppCompatActivity;
 import ir.ashkanabd.cina.project.Project;
 
 import java.io.*;

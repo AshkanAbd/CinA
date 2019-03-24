@@ -1,7 +1,6 @@
 package ir.ashkanabd.cina.project;
 
 import android.view.View;
-import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatTextView;
 import co.dift.ui.SwipeToAction;
 import ir.ashkanabd.cina.R;
