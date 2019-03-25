@@ -30,4 +30,11 @@
     <color name="surface">#FAFAFA</color>
 
 
+    <array name="progress_colors_light">
+        <item>#FFD8433C</item>
+        <item>#FFF2AF3A</item>
+        <item>#FF279B5E</item>
+        <item>#FF03A9F4</item>
+    </array>
+
 </resources>

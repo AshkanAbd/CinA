@@ -70,4 +70,21 @@
 
     </style>
 
+    <style name="splashProgressStyle">
+        <item name="lpd_maxLineWidth">75%</item>
+        <item name="lpd_minLineWidth">10%</item>
+        <item name="lpd_strokeSize">4dp</item>
+        <item name="lpd_strokeColor">?attr/errorColor</item>
+        <item name="lpd_strokeColors">@array/progress_colors_light</item>
+        <item name="lpd_reverse">false</item>
+        <item name="lpd_travelDuration">1000</item>
+        <item name="lpd_transformDuration">600</item>
+        <item name="lpd_keepDuration">200</item>
+        <item name="lpd_transformInterpolator">@android:anim/decelerate_interpolator</item>
+        <item name="pv_progressMode">indeterminate</item>
+        <item name="lpd_inAnimDuration">@android:integer/config_mediumAnimTime</item>
+        <item name="lpd_outAnimDuration">@android:integer/config_mediumAnimTime</item>
+        <item name="lpd_verticalAlign">bottom</item>
+    </style>
+
 </resources>

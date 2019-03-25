@@ -77,12 +77,10 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private boolean drawerOpen = false;
     private ProjectManager projectManager;
     private MaterialDialog newProjectDialog;
-    private MaterialDialog loadingDialog;
     private MaterialDialog deleteProjectDialog;
     private SwipeToAction swipeToAction;
     private RecyclerView recyclerView;
     private ProjectAdapter adapter;
-    private boolean isLoadingDialog = false;
     private SwipeRefreshLayout mainLayout;
     private FileBrowserDialog fileBrowserDialog;
     private TextView titleDeleteProject;
@@ -97,30 +95,32 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         resourcesContext = this;
-        setContentView(R.layout.start_activity);
-        setupLoadingProgress();
-        setupActionBar();
-        changeLoadingProgressStatus();
-        TypefaceProvider.registerDefaultIconSets();
-        activityStartTask = new ActivityTask(loadingDialog);
+        setContentView(R.layout.splash_layout);
+        getSupportActionBar().hide();
+        this.projectManager = new ProjectManager();
+        this.projectList = new ArrayList<>();
+        activityStartTask = new ActivityTask(null);
         activityStartTask.setOnTaskStarted(o -> onActivityStart());
-        activityStartTask.setOnPostTask(o -> changeListView());
-        activityStartTask.setOnBeforeTask(this::preActivityStart);
-        new Handler().postDelayed(activityStartTask::execute, 2000);
+        activityStartTask.setOnPostTask(o -> postActivityTask());
+        activityStartTask.execute();
     }
 
-    /*
-     * Tasks on starting activity before background task
-     */
-    private void preActivityStart() {
+    private void postActivityTask() {
+        TypefaceProvider.registerDefaultIconSets();
+        setContentView(R.layout.start_activity);
+        getSupportActionBar().show();
         findViews();
         setupNavigationView();
         setupNewProjectDialog();
-        this.projectManager = new ProjectManager();
-        this.projectList = new ArrayList<>();
+        setupActionBar();
         setupListView();
         setupBrowseProjectDialog();
         setupDeleteProjectDialog();
+        adapter = new ProjectAdapter(this.projectList);
+        recyclerView.setAdapter(adapter);
+        if (connection.getNeedNetwork()) {
+            Toasty.error(this, getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     /*
@@ -137,26 +137,10 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         checkCompiler();
         loadProjects();
         connection = new Connection();
+        connection.connectDatabase(this);
         return null;
     }
 
-    /*
-     * Check user login
-     */
-    private void connectServer() {
-        ActivityTask connectionTask = new ActivityTask(loadingDialog);
-        connection = new Connection();
-        connectionTask.setOnTaskStarted(a -> {
-            connection.connectDatabase(StartActivity.this);
-            return null;
-        });
-        connectionTask.setOnPostTask(c -> {
-            if (connection.getNeedNetwork()) {
-                Toasty.error(StartActivity.this, StartActivity.this.getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
-            }
-        });
-        connectionTask.execute();
-    }
 
     @Override
     protected void onResume() {
@@ -212,31 +196,6 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     }
 
     /*
-     * Setup a loading progress dialog
-     */
-    private void setupLoadingProgress() {
-        loadingDialog = new MaterialDialog(this);
-        loadingDialog.setContentView(R.layout.loading_progress);
-        loadingDialog.cancelable(false);
-        isLoadingDialog = false;
-    }
-
-    /*
-     * Change loading progress  status
-     * If show => cancel,
-     * If cancel => show
-     */
-    private void changeLoadingProgressStatus() {
-        if (isLoadingDialog) {
-            isLoadingDialog = false;
-            loadingDialog.dismiss();
-        } else {
-            isLoadingDialog = true;
-            loadingDialog.show();
-        }
-    }
-
-    /*
      * Setup GCC
      */
     private void checkCompiler() {
@@ -273,7 +232,6 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private void changeListView() {
         adapter = new ProjectAdapter(this.projectList);
         recyclerView.setAdapter(adapter);
-        connectServer();
     }
 
     /*
@@ -336,8 +294,8 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         this.newProjectButton.setOnClickListener(this::createNewProject);
         primaryColorTypedValue = new TypedValue();
         errorColorTypedValue = new TypedValue();
-        getTheme().resolveAttribute(R.attr.primaryColor, primaryColorTypedValue,true);
-        getTheme().resolveAttribute(R.attr.errorColor, errorColorTypedValue,true);
+        getTheme().resolveAttribute(R.attr.primaryColor, primaryColorTypedValue, true);
+        getTheme().resolveAttribute(R.attr.errorColor, errorColorTypedValue, true);
         this.newProjectName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -407,10 +365,18 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         mainLayout.setColorSchemeColors(Color.BLUE, Color.RED);
         this.mainLayout.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
             ActivityTask st = new ActivityTask(null);
-            st.setOnTaskStarted(o -> loadProjects());
+            st.setOnTaskStarted(o -> {
+                loadProjects();
+                connection = new Connection();
+                connection.connectDatabase(this);
+                return null;
+            });
             st.setOnPostTask(c -> {
                 changeListView();
                 mainLayout.setRefreshing(false);
+                if (connection.getNeedNetwork()) {
+                    Toasty.error(this, getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
+                }
             });
             st.execute();
         }, 1000));
@@ -439,24 +405,24 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         if (menuItem.getItemId() == R.id.start_nav_purchase) {
             startActivity(new Intent(this, PurchaseActivity.class));
         }
-        if (menuItem.getItemId() == R.id.start_nav_about){
+        if (menuItem.getItemId() == R.id.start_nav_about) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setData(Uri.parse("bazaar://collection?slug=by_author&aid=569432754687"));
             intent.setPackage("com.farsitel.bazaar");
             try {
                 startActivity(intent);
-            }catch (Exception e){
-                Toasty.warning(this, this.getString(R.string.need_bazaar),Toasty.LENGTH_SHORT,true).show();
+            } catch (Exception e) {
+                Toasty.warning(this, this.getString(R.string.need_bazaar), Toasty.LENGTH_SHORT, true).show();
             }
         }
-        if (menuItem.getItemId() == R.id.start_nav_rate){
+        if (menuItem.getItemId() == R.id.start_nav_rate) {
             Intent intent = new Intent(Intent.ACTION_EDIT);
             intent.setData(Uri.parse("bazaar://details?id=" + PACKAGE_NAME));
             intent.setPackage("com.farsitel.bazaar");
             try {
                 startActivity(intent);
-            }catch (Exception e){
-                Toasty.warning(this, this.getString(R.string.need_bazaar),Toasty.LENGTH_SHORT,true).show();
+            } catch (Exception e) {
+                Toasty.warning(this, this.getString(R.string.need_bazaar), Toasty.LENGTH_SHORT, true).show();
             }
         }
         drawerLayout.closeDrawers();
