@@ -84,6 +84,7 @@ public class Connection implements Serializable {
         } catch (IOException e) {
             needNetwork = true;
             Log.e("CinA", "Unknown user");
+            Log.e("CinA", e.toString());
         }
     }
 

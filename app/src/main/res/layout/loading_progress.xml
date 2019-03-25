@@ -6,6 +6,7 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingBottom="20dp"
+        android:background="?attr/surface"
         android:id="@+id/loading_relative_layout">
 
     <ir.ashkanabd.cina.view.LoadingView
@@ -27,7 +28,7 @@
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
             android:paddingStart="20dp"
-            android:textColor="#000"
+            android:textColor="?attr/primaryTextColorDark"
             android:text="@string/loading_layout"
             android:textSize="15sp"
     />

@@ -28,25 +28,25 @@
             </intent-filter>
         </activity>
         <activity
-                android:name=".EditorActivity"
-                android:theme="@style/EditActivity">
+                android:name=".EditorActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
-                android:name=".RunActivity"
-                android:theme="@style/EditActivity">
+                android:name=".RunActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
         <activity
-                android:theme="@style/StartActivityTheme"
-                android:name=".SettingActivity">
+                android:name=".SettingActivity"
+                android:theme="@style/StartActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
+        </activity>
+        <activity android:name=".PurchaseActivity">
         </activity>
     </application>
 

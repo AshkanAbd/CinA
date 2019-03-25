@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="activityBackground" format="color"/>
+    <attr name="runActivityBackground" format="color"/>
+    <attr name="runProgramTextColor" format="color"/>
+    <attr name="runProgramTextHintColor" format="color"/>
+    <attr name="runUserTextColor" format="color"/>
+    <attr name="runUserTextHintColor" format="color"/>
+    <attr name="runDividerBackground" format="color"/>
+    <attr name="runDividerTextColor" format="color"/>
+    <attr name="surface" format="color"/>
+    <attr name="primaryTextColor" format="color"/>
+    <attr name="primaryTextColorDark" format="color"/>
+    <attr name="primaryColor" format="color"/>
+    <attr name="primaryColorDark" format="color"/>
+    <attr name="primaryColorLight" format="color"/>
+    <attr name="primaryColorVeryLight" format="color"/>
+    <attr name="accentColor" format="color"/>
+    <attr name="errorColor" format="color"/>
+    <attr name="compileBackground" format="color"/>
+    <attr name="compileTextColor" format="color"/>
+    <attr name="editorTextColor" format="color"/>
+    <attr name="editorBackground" format="color"/>
+    <attr name="editorCurrentLineTextColor" format="color"/>
+    <attr name="editorLineNumberBackground" format="color"/>
+    <attr name="editorLineNumberTextColor" format="color"/>
+</resources>

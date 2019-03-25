@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.rey.material.widget.RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/main_layout_file_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="5dp"
-        android:background="#FFF">
+        android:background="?attr/surface">
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/file_statue_file_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:src="@drawable/close_folder_icon"/>
+            app:srcCompat="@drawable/close_folder_icon"/>
 
     <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/file_type_file_layout"

@@ -207,6 +207,10 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
             }
         }
         if (item.getItemId() == R.id.project_nav_compile) {
+            if (connection.getNeedNetwork()) {
+                Toasty.error(this, this.getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
+                return true;
+            }
             if (!connection.isValid()) {
                 Toasty.error(this, this.getString(R.string.invalid_user), Toasty.LENGTH_LONG, true).show();
                 return true;

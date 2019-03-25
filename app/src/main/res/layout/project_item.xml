@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -27,12 +28,11 @@
             android:tag="reveal-left"
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:background="@color/colorPrimary"
+            android:background="?attr/errorColor"
     >
 
         <androidx.appcompat.widget.AppCompatImageView
-                android:textColor="#fff"
-                android:src="@drawable/delete_icon"
+                app:srcCompat="@drawable/delete_icon"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_centerVertical="true"
@@ -47,14 +47,14 @@
             android:tag="front"
             android:layout_width="match_parent"
             android:layout_height="85dp"
-            android:background="@color/colorAccent"
+            android:background="?attr/primaryColorLight"
             android:padding="@dimen/item_padding">
 
         <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/item_project_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#FFF"
+                android:textColor="?attr/primaryTextColor"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 tools:ignore="RelativeOverlap"/>
@@ -66,7 +66,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="10dp"
-                android:textColor="#fff"
+                android:textColor="?attr/primaryTextColor"
                 android:gravity="start"
                 android:textSize="25sp"/>
 
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/item_project_name"
                 android:layout_marginTop="10dp"
-                android:textColor="#FFF"/>
+                android:textColor="?attr/primaryTextColor"/>
     </RelativeLayout>
 
 </RelativeLayout>

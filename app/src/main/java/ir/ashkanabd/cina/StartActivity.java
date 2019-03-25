@@ -1,9 +1,11 @@
 package ir.ashkanabd.cina;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,6 +15,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -56,7 +59,12 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
+
 public class StartActivity extends AppCompatActivityFileBrowserSupport {
+
+    public static Context resourcesContext;
+
     private List<Project> projectList;
     private ActionBarDrawerToggleCompat drawerToggle;
     private DrawerLayout drawerLayout;
@@ -82,10 +90,13 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private ActivityTask activityStartTask;
     private boolean validProjectName = false;
     private Connection connection;
+    private TypedValue primaryColorTypedValue;
+    private TypedValue errorColorTypedValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        resourcesContext = this;
         setContentView(R.layout.start_activity);
         setupLoadingProgress();
         setupActionBar();
@@ -243,8 +254,8 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         deleteProjectDialog = new MaterialDialog(this);
         deleteProjectDialog.setContentView(R.layout.delete_file_layout);
         titleDeleteProject = deleteProjectDialog.findViewById(R.id.title_delete_file_layout);
-        BootstrapButton deleteButton = deleteProjectDialog.findViewById(R.id.delete_delete_file_layout);
-        BootstrapButton cancelButton = deleteProjectDialog.findViewById(R.id.cancel_delete_file_layout);
+        TextView deleteButton = deleteProjectDialog.findViewById(R.id.delete_delete_file_layout);
+        TextView cancelButton = deleteProjectDialog.findViewById(R.id.cancel_delete_file_layout);
         deleteButton.setOnClickListener(view -> {
             if (deletingProject == null) return;
             ProjectManager.removeProject(deletingProject);
@@ -323,6 +334,10 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         this.cppRadioBtn = newProjectDialog.findViewById(R.id.create_new_project_cpp_radio);
         this.newProjectButton = newProjectDialog.findViewById(R.id.create_new_project_button);
         this.newProjectButton.setOnClickListener(this::createNewProject);
+        primaryColorTypedValue = new TypedValue();
+        errorColorTypedValue = new TypedValue();
+        getTheme().resolveAttribute(R.attr.primaryColor, primaryColorTypedValue,true);
+        getTheme().resolveAttribute(R.attr.errorColor, errorColorTypedValue,true);
         this.newProjectName.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -352,11 +367,11 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
                 String charCount = str.length() + " / " + 20;
                 SpannableString span = new SpannableString(charCount);
                 if (str.length() > 20) {
-                    span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorAccent)), 0,
+                    span.setSpan(new ForegroundColorSpan(errorColorTypedValue.data), 0,
                             charCount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     newProjectName.setHelper(span);
                 } else {
-                    span.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorPrimary)), 0,
+                    span.setSpan(new ForegroundColorSpan(primaryColorTypedValue.data), 0,
                             charCount.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     newProjectName.setHelper(span);
                 }
@@ -421,6 +436,29 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         if (menuItem.getItemId() == R.id.start_nav_setting) {
             startActivity(new Intent(this, SettingActivity.class));
         }
+        if (menuItem.getItemId() == R.id.start_nav_purchase) {
+            startActivity(new Intent(this, PurchaseActivity.class));
+        }
+        if (menuItem.getItemId() == R.id.start_nav_about){
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse("bazaar://collection?slug=by_author&aid=569432754687"));
+            intent.setPackage("com.farsitel.bazaar");
+            try {
+                startActivity(intent);
+            }catch (Exception e){
+                Toasty.warning(this, this.getString(R.string.need_bazaar),Toasty.LENGTH_SHORT,true).show();
+            }
+        }
+        if (menuItem.getItemId() == R.id.start_nav_rate){
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            intent.setData(Uri.parse("bazaar://details?id=" + PACKAGE_NAME));
+            intent.setPackage("com.farsitel.bazaar");
+            try {
+                startActivity(intent);
+            }catch (Exception e){
+                Toasty.warning(this, this.getString(R.string.need_bazaar),Toasty.LENGTH_SHORT,true).show();
+            }
+        }
         drawerLayout.closeDrawers();
         return true;
     }
@@ -436,7 +474,13 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
             public boolean isLayoutRtl() {
                 return false;
             }
+
+            @Override
+            public void setColor(int resourceId) {
+                this.mPaint.setColor(StartActivity.this.getResources().getColor(R.color.primaryTextColor));
+            }
         };
+        drawerArrow.setColor(0);
         drawerToggle = new ActionBarDrawerToggleCompat(this, drawerLayout, drawerArrow, R.drawable.back_icon, R.drawable.action_bar_menu) {
             @Override
             public void onDrawerClosed(View view) {
@@ -453,7 +497,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         };
         drawerLayout.addDrawerListener(drawerToggle);
         drawerToggle.syncState();
-        this.drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
             @Override
             public void onDrawerSlide(@NonNull View view, float v) {
 

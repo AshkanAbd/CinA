@@ -4,7 +4,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp">
+        android:background="?attr/surface"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="15dp"
+>
 
     <com.rey.material.widget.ImageView
             android:id="@+id/icon_delete_file_layout"
@@ -13,7 +18,7 @@
             android:layout_alignTop="@id/title_delete_file_layout"
             android:layout_alignBottom="@id/title_delete_file_layout"
             android:layout_marginEnd="10dp"
-            android:src="@drawable/danger_icon"
+            app:srcCompat="@drawable/danger_icon"
     />
 
     <com.rey.material.widget.TextView
@@ -21,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_toEndOf="@id/icon_delete_file_layout"
-            android:textColor="@color/black"
+            android:textColor="?attr/primaryTextColorDark"
             android:textSize="20sp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
@@ -31,35 +36,38 @@
             app:autoSizeTextType="none"
     />
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
+    <com.rey.material.widget.TextView
             android:id="@+id/delete_delete_file_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/title_delete_file_layout"
             android:layout_alignParentEnd="true"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="5dp"
+            android:text="@string/delete_button_text"
+            android:textColor="?attr/primaryColor"
+            android:background="?attr/surface"
+            android:gravity="center"
+            android:textStyle="bold"
             android:textAllCaps="true"
-            app:bootstrapSize="md"
-            app:bootstrapText="@string/delete_button_text"
-            app:bootstrapBrand="danger"
-            app:roundedCorners="true"
-            app:buttonMode="regular"
-            app:showOutline="true"
     />
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
+    <com.rey.material.widget.TextView
             android:id="@+id/cancel_delete_file_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/title_delete_file_layout"
-            android:layout_marginEnd="20dp"
+            android:layout_alignTop="@id/delete_delete_file_layout"
+            android:layout_marginEnd="10dp"
             android:layout_toStartOf="@id/delete_delete_file_layout"
+            android:text="@string/cancel_button_text"
+            android:textColor="?attr/primaryColor"
+            android:background="?attr/surface"
+            android:padding="10dp"
+            android:gravity="center"
+            android:textStyle="bold"
             android:textAllCaps="true"
-            app:bootstrapText="@string/cancel_button_text"
-            app:bootstrapSize="md"
-            app:bootstrapBrand="warning"
-            app:roundedCorners="true"
-            app:buttonMode="regular"
-            app:showOutline="true"
     />
 
 </com.rey.material.widget.RelativeLayout>

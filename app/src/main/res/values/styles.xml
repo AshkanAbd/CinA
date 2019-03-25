@@ -1,24 +1,73 @@
 <resources>
 
-	<!-- Base application theme. -->
-	<style name="StartActivityTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
-		<!-- Customize your theme here. -->
-		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
-	</style>
+    <style name="StartActivityTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+        <item name="actionBarStyle">@style/StartActionBar</item>
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/primaryLightColor</item>
+        <item name="activityBackground">@color/activityBackground</item>
+        <item name="runActivityBackground">@color/runBackground</item>
+        <item name="runProgramTextColor">@color/red</item>
+        <item name="runProgramTextHintColor">@color/red1</item>
+        <item name="runUserTextColor">@color/primaryTextColorDark</item>
+        <item name="runUserTextHintColor">@color/gray</item>
+        <item name="runDividerBackground">@color/runDivider</item>
+        <item name="runDividerTextColor">@color/primaryTextColorDark</item>
+        <item name="surface">@color/surface</item>
+        <item name="primaryColor">@color/primaryColor</item>
+        <item name="primaryColorDark">@color/primaryDarkColor</item>
+        <item name="primaryColorLight">@color/primaryLightColor</item>
+        <item name="primaryColorVeryLight">@color/primaryVeryLightColor</item>
+        <item name="accentColor">@color/primaryLightColor</item>
+        <item name="errorColor">@color/red</item>
+        <item name="primaryTextColor">@color/primaryTextColor</item>
+        <item name="primaryTextColorDark">@color/primaryTextColorDark</item>
+        <item name="compileBackground">@color/black</item>
+        <item name="compileTextColor">@color/green</item>
+        <item name="editorTextColor">@color/editorTextColor</item>
+        <item name="editorBackground">@color/editorBackground</item>
+        <item name="editorCurrentLineTextColor">@color/editorCurrentLineBackground</item>
+        <item name="editorLineNumberBackground">@color/editorLineNumberBackground</item>
+        <item name="editorLineNumberTextColor">@color/editorLineNumberText</item>
+    </style>
 
-	<style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-		<!-- Customize your theme here. -->
-		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
-	</style>
+    <style name="StartActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
+        <item name="titleTextStyle">@style/StartActionBarTitle</item>
+    </style>
 
-	<style name="EditActivity" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
-		<!-- Customize your theme here. -->
-		<item name="colorPrimary">@color/colorPrimary</item>
-		<item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-		<item name="colorAccent">@color/colorAccent</item>
-	</style>
+    <style name="StartActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/primaryTextColor</item>
+    </style>
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor</item>
+        <item name="colorAccent">@color/primaryLightColor</item>
+        <item name="activityBackground">@color/activityBackground</item>
+        <item name="runActivityBackground">@color/runBackground</item>
+        <item name="runProgramTextColor">@color/red</item>
+        <item name="runProgramTextHintColor">@color/red1</item>
+        <item name="runUserTextColor">@color/primaryTextColorDark</item>
+        <item name="runUserTextHintColor">@color/gray</item>
+        <item name="runDividerBackground">@color/runDivider</item>
+        <item name="runDividerTextColor">@color/primaryTextColorDark</item>
+        <item name="surface">@color/surface</item>
+        <item name="primaryColor">@color/primaryColor</item>
+        <item name="primaryColorDark">@color/primaryDarkColor</item>
+        <item name="primaryColorLight">@color/primaryLightColor</item>
+        <item name="primaryColorVeryLight">@color/primaryVeryLightColor</item>
+        <item name="accentColor">@color/primaryLightColor</item>
+        <item name="errorColor">@color/red</item>
+        <item name="primaryTextColor">@color/primaryTextColor</item>
+        <item name="primaryTextColorDark">@color/primaryTextColorDark</item>
+        <item name="compileBackground">@color/black</item>
+        <item name="compileTextColor">@color/green</item>
+        <item name="editorTextColor">@color/editorTextColor</item>
+        <item name="editorBackground">@color/editorBackground</item>
+        <item name="editorCurrentLineTextColor">@color/editorCurrentLineBackground</item>
+        <item name="editorLineNumberBackground">@color/editorLineNumberBackground</item>
+        <item name="editorLineNumberTextColor">@color/editorLineNumberText</item>
+
+    </style>
+
 </resources>

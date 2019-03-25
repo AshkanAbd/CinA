@@ -1,7 +1,7 @@
 package ir.ashkanabd.cina.view.filebrowser;
 
-import android.content.res.Resources;
 import ir.ashkanabd.cina.R;
+import ir.ashkanabd.cina.StartActivity;
 
 import java.util.List;
 import java.util.Arrays;
@@ -28,14 +28,14 @@ public class FileStructure implements Cloneable {
 
     public File[] getListAsFile() throws IOException {
         if (!this.baseFile.canRead()) {
-            throw new IOException(Resources.getSystem().getString(R.string.permission_error));
+            throw new IOException(StartActivity.resourcesContext.getResources().getString(R.string.permission_error));
         }
         return this.baseFile.listFiles();
     }
 
     public String[] getListAsString() throws IOException {
         if (!this.baseFile.canRead()) {
-            throw new IOException(Resources.getSystem().getString(R.string.permission_error));
+            throw new IOException(StartActivity.resourcesContext.getResources().getString(R.string.permission_error));
         }
         return this.baseFile.list();
     }
@@ -50,7 +50,7 @@ public class FileStructure implements Cloneable {
                 return true;
             }
         }
-        throw new IOException(Resources.getSystem().getString(R.string.directory_not_exist_error));
+        throw new IOException(StartActivity.resourcesContext.getResources().getString(R.string.directory_not_exist_error));
     }
 
     public boolean changeDir(int index) throws IOException {
@@ -62,7 +62,7 @@ public class FileStructure implements Cloneable {
                 return true;
             }
         }
-        throw new IOException(Resources.getSystem().getString(R.string.directory_not_exist_error));
+        throw new IOException(StartActivity.resourcesContext.getResources().getString(R.string.directory_not_exist_error));
     }
 
     public boolean changeDir(File file) throws IOException {
@@ -74,14 +74,14 @@ public class FileStructure implements Cloneable {
                 return true;
             }
         }
-        throw new IOException(Resources.getSystem().getString(R.string.directory_not_exist_error));
+        throw new IOException(StartActivity.resourcesContext.getResources().getString(R.string.directory_not_exist_error));
     }
 
     private boolean checkFile(File file) throws IOException {
         if (!file.exists())
-            throw new IOException(Resources.getSystem().getString(R.string.directory_not_exist_error));
+            throw new IOException(StartActivity.resourcesContext.getResources().getString(R.string.directory_not_exist_error));
         if (!file.isDirectory())
-            throw new IOException(Resources.getSystem().getString(R.string.dir_only_error));
+            throw new IOException(StartActivity.resourcesContext.getResources().getString(R.string.dir_only_error));
         return true;
     }
 

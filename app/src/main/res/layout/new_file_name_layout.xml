@@ -2,9 +2,13 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:background="?attr/surface"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="15dp"
 >
 
     <com.rey.material.widget.EditText
@@ -13,48 +17,52 @@
             android:layout_height="wrap_content"
             android:theme="@style/Material.Widget.EditText"
             android:textSize="20sp"
+            android:textColor="?attr/primaryTextColorDark"
             android:layout_marginBottom="10dp"
+            app:et_supportMode="helperWithError"
             app:et_labelEnable="true"
             app:et_labelTextSize="12sp"
-            app:et_labelTextColor="@color/colorPrimary"
-            app:et_supportMode="helperWithError"
-            app:et_supportTextColor="@color/colorAccent"
-            app:et_supportTextErrorColor="@color/colorAccent"
-            app:et_dividerErrorColor="@color/colorAccent"
-            app:et_dividerColor="@color/colorPrimary"
+            app:et_labelTextColor="?attr/primaryColor"
+            app:et_supportTextColor="?attr/primaryTextColor"
+            app:et_supportTextErrorColor="?attr/errorColor"
+            app:et_dividerErrorColor="?attr/errorColor"
+            app:et_dividerColor="?attr/primaryColor"
             app:et_helper=""
     />
 
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
+    <com.rey.material.widget.TextView
             android:id="@+id/create_button_new_file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:padding="10dp"
             android:layout_below="@id/edit_new_file_name"
+            android:text="@string/create_button_text"
+            android:textColor="?attr/primaryColor"
+            android:background="?attr/surface"
+            android:layout_marginEnd="5dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
             android:textAllCaps="true"
-            app:bootstrapText="@string/create_button_text"
-            app:bootstrapSize="md"
-            app:bootstrapBrand="success"
-            app:roundedCorners="true"
-            app:buttonMode="regular"
-            app:showOutline="true"
+            android:textStyle="bold"
     />
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
+    <com.rey.material.widget.TextView
             android:id="@+id/cancel_button_new_file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
+            android:padding="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_alignTop="@id/create_button_new_file_name"
             android:layout_toStartOf="@id/create_button_new_file_name"
             android:layout_below="@id/edit_new_file_name"
+            android:text="@string/cancel_button_text"
+            android:textColor="?attr/primaryColor"
+            android:background="?attr/surface"
+            android:gravity="center"
+            android:textStyle="bold"
             android:textAllCaps="true"
-            app:bootstrapText="@string/cancel_button_text"
-            app:bootstrapSize="md"
-            app:bootstrapBrand="danger"
-            app:roundedCorners="true"
-            app:buttonMode="regular"
-            app:showOutline="true"
     />
 
 </RelativeLayout>

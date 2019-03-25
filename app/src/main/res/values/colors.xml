@@ -3,9 +3,31 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="white">#FFF</color>
+
+
+    <color name="white">#FAFAFA</color>
     <color name="black">#000</color>
-    <color name="code_editor_line_number">#FFF0F0F0</color>
-    <color name="code_editor_current_line">#FFFFFAD6</color>
+    <color name="red">#FFFA0000</color>
+    <color name="red1">#ae0000</color>
+    <color name="gray">#8c8c8c</color>
+    <color name="gray1">#6b6b6b</color>
+    <color name="green">#0cc600</color>
+    <color name="editorLineNumberBackground">#FFF0F0F0</color>
+    <color name="editorLineNumberText">#000</color>
+    <color name="editorCurrentLineBackground">#FFFFFAD6</color>
+    <color name="editorBackground">#FAFAFA</color>
+    <color name="editorTextColor">#000</color>
     <color name="file_browser_clicked_node_background">#FFFFFAD6</color>
+    <color name="primaryColor">#3949ab</color>
+    <color name="primaryLightColor">#6f74dd</color>
+    <color name="primaryDarkColor">#00227b</color>
+    <color name="primaryVeryLightColor">#E8EAF6</color>
+    <color name="primaryTextColor">#FAFAFA</color>
+    <color name="primaryTextColorDark">#000</color>
+    <color name="runBackground">#FAFAFA</color>
+    <color name="runDivider">#6b6b6b</color>
+    <color name="activityBackground">#FAFAFA</color>
+    <color name="surface">#FAFAFA</color>
+
+
 </resources>

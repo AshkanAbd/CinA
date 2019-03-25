@@ -8,7 +8,7 @@
 		android:paddingBottom="15dp"
 		android:paddingStart="30dp"
 		android:paddingEnd="30dp"
-		android:background="#daecea">
+		android:background="?attr/primaryColorVeryLight">
 
 	<androidx.appcompat.widget.AppCompatTextView
 			android:id="@+id/header_browse_file_layout"
@@ -16,7 +16,7 @@
 			android:layout_height="wrap_content"
 			android:gravity="center"
 			android:padding="15dp"
-			android:textColor="@color/colorPrimary"
+			android:textColor="?attr/primaryColor"
 			android:text="@string/browse_files_label"
 			android:textStyle="bold"
 			android:textSize="20sp"
@@ -29,7 +29,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:layout_above="@id/buttons_layout_browse_file_layout"
-			android:background="#FFF"/>
+			android:background="#FAFAFA"/>
 
 	<androidx.appcompat.widget.LinearLayoutCompat
 			android:id="@+id/buttons_layout_browse_file_layout"

@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto">
-	<item
-			android:id="@+id/start_nav_open"
-			android:icon="@drawable/folder_icon2"
-			android:title="@string/Open_project"/>
-	<item
-			android:id="@+id/start_nav_setting"
-			android:icon="@drawable/setting_icon"
-			android:title="@string/Setting"/>
-	<item
-			android:id="@+id/start_nav_about"
-			android:icon="@drawable/info_icon"
-			android:title="@string/About_us"/>
-	<item
-			android:id="@+id/start_nav_rate"
-			android:icon="@drawable/start_icon"
-			android:title="@string/Rate_us"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+            android:id="@+id/start_nav_open"
+            android:icon="@drawable/folder_icon2"
+            android:title="@string/Open_project"/>
+
+    <item
+            android:id="@+id/start_nav_setting"
+            android:icon="@drawable/setting_icon"
+            android:title="@string/Setting"/>
+    <item
+            android:id="@+id/start_nav_purchase"
+            android:icon="@drawable/purchase_icon"
+            android:title="@string/Upgrade_account"/>
+    <item
+            android:id="@+id/start_nav_about"
+            android:icon="@drawable/info_icon"
+            android:title="@string/About_us"/>
+
+    <item
+            android:id="@+id/start_nav_rate"
+            android:icon="@drawable/start_icon"
+            android:title="@string/Rate_us"/>
 </menu>

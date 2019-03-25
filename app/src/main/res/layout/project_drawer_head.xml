@@ -4,7 +4,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorPrimaryDark"
+        android:background="?attr/primaryColorDark"
         android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <TextView
@@ -15,7 +15,7 @@
             android:layout_marginBottom="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="#FFF"
+            android:textColor="?attr/primaryTextColor"
             android:lineSpacingExtra="1sp"
             android:textStyle="bold"
             android:textSize="15sp"/>

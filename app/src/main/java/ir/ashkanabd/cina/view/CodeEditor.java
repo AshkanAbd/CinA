@@ -6,13 +6,19 @@ import android.graphics.Paint;
 import android.text.Layout;
 import android.text.Selection;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatEditText;
 import ir.ashkanabd.cina.R;
 
 public class CodeEditor extends AppCompatEditText {
 
-    private Paint p1, p2;
+    private Paint currentLinePaint;
+    private Paint lineNumberBackgroundPaint;
+    private Paint lineNumberTextPaint;
+    private TypedValue currentLineValue;
+    private TypedValue lineNumberBackgroundValue;
+    private TypedValue lineNumberTextValue;
 
     public CodeEditor(Context context) {
         super(context);
@@ -33,10 +39,18 @@ public class CodeEditor extends AppCompatEditText {
      * Initialize Paint for Line number and current line
      */
     public void initialize(Context context) {
-        p1 = new Paint(getPaint());
-        p1.setColor(context.getResources().getColor(R.color.code_editor_current_line));
-        p2 = new Paint(getPaint());
-        p2.setColor(context.getResources().getColor(R.color.code_editor_line_number));
+        currentLineValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.editorCurrentLineTextColor, currentLineValue, true);
+        lineNumberBackgroundValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.editorLineNumberBackground, lineNumberBackgroundValue, true);
+        lineNumberTextValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.editorLineNumberTextColor, lineNumberTextValue, true);
+        currentLinePaint = new Paint(getPaint());
+        currentLinePaint.setColor(currentLineValue.data);
+        lineNumberBackgroundPaint = new Paint(getPaint());
+        lineNumberBackgroundPaint.setColor(lineNumberBackgroundValue.data);
+        lineNumberTextPaint = new Paint(getPaint());
+        lineNumberTextPaint.setColor(lineNumberTextValue.data);
     }
 
     @Override
@@ -46,14 +60,14 @@ public class CodeEditor extends AppCompatEditText {
          */
         for (int i = 0; i < getLineCount(); i++) {
             canvas.drawRect(0, (i * getLineHeight()) + getPaddingTop() - 5, getPaddingLeft()
-                    , ((i + 1) * getLineHeight() + 1) + getPaddingTop() + 5, p2);
+                    , ((i + 1) * getLineHeight() + 1) + getPaddingTop() + 5, lineNumberBackgroundPaint);
         }
         /*
          * Change current line color
          */
         int currentLine = getCurrentCursorLine();
         canvas.drawRect(0, (currentLine * getLineHeight()) + getPaddingTop() - 5, getWidth()
-                , ((currentLine + 1) * getLineHeight() + 1) + getPaddingTop() + 5, p1);
+                , ((currentLine + 1) * getLineHeight() + 1) + getPaddingTop() + 5, currentLinePaint);
         /*
          * Draw main View
          */
@@ -63,7 +77,7 @@ public class CodeEditor extends AppCompatEditText {
          */
         int baseline = getBaseline();
         for (int i = 0; i < getLineCount(); i++) {
-            canvas.drawText(Integer.toString(i + 1), 10, baseline, getPaint());
+            canvas.drawText(Integer.toString(i + 1), 10, baseline, lineNumberTextPaint);
             baseline += getLineHeight();
         }
     }
