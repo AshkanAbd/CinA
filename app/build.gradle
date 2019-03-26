@@ -33,6 +33,7 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'com.github.kanytu:android-parallax-recyclerview:v1.7'
     implementation 'com.google.android.material:material:1.1.0-alpha04'
     implementation 'com.amulyakhare:com.amulyakhare.textdrawable:1.0.1'
     implementation 'androidx.appcompat:appcompat:1.1.0-alpha03'
@@ -45,7 +46,6 @@ dependencies {
     implementation 'com.github.bmelnychuk:atv:1.2.9'
     implementation 'com.tt:whorlviewlibrary:1.0.3'
     implementation 'com.ikimuhendis:ldrawer:0.1'
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.backendless:backendless:5.0.2'
     implementation('io.socket:socket.io-client:1.0.0') {
         exclude group: 'org.json', module: 'json'

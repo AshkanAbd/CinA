@@ -7,4 +7,11 @@
         android:background="?attr/surface"
         tools:context=".PurchaseActivity">
 
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_view_purchase"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+    />
+
 </RelativeLayout>

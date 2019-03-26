@@ -26,6 +26,8 @@ public class UserData implements Serializable {
     private String purchase_date;
     private String expire_days;
 
+    boolean encrypted = false;
+
     public UserData() {
 
     }
@@ -159,17 +161,19 @@ public class UserData implements Serializable {
 
     public static UserData encryptData(UserData userData) {
         UserData ud = new UserData();
-        ud.setPhone_id(Encryption.encrypt(StartActivity.resourcesContext,userData.getPhone_id()));
-        ud.setExpire_days(Encryption.encrypt(StartActivity.resourcesContext,userData.getExpire_days()));
-        ud.setPurchase_date(Encryption.encrypt(StartActivity.resourcesContext,userData.getPurchase_date()));
+        ud.setPhone_id(Encryption.encrypt(StartActivity.resourcesContext, userData.getPhone_id()));
+        ud.setExpire_days(Encryption.encrypt(StartActivity.resourcesContext, userData.getExpire_days()));
+        ud.setPurchase_date(Encryption.encrypt(StartActivity.resourcesContext, userData.getPurchase_date()));
+        ud.encrypted = true;
         return ud;
     }
 
     public static UserData decryptData(UserData userData) {
         UserData ud = new UserData();
-        ud.setPhone_id(Encryption.decrypt(StartActivity.resourcesContext,userData.getPhone_id()));
-        ud.setExpire_days(Encryption.decrypt(StartActivity.resourcesContext,userData.getExpire_days()));
-        ud.setPurchase_date(Encryption.decrypt(StartActivity.resourcesContext,userData.getPurchase_date()));
+        ud.setPhone_id(Encryption.decrypt(StartActivity.resourcesContext, userData.getPhone_id()));
+        ud.setExpire_days(Encryption.decrypt(StartActivity.resourcesContext, userData.getExpire_days()));
+        ud.setPurchase_date(Encryption.decrypt(StartActivity.resourcesContext, userData.getPurchase_date()));
+        ud.encrypted = false;
         return ud;
     }
 }

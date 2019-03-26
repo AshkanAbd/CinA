@@ -89,6 +89,24 @@ public class Connection implements Serializable {
         }
     }
 
+    public boolean updateDataBase(Context context, UserData userData) {
+        String userFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/.user.info";
+        File userFile = new File(userFilePath);
+        Backendless.setUrl(Encryption.decrypt(context, DataBaseDefaults.SERVER_URL));
+        Backendless.initApp(context.getApplicationContext(), Encryption.decrypt(context, DataBaseDefaults.APPLICATION_ID)
+                , Encryption.decrypt(context, DataBaseDefaults.API_KEY));
+        Backendless.Data.mapTableToClass("UserData", UserData.class);
+        if (!userData.encrypted)
+            userData = UserData.encryptData(userData);
+        try {
+            UserData ud = Backendless.Data.of(UserData.class).save(userData);
+            UserData.writeFile(userFile, ud);
+            return true;
+        } catch (BackendlessException | IOException e) {
+            return false;
+        }
+    }
+
     /*
      * Check user is valid and can use app or not.
      */

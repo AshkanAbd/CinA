@@ -15,6 +15,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
@@ -45,6 +46,7 @@ import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.backgroundTasks.ActivityTask;
 import ir.ashkanabd.cina.compileAndRun.GccCompiler;
 import ir.ashkanabd.cina.database.Connection;
+import ir.ashkanabd.cina.database.Encryption;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
@@ -124,8 +126,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         setupDeleteProjectDialog();
         if (connection.getNeedNetwork()) {
             Toasty.error(this, getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
-        }
-        if (!connection.isValid()) {
+        } else if (!connection.isValid()) {
             Toasty.warning(this, this.getString(R.string.invalid_user), Toasty.LENGTH_LONG, true).show();
         }
     }
@@ -409,7 +410,9 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
             startActivityForResult(new Intent(this, SettingActivity.class), CHANGE_THEME_REQUEST);
         }
         if (menuItem.getItemId() == R.id.start_nav_purchase) {
-            startActivity(new Intent(this, PurchaseActivity.class));
+            Intent projectActivity = new Intent(this, PurchaseActivity.class);
+            projectActivity.putExtra("connection", connection);
+            startActivity(projectActivity);
         }
         if (menuItem.getItemId() == R.id.start_nav_about) {
             Intent intent = new Intent(Intent.ACTION_VIEW);

@@ -15,7 +15,7 @@
     <string name="failed_build_status">Build state: Failed</string>
     <string name="success_build_status">Build state: Success</string>
     <string name="save_successful">Saved successfully</string>
-    <string name="save_failed">Couldn\'t save file </string>
+    <string name="save_failed">Couldn\'t save file</string>
     <string name="not_compiled_project">Project is not compiled yet</string>
     <string name="no_user_login">We couldn\'t found Info about user account, Please connect Internet and try again
     </string>
@@ -66,4 +66,9 @@
     <string name="c_param_helper">These params will use when you compile a C project</string>
     <string name="cpp_param_helper">These params will use when you compile a C++ project</string>
     <string name="splash_text">In Android</string>
+    <string name="purchase_error">Error while purchase item</string>
+    <string name="activating_account">Your activated successfully</string>
+    <string name="activating_error">Unknown error occurred</string>
+    <string name="active_account">Your is active now</string>
+    <string name="wait_activating">Item purchase successfully,\nPlease wait until we active it</string>
 </resources>
