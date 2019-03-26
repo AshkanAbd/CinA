@@ -47,6 +47,7 @@ public class Connection implements Serializable {
                  * Revive user data from server
                  */
                 UserData userData = userDataList.get(0);
+                userData.encrypted = true;
                 UserData.writeFile(userFile, userData);
                 this.userData = UserData.decryptData(userData);
                 this.validUser = isValidUser(userData);
@@ -58,6 +59,7 @@ public class Connection implements Serializable {
                 UserData userData = new UserData(UserData.getDeviceID(context)
                         , UserData.getString(Calendar.getInstance().getTime()), "7");
                 userData = Backendless.Data.of(UserData.class).save(UserData.encryptData(userData));
+                userData.encrypted = true;
                 UserData.writeFile(userFile, userData);
                 this.userData = UserData.decryptData(userData);
                 this.validUser = true;
@@ -100,6 +102,7 @@ public class Connection implements Serializable {
             userData = UserData.encryptData(userData);
         try {
             UserData ud = Backendless.Data.of(UserData.class).save(userData);
+            ud.encrypted = true;
             UserData.writeFile(userFile, ud);
             return true;
         } catch (BackendlessException | IOException e) {
@@ -111,7 +114,8 @@ public class Connection implements Serializable {
      * Check user is valid and can use app or not.
      */
     private boolean isValidUser(UserData userData) {
-        userData = UserData.decryptData(userData);
+        if (userData.encrypted)
+            userData = UserData.decryptData(userData);
         Date startDate = UserData.getDate(userData.getPurchase_date());
         int days = Integer.parseInt(userData.getExpire_days());
         Calendar expireTime = Calendar.getInstance();
@@ -119,6 +123,17 @@ public class Connection implements Serializable {
         expireTime.add(Calendar.DAY_OF_MONTH, days);
         Calendar now = Calendar.getInstance();
         return now.before(expireTime);
+    }
+
+    public Date getExpireTime(UserData userData) {
+        if (userData.encrypted)
+            userData = UserData.decryptData(userData);
+        Date startDate = UserData.getDate(userData.getPurchase_date());
+        int days = Integer.parseInt(userData.getExpire_days());
+        Calendar expireTime = Calendar.getInstance();
+        expireTime.setTime(startDate);
+        expireTime.add(Calendar.DAY_OF_MONTH, days);
+        return expireTime.getTime();
     }
 
     public Boolean isValid() {

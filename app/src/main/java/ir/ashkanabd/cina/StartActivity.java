@@ -40,13 +40,12 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
-import com.rey.material.widget.RadioButton;
 import com.rey.material.widget.TextView;
 import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.backgroundTasks.ActivityTask;
 import ir.ashkanabd.cina.compileAndRun.GccCompiler;
 import ir.ashkanabd.cina.database.Connection;
-import ir.ashkanabd.cina.database.Encryption;
+import ir.ashkanabd.cina.database.UserData;
 import ir.ashkanabd.cina.project.Project;
 import ir.ashkanabd.cina.project.ProjectAdapter;
 import ir.ashkanabd.cina.project.ProjectManager;
@@ -58,7 +57,10 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -95,6 +97,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private Connection connection;
     private TypedValue primaryColorTypedValue;
     private TypedValue errorColorTypedValue;
+    private TextView startDrawerAccountView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,6 +132,13 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         } else if (!connection.isValid()) {
             Toasty.warning(this, this.getString(R.string.invalid_user), Toasty.LENGTH_LONG, true).show();
         }
+        updateAccountView();
+    }
+
+    private void updateAccountView() {
+        Date expireDate = connection.getExpireTime(connection.getUserData());
+        String msg = StartActivity.this.getString(R.string.expite_at) + UserData.getString(expireDate);
+        startDrawerAccountView.setText(msg);
     }
 
     /*
@@ -367,6 +377,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     private void findViews() {
         this.drawerLayout = this.findViewById(R.id.drawer_layout);
         this.navigationView = this.findViewById(R.id.nav_view);
+        this.startDrawerAccountView = navigationView.getHeaderView(0).findViewById(R.id.account_info_start_drawer);
         this.recyclerView = this.findViewById(R.id.projects_recycler_view);
         this.mainLayout = this.findViewById(R.id.main_layout_start_activity);
         mainLayout.setColorSchemeColors(Color.BLUE, Color.RED);
@@ -384,9 +395,11 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
                 if (connection.getNeedNetwork()) {
                     Toasty.error(this, getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
                 }
+                updateAccountView();
             });
             st.execute();
         }, 1000));
+
     }
 
     /*
