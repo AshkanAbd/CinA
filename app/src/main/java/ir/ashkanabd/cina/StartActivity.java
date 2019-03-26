@@ -125,6 +125,9 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         if (connection.getNeedNetwork()) {
             Toasty.error(this, getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
         }
+        if (!connection.isValid()) {
+            Toasty.warning(this, this.getString(R.string.invalid_user), Toasty.LENGTH_LONG, true).show();
+        }
     }
 
     /*

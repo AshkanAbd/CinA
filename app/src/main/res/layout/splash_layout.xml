@@ -27,7 +27,7 @@
                 android:layout_height="20dp"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentBottom="true"
-                android:text="In Android"
+                android:text="@string/splash_text"
                 android:textStyle="bold"
                 android:textColor="?attr/primaryTextColor"
                 android:gravity="center"
