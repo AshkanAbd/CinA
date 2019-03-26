@@ -1,107 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/browse_file_main_layout"
-    android:layout_width="match_parent"
-    android:layout_height="400dp"
-    android:background="@color/colorPrimary"
-    android:paddingStart="30dp"
-    android:paddingEnd="30dp"
-    android:paddingBottom="15dp">
+<RelativeLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		android:id="@+id/browse_file_main_layout"
+		android:layout_width="match_parent"
+		android:layout_height="400dp"
+		android:paddingBottom="15dp"
+		android:paddingStart="30dp"
+		android:paddingEnd="30dp"
+		android:background="?attr/primaryColorVeryLight">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/header_browse_file_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="15dp"
-        android:text="@string/browse_files_label"
-        android:textColor="#FFF"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+	<androidx.appcompat.widget.AppCompatTextView
+			android:id="@+id/header_browse_file_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:padding="15dp"
+			android:textColor="?attr/primaryColor"
+			android:text="@string/browse_files_label"
+			android:textStyle="bold"
+			android:textSize="20sp"
+			/>
 
-    <TextView
-        android:id="@+id/browser_browse_file_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/header_browse_file_layout"
-        android:layout_marginBottom="40dp"
-        android:background="#FFF" />
+	<TextView
+			android:layout_below="@+id/header_browse_file_layout"
+			android:id="@+id/browser_browse_file_layout"
+			android:layout_marginBottom="15dp"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_above="@id/buttons_layout_browse_file_layout"
+			android:background="#FAFAFA"/>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/buttons_layout_browse_file_layout"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:showDividers="middle">
+	<androidx.appcompat.widget.LinearLayoutCompat
+			android:id="@+id/buttons_layout_browse_file_layout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="horizontal"
+			android:layout_centerHorizontal="true"
+			android:layout_alignParentBottom="true"
+			android:gravity="center"
+			app:showDividers="middle"
+			>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
 
-        <com.rey.material.widget.Button
-            android:id="@+id/new_folder_browse_file_layout"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/new_folder" />
+		<com.beardedhen.androidbootstrap.BootstrapButton
+				android:id="@+id/new_folder_browse_file_layout"
+				android:layout_width="40dp"
+				android:layout_height="35dp"
+				app:materialIcon="md_create_new_folder"
+				app:bootstrapSize="lg"
+				app:bootstrapBrand="regular"
+				app:roundedCorners="true"
+				app:buttonMode="regular"
+				app:showOutline="true"
+				/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
 
-        <com.rey.material.widget.Button
-            android:id="@+id/new_file_browser_file_layout"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/file_icon1"
-            android:text="+"
-            android:textAlignment="center"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
+		<com.beardedhen.androidbootstrap.BootstrapButton
+				android:id="@+id/new_file_browser_file_layout"
+				android:layout_width="40dp"
+				android:layout_height="35dp"
+				app:materialIcon="md_insert_drive_file"
+				app:bootstrapSize="lg"
+				app:bootstrapBrand="regular"
+				app:roundedCorners="true"
+				app:buttonMode="regular"
+				app:showOutline="true"
+				/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
 
-        <com.rey.material.widget.Button
-            android:id="@+id/delete_file_browser_file_layout"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/delete_icon" />
+		<com.beardedhen.androidbootstrap.BootstrapButton
+				android:id="@+id/delete_file_browser_file_layout"
+				android:layout_width="40dp"
+				android:layout_height="35dp"
+				app:materialIcon="md_delete"
+				app:bootstrapSize="lg"
+				app:bootstrapBrand="regular"
+				app:roundedCorners="true"
+				app:buttonMode="regular"
+				app:showOutline="true"
+				/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
 
-        <com.rey.material.widget.Button
-            android:id="@+id/open_browse_file_layout"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/edit_icon" />
+		<com.beardedhen.androidbootstrap.BootstrapButton
+				android:id="@+id/open_browse_file_layout"
+				android:layout_width="40dp"
+				android:layout_height="35dp"
+				app:materialIcon="md_edit"
+				app:bootstrapSize="lg"
+				app:bootstrapBrand="regular"
+				app:roundedCorners="true"
+				app:buttonMode="regular"
+				app:showOutline="true"
+				/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
 
-        <com.rey.material.widget.Button
-            android:id="@+id/cancel_browse_file_layout"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:background="@drawable/cancel_icon" />
+		<com.beardedhen.androidbootstrap.BootstrapButton
+				android:id="@+id/cancel_browse_file_layout"
+				android:layout_width="40dp"
+				android:layout_height="35dp"
+				app:materialIcon="md_clear"
+				app:bootstrapSize="lg"
+				app:bootstrapBrand="warning"
+				app:roundedCorners="true"
+				app:checked="false"
+				app:buttonMode="regular"
+				app:showOutline="true"
+				/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5" />
+		<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_weight="0.5"/>
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+	</androidx.appcompat.widget.LinearLayoutCompat>
 
 </RelativeLayout>

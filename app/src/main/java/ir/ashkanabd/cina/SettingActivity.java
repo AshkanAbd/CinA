@@ -8,6 +8,8 @@ import android.os.Bundle;
 import com.rey.material.widget.EditText;
 import com.rey.material.widget.Spinner;
 
+import java.util.Objects;
+
 public class SettingActivity extends AppCompatActivity {
 
     private Spinner themeSpinner;
@@ -37,7 +39,9 @@ public class SettingActivity extends AppCompatActivity {
         appearancePreferences = getSharedPreferences("appearance", MODE_PRIVATE);
         lang = appearancePreferences.getString("lang", "EN");
         theme = appearancePreferences.getString("theme", "light");
-        // TODO: 3/23/19 Set lang to App language and theme to App theme
+        boolean isDarkTheme = Objects.requireNonNull(theme).equalsIgnoreCase("dark");
+        if (isDarkTheme)
+            setTheme(R.style.StartActivityThemeDark);
     }
 
     private void findView() {
@@ -58,31 +62,13 @@ public class SettingActivity extends AppCompatActivity {
         themeSpinnerAdapter.add("Light");
         themeSpinnerAdapter.add("Dark");
         themeSpinner.setAdapter(themeSpinnerAdapter);
-        themeSpinner.setOnItemSelectedListener((_a, _b, position, _c) -> themeSpinnerItemSelected(position));
         themeSpinner.setSelection(themeSpinnerAdapter.getPosition(theme));
         langSpinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
         langSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         langSpinnerAdapter.add("English");
         langSpinnerAdapter.add("Persian");
         langSpinner.setAdapter(langSpinnerAdapter);
-        langSpinner.setOnItemSelectedListener((_a, _b, position, _c) -> langSpinnerItemSelected(position));
         langSpinner.setSelection(langSpinnerAdapter.getPosition(lang.equals("EN") ? "English" : "Persian"));
-    }
-
-    /*
-     * Theme spinner callback
-     */
-    public void themeSpinnerItemSelected(int position) {
-        // TODO: 3/23/19 change app theme
-        Log.e("CinA", themeSpinnerAdapter.getItem(position));
-    }
-
-    /*
-     * Language spinner callback
-     */
-    public void langSpinnerItemSelected(int position) {
-        // TODO: 3/23/19 change app language
-        Log.e("CinA", langSpinnerAdapter.getItem(position));
     }
 
     @Override
@@ -93,7 +79,11 @@ public class SettingActivity extends AppCompatActivity {
         this.compilePreferences.edit().putString("c", cCompileParams.getText().toString()).apply();
         this.compilePreferences.edit().putString("c++", cppCompileParams.getText().toString()).apply();
         this.appearancePreferences.edit().putString("lang", langSpinner.getSelectedItem().equals("English") ? "EN" : "FA").apply();
-        this.appearancePreferences.edit().putString("theme", ((String) themeSpinner.getSelectedItem())).apply();
+        if (!theme.equals(themeSpinner.getSelectedItem())){
+            this.appearancePreferences.edit().putString("theme", ((String) themeSpinner.getSelectedItem())).apply();
+            setResult(1);
+        }else
+            setResult(0);
         super.onBackPressed();
     }
 }

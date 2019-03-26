@@ -56,6 +56,8 @@ public class EditorActivity extends AppCompatActivityFileBrowserSupport {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (isDarkTheme)
+            setTheme(R.style.AppThemeDark);
         setContentView(R.layout.activity_editor);
         setupLoadingProgress();
         changeLoadingProgressStatus();

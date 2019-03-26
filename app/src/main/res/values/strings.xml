@@ -65,4 +65,5 @@
     <string name="need_bazaar">You need cafe bazaar to complete this action</string>
     <string name="c_param_helper">These params will use when you compile a C project</string>
     <string name="cpp_param_helper">These params will use when you compile a C++ project</string>
+    <string name="splash_text">In Android</string>
 </resources>

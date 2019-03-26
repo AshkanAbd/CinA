@@ -4,6 +4,8 @@ import android.content.SharedPreferences;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
+import java.util.Objects;
+
 public class PurchaseActivity extends AppCompatActivity {
 
     private SharedPreferences appearancePreferences;
@@ -22,7 +24,9 @@ public class PurchaseActivity extends AppCompatActivity {
         appearancePreferences = getSharedPreferences("appearance", MODE_PRIVATE);
         String lang = appearancePreferences.getString("lang", "EN");
         String theme = appearancePreferences.getString("theme", "light");
-        // TODO: 3/23/19 Set lang to App language and theme to App theme
+        boolean isDarkTheme = Objects.requireNonNull(theme).equalsIgnoreCase("dark");
+        if (isDarkTheme)
+            setTheme(R.style.StartActivityThemeDark);
     }
 
 }

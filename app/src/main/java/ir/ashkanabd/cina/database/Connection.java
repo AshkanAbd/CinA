@@ -31,11 +31,12 @@ public class Connection implements Serializable {
     public void connectDatabase(Context context) {
         String userFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/.user.info";
         File userFile = new File(userFilePath);
-        Backendless.setUrl(Encryption.decrypt(DataBaseDefaults.SERVER_URL));
-        Backendless.initApp(context.getApplicationContext(), Encryption.decrypt(DataBaseDefaults.APPLICATION_ID), Encryption.decrypt(DataBaseDefaults.API_KEY));
+        Backendless.setUrl(Encryption.decrypt(context, DataBaseDefaults.SERVER_URL));
+        Backendless.initApp(context.getApplicationContext(), Encryption.decrypt(context, DataBaseDefaults.APPLICATION_ID)
+                , Encryption.decrypt(context, DataBaseDefaults.API_KEY));
         Backendless.Data.mapTableToClass("UserData", UserData.class);
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause("phone_id = '" + Encryption.encrypt(UserData.getDeviceID(context)) + "'");
+        queryBuilder.setWhereClause("phone_id = '" + Encryption.encrypt(context, UserData.getDeviceID(context)) + "'");
         try {
             if (!userFile.exists()) {
                 userFile.createNewFile();

@@ -5,7 +5,10 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import ir.ashkanabd.cina.view.CodeEditor;
+
+import java.util.Objects;
 
 
 /**
@@ -17,11 +20,13 @@ public abstract class AppCompatActivityFileBrowserSupport extends AppCompatActiv
     protected CodeEditor editor;
     protected ActionBar projectActionBar;
     protected SharedPreferences appearancePreferences;
+    protected boolean isDarkTheme;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setAppAppearance();
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
 
     /*
@@ -31,7 +36,7 @@ public abstract class AppCompatActivityFileBrowserSupport extends AppCompatActiv
         appearancePreferences = getSharedPreferences("appearance", MODE_PRIVATE);
         String lang = appearancePreferences.getString("lang", "EN");
         String theme = appearancePreferences.getString("theme", "light");
-        // TODO: 3/23/19 Set lang to App language and theme to App theme
+        isDarkTheme = Objects.requireNonNull(theme).equalsIgnoreCase("dark");
     }
 
     public CodeEditor getEditor() {

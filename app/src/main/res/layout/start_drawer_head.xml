@@ -10,15 +10,6 @@
         android:paddingTop="20dp"
         android:paddingEnd="20dp">
 
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher_round"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:paddingBottom="10dp"
-            tools:ignore="ContentDescription"/>
-
     <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,5 +20,13 @@
             android:text="@string/app_name"
             android:textSize="35sp"
             android:fontFamily="serif"/>
+
+    <ImageView
+            android:layout_width= "80dp"
+            android:layout_height="80dp"
+            android:src="@mipmap/cina_launcher"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            tools:ignore="ContentDescription"/>
 
 </RelativeLayout>

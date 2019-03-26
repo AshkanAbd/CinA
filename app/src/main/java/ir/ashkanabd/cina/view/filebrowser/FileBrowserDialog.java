@@ -51,7 +51,7 @@ public class FileBrowserDialog {
 
     private void setupDialog() {
         browserDialog = new MaterialDialog(activity);
-        browserDialog.setContentView(R.layout.browse_file_layout1);
+        browserDialog.setContentView(R.layout.browse_file_layout);
         RelativeLayout mainLayout = browserDialog.findViewById(R.id.browse_file_main_layout);
         mainLayout.addView(setupDialogView());
         setupDialogViewListeners(mainLayout);

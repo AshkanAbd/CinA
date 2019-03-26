@@ -70,8 +70,10 @@
                 android:layout_marginEnd="10dp"
                 android:textSize="15sp"
                 android:checked="true"
-                android:theme="@style/StartActivityTheme"
-                app:useMaterialThemeColors="true"
+                android:theme="?attr/theme"
+                android:gravity="center"
+                android:buttonTint="?attr/primaryColorLight"
+                style=""
         />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
@@ -82,8 +84,9 @@
                 android:text="@string/create_cpp_project_button_text"
                 android:textSize="15sp"
                 android:checked="false"
-                android:theme="@style/StartActivityTheme"
-                app:useMaterialThemeColors="true"
+                android:gravity="center"
+                android:buttonTint="?attr/primaryColorLight"
+
         />
 
     </RadioGroup>
@@ -100,6 +103,7 @@
             android:textAllCaps="false"
             android:textSize="17sp"
             android:layout_marginTop="40dp"
-            android:theme="@style/AppTheme"/>
+            app:backgroundTint="?attr/primaryColor"
+    />
 
 </RelativeLayout>

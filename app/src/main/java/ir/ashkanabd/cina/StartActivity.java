@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.view.GravityCompat;
@@ -38,6 +39,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.ikimuhendis.ldrawer.DrawerArrowDrawable;
 import com.rey.material.widget.EditText;
+import com.rey.material.widget.RadioButton;
 import com.rey.material.widget.TextView;
 import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.backgroundTasks.ActivityTask;
@@ -64,6 +66,7 @@ import static android.provider.ContactsContract.Directory.PACKAGE_NAME;
 public class StartActivity extends AppCompatActivityFileBrowserSupport {
 
     public static Context resourcesContext;
+    public static int CHANGE_THEME_REQUEST = 10;
 
     private List<Project> projectList;
     private ActionBarDrawerToggleCompat drawerToggle;
@@ -95,8 +98,12 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         resourcesContext = this;
+        if (isDarkTheme) {
+            setTheme(R.style.StartActivityThemeDark);
+        }
         setContentView(R.layout.splash_layout);
         getSupportActionBar().hide();
+        TypefaceProvider.registerDefaultIconSets();
         this.projectManager = new ProjectManager();
         this.projectList = new ArrayList<>();
         activityStartTask = new ActivityTask(null);
@@ -106,7 +113,6 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     }
 
     private void postActivityTask() {
-        TypefaceProvider.registerDefaultIconSets();
         setContentView(R.layout.start_activity);
         getSupportActionBar().show();
         findViews();
@@ -116,8 +122,6 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         setupListView();
         setupBrowseProjectDialog();
         setupDeleteProjectDialog();
-        adapter = new ProjectAdapter(this.projectList);
-        recyclerView.setAdapter(adapter);
         if (connection.getNeedNetwork()) {
             Toasty.error(this, getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
         }
@@ -145,11 +149,11 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            loadProjects();
-            changeListView();
-        } catch (Exception ignored) {
-        }
+//        try {
+//            loadProjects();
+//            changeListView();
+//        } catch (Exception ignored) {
+//        }
     }
 
     /*
@@ -340,7 +344,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     /*
      * Load projects from workspace
      */
-    private Object loadProjects() {
+    private void loadProjects() {
         projectList.clear();
         try {
             this.projectManager.readPreviousProjects(projectList);
@@ -351,7 +355,6 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
             Toasty.error(this, getString(R.string.project_error) + getString(R.string.project_structure_error)
                     , Toasty.LENGTH_SHORT, true).show();
         }
-        return null;
     }
 
     /*
@@ -400,7 +403,7 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
             fileBrowserDialog.getBrowserDialog().show();
         }
         if (menuItem.getItemId() == R.id.start_nav_setting) {
-            startActivity(new Intent(this, SettingActivity.class));
+            startActivityForResult(new Intent(this, SettingActivity.class), CHANGE_THEME_REQUEST);
         }
         if (menuItem.getItemId() == R.id.start_nav_purchase) {
             startActivity(new Intent(this, PurchaseActivity.class));
@@ -427,6 +430,18 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
         }
         drawerLayout.closeDrawers();
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CHANGE_THEME_REQUEST) {
+            if (resultCode == 1) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+        }
     }
 
     /*

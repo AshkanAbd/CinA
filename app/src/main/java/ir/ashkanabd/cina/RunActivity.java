@@ -1,5 +1,6 @@
 package ir.ashkanabd.cina;
 
+import android.content.SharedPreferences;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
@@ -11,6 +12,8 @@ import es.dmoral.toasty.Toasty;
 import ir.ashkanabd.cina.compileAndRun.GccRun;
 import ir.ashkanabd.cina.project.Project;
 
+import java.util.Objects;
+
 public class RunActivity extends AppCompatActivity {
 
     private TextView outputTextView;
@@ -18,15 +21,26 @@ public class RunActivity extends AppCompatActivity {
     private EditText userEditText;
     private Project runningProject;
     private GccRun gccRun;
+    private SharedPreferences appearancePreferences;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setAppAppearance();
         setContentView(R.layout.run_layout);
-//        findViews();
-//        getProject();
-//        run();
+        findViews();
+        getProject();
+        run();
+    }
+
+    private void setAppAppearance(){
+        appearancePreferences = getSharedPreferences("appearance", MODE_PRIVATE);
+        String lang = appearancePreferences.getString("lang", "EN");
+        String theme = appearancePreferences.getString("theme", "light");
+        boolean isDarkTheme = Objects.requireNonNull(theme).equalsIgnoreCase("dark");
+        if (isDarkTheme)
+            setTheme(R.style.AppThemeDark);
     }
 
     /*

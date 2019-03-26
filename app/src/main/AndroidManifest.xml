@@ -11,9 +11,8 @@
     <application
             android:allowBackup="true"
             android:fullBackupContent="true"
-            android:icon="@mipmap/ic_launcher"
+            android:icon="@mipmap/cina_launcher"
             android:label="@string/app_name"
-            android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="false"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning"
@@ -46,7 +45,8 @@
                 <action android:name="android.intent.action.MAIN"/>
             </intent-filter>
         </activity>
-        <activity android:name=".PurchaseActivity">
+        <activity android:name=".PurchaseActivity"
+                  android:theme="@style/StartActivityTheme">
         </activity>
     </application>
 

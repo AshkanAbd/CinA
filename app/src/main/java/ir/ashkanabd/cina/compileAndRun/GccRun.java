@@ -60,6 +60,7 @@ public class GccRun extends GccTask {
         Future<String> stdErrFuture = stdErrService.submit(stdErr::nextLine);
         Future<String> stdInFuture = stdInService.submit(this::readUserInput);
         String stdOutString, stdErrString, stdInString;
+        int tolerance = 3;
         do {
             try {
                 stdOutString = stdOutFuture.get(10, TimeUnit.MILLISECONDS);
@@ -86,7 +87,9 @@ public class GccRun extends GccTask {
                 }
             } catch (Exception ignored) {
             }
-        } while (isAlive());
+            if (!isAlive())
+                tolerance--;
+        } while (isAlive() || tolerance != 0);
         return runningProcess.exitValue();
     }
 

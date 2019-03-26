@@ -43,6 +43,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
+            android:background="?attr/surface"
             app:menu="@menu/project_drawer_menu"
             app:headerLayout="@layout/project_drawer_head"/>
 

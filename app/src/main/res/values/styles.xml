@@ -31,6 +31,37 @@
         <item name="editorLineNumberTextColor">@color/editorLineNumberText</item>
     </style>
 
+    <style name="StartActivityThemeDark" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+        <item name="actionBarStyle">@style/StartActionBar</item>
+        <item name="colorPrimary">@color/primaryColor_d</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor_d</item>
+        <item name="colorAccent">@color/primaryLightColor_d</item>
+        <item name="activityBackground">@color/activityBackground_d</item>
+        <item name="runActivityBackground">@color/runBackground_d</item>
+        <item name="runProgramTextColor">@color/red</item>
+        <item name="runProgramTextHintColor">@color/red1</item>
+        <item name="runUserTextColor">@color/primaryTextColor_d</item>
+        <item name="runUserTextHintColor">@color/gray</item>
+        <item name="runDividerBackground">@color/runDivider</item>
+        <item name="runDividerTextColor">@color/primaryTextColor_d</item>
+        <item name="surface">@color/surface_d</item>
+        <item name="primaryColor">@color/primaryColor_d</item>
+        <item name="primaryColorDark">@color/primaryDarkColor_d</item>
+        <item name="primaryColorLight">@color/primaryLightColor_d</item>
+        <item name="primaryColorVeryLight">@color/primaryVeryLightColor_d</item>
+        <item name="accentColor">@color/primaryLightColor_d</item>
+        <item name="errorColor">@color/red</item>
+        <item name="primaryTextColor">@color/primaryTextColor_d</item>
+        <item name="primaryTextColorDark">@color/primaryTextColorDark_d</item>
+        <item name="compileBackground">@color/black</item>
+        <item name="compileTextColor">@color/green</item>
+        <item name="editorTextColor">@color/editorTextColor_d</item>
+        <item name="editorBackground">@color/editorBackground_d</item>
+        <item name="editorLineNumberTextColor">@color/editorLineNumberText_d</item>
+        <item name="editorLineNumberBackground">@color/editorLineNumberBackground_d</item>
+        <item name="editorCurrentLineTextColor">@color/editorCurrentLineBackground_d</item>
+    </style>
+
     <style name="StartActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="titleTextStyle">@style/StartActionBarTitle</item>
     </style>
@@ -67,6 +98,37 @@
         <item name="editorCurrentLineTextColor">@color/editorCurrentLineBackground</item>
         <item name="editorLineNumberBackground">@color/editorLineNumberBackground</item>
         <item name="editorLineNumberTextColor">@color/editorLineNumberText</item>
+
+    </style>
+
+    <style name="AppThemeDark" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="colorPrimary">@color/primaryColor_d</item>
+        <item name="colorPrimaryDark">@color/primaryDarkColor_d</item>
+        <item name="colorAccent">@color/primaryLightColor_d</item>
+        <item name="activityBackground">@color/activityBackground_d</item>
+        <item name="runActivityBackground">@color/runBackground_d</item>
+        <item name="runProgramTextColor">@color/red</item>
+        <item name="runProgramTextHintColor">@color/red1</item>
+        <item name="runUserTextColor">@color/primaryTextColor_d</item>
+        <item name="runUserTextHintColor">@color/gray</item>
+        <item name="runDividerBackground">@color/runDivider</item>
+        <item name="runDividerTextColor">@color/primaryTextColor_d</item>
+        <item name="surface">@color/surface_d</item>
+        <item name="primaryColor">@color/primaryColor_d</item>
+        <item name="primaryColorDark">@color/primaryDarkColor_d</item>
+        <item name="primaryColorLight">@color/primaryLightColor_d</item>
+        <item name="primaryColorVeryLight">@color/primaryVeryLightColor_d</item>
+        <item name="accentColor">@color/primaryLightColor_d</item>
+        <item name="errorColor">@color/red</item>
+        <item name="primaryTextColor">@color/primaryTextColor_d</item>
+        <item name="primaryTextColorDark">@color/primaryTextColorDark_d</item>
+        <item name="compileBackground">@color/black</item>
+        <item name="compileTextColor">@color/green</item>
+        <item name="editorTextColor">@color/editorTextColor_d</item>
+        <item name="editorBackground">@color/editorBackground_d</item>
+        <item name="editorLineNumberTextColor">@color/editorLineNumberText_d</item>
+        <item name="editorLineNumberBackground">@color/editorLineNumberBackground_d</item>
+        <item name="editorCurrentLineTextColor">@color/editorCurrentLineBackground_d</item>
 
     </style>
 

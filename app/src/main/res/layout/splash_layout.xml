@@ -4,29 +4,57 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="?attr/colorPrimary"
+        android:background="?attr/primaryColor"
 >
 
-    <com.rey.material.widget.ImageView
-            android:id="@+id/splash_center_icon"
+    <RelativeLayout
+            android:id="@+id/icon_layout_splash_layout"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/ic_launcher"
-            android:layout_centerInParent="true"
-    />
+            android:layout_height="100dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginBottom="20dp"
+            android:layout_above="@id/center_splash_layout"
+    >
+        <com.rey.material.widget.ImageView
+                android:id="@+id/splash_center_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:srcCompat="@mipmap/cina_launcher"
+        />
+        <com.rey.material.widget.TextView
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
+                android:text="In Android"
+                android:textStyle="bold"
+                android:textColor="?attr/primaryTextColor"
+                android:gravity="center"
+                android:layout_marginStart="75dp"
+                android:textSize="20sp"
+                app:fontFamily="sans-serif-smallcaps"
+        />
+    </RelativeLayout>
+    <TextView
+            android:id="@+id/center_splash_layout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"/>
 
     <com.rey.material.widget.ProgressView
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_below="@id/splash_center_icon"
+            android:layout_below="@id/center_splash_layout"
             android:layout_marginTop="20dp"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
             android:layout_centerHorizontal="true"
+            android:layout_alignStart="@id/icon_layout_splash_layout"
+            android:layout_alignEnd="@id/icon_layout_splash_layout"
+            android:layout_marginStart="-60dp"
+            android:layout_marginEnd="-60dp"
             app:pv_autostart="true"
             app:pv_circular="false"
             app:pv_progressStyle="@style/splashProgressStyle"
-
     />
 
 </RelativeLayout>

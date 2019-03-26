@@ -4,11 +4,11 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/drawer_layout"
-        tools:context=".StartActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-
+        android:fitsSystemWindows="true"
+        tools:context=".StartActivity"
+>
 
     <RelativeLayout
             android:layout_width="match_parent"
@@ -32,8 +32,8 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/new_project_float_btn"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:srcCompat="@drawable/add_icon"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
@@ -47,9 +47,9 @@
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingTop="?attr/actionBarSize"
             android:layout_gravity="start"
-            android:fitsSystemWindows="true"
+            android:fitsSystemWindows="false"
+            android:background="?attr/surface"
             app:menu="@menu/start_drawer_menu"
             app:headerLayout="@layout/start_drawer_head"/>
 

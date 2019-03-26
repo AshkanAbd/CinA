@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
+import ir.ashkanabd.cina.StartActivity;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -158,17 +159,17 @@ public class UserData implements Serializable {
 
     public static UserData encryptData(UserData userData) {
         UserData ud = new UserData();
-        ud.setPhone_id(Encryption.encrypt(userData.getPhone_id()));
-        ud.setExpire_days(Encryption.encrypt(userData.getExpire_days()));
-        ud.setPurchase_date(Encryption.encrypt(userData.getPurchase_date()));
+        ud.setPhone_id(Encryption.encrypt(StartActivity.resourcesContext,userData.getPhone_id()));
+        ud.setExpire_days(Encryption.encrypt(StartActivity.resourcesContext,userData.getExpire_days()));
+        ud.setPurchase_date(Encryption.encrypt(StartActivity.resourcesContext,userData.getPurchase_date()));
         return ud;
     }
 
     public static UserData decryptData(UserData userData) {
         UserData ud = new UserData();
-        ud.setPhone_id(Encryption.decrypt(userData.getPhone_id()));
-        ud.setExpire_days(Encryption.decrypt(userData.getExpire_days()));
-        ud.setPurchase_date(Encryption.decrypt(userData.getPurchase_date()));
+        ud.setPhone_id(Encryption.decrypt(StartActivity.resourcesContext,userData.getPhone_id()));
+        ud.setExpire_days(Encryption.decrypt(StartActivity.resourcesContext,userData.getExpire_days()));
+        ud.setPurchase_date(Encryption.decrypt(StartActivity.resourcesContext,userData.getPurchase_date()));
         return ud;
     }
 }
