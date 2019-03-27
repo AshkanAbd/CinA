@@ -57,9 +57,7 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -136,6 +134,10 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
     }
 
     private void updateAccountView() {
+        if (connection.getUserData() == null) {
+            startDrawerAccountView.setText(this.getString(R.string.unknown_account));
+            return;
+        }
         Date expireDate = connection.getExpireTime(connection.getUserData());
         String msg = StartActivity.this.getString(R.string.expite_at) + UserData.getString(expireDate);
         startDrawerAccountView.setText(msg);
@@ -423,6 +425,10 @@ public class StartActivity extends AppCompatActivityFileBrowserSupport {
             startActivityForResult(new Intent(this, SettingActivity.class), CHANGE_THEME_REQUEST);
         }
         if (menuItem.getItemId() == R.id.start_nav_purchase) {
+            if (connection.getNeedNetwork()) {
+                Toasty.error(this, this.getString(R.string.no_user_login), Toasty.LENGTH_LONG, true).show();
+                return true;
+            }
             Intent projectActivity = new Intent(this, PurchaseActivity.class);
             projectActivity.putExtra("connection", connection);
             startActivity(projectActivity);

@@ -71,5 +71,6 @@
     <string name="activating_error">Unknown error occurred</string>
     <string name="active_account">Your is active now</string>
     <string name="wait_activating">Item purchase successfully,\nPlease wait until we active it</string>
-    <string name="expite_at">Expire at:\u0020</string>
+    <string name="expite_at">Expires on:\u0020</string>
+    <string name="unknown_account">Unknown account</string>
 </resources>

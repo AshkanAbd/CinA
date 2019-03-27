@@ -145,12 +145,12 @@ public class UserData implements Serializable {
     public static String getString(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        return calendar.get(Calendar.YEAR) + "-" + calendar.get(Calendar.MONTH) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
+        return calendar.get(Calendar.YEAR) + "-" + (calendar.get(Calendar.MONTH) + 1) + "-" + calendar.get(Calendar.DAY_OF_MONTH);
     }
 
     public static Date getDate(int year, int month, int date) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, date);
+        calendar.set(year, month - 1, date);
         return calendar.getTime();
     }
 

@@ -79,7 +79,7 @@ public class SettingActivity extends AppCompatActivity {
         this.compilePreferences.edit().putString("c", cCompileParams.getText().toString()).apply();
         this.compilePreferences.edit().putString("c++", cppCompileParams.getText().toString()).apply();
         this.appearancePreferences.edit().putString("lang", langSpinner.getSelectedItem().equals("English") ? "EN" : "FA").apply();
-        if (!theme.equals(themeSpinner.getSelectedItem())){
+        if (!theme.equalsIgnoreCase(themeSpinner.getSelectedItem().toString())){
             this.appearancePreferences.edit().putString("theme", ((String) themeSpinner.getSelectedItem())).apply();
             setResult(1);
         }else

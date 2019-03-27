@@ -65,7 +65,12 @@ public class GccCompiler {
      * Create compile parameter from given source files
      */
     private String createCompileParam(Project project) {
-        StringBuilder builder = new StringBuilder(this.workspace.getAbsolutePath() + "/gcc/bin/aarch64-linux-android-g++");
+        StringBuilder builder = new StringBuilder();
+        if (project.getLang().equalsIgnoreCase("C++")) {
+            builder.append(this.workspace.getAbsolutePath()).append("/gcc/bin/aarch64-linux-android-g++");
+        } else {
+            builder.append(this.workspace.getAbsolutePath()).append("/gcc/bin/aarch64-linux-android-gcc");
+        }
         for (File file : project.getSourceAsFile()) {
             if (!file.isFile()) continue;
             builder.append(" ");
