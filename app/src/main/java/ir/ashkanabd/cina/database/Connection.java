@@ -36,59 +36,114 @@ public class Connection implements Serializable {
                 , Encryption.decrypt(context, DataBaseDefaults.API_KEY));
         Backendless.Data.mapTableToClass("UserData", UserData.class);
         DataQueryBuilder queryBuilder = DataQueryBuilder.create();
-        queryBuilder.setWhereClause("phone_id = '" + Encryption.encrypt(context, UserData.getDeviceID(context)) + "'");
         try {
-            if (!userFile.exists()) {
-                userFile.createNewFile();
-            }
-            List<UserData> userDataList = Backendless.Data.of(UserData.class).find(queryBuilder);
-            if (userDataList.size() != 0) {
-                /*
-                 * Revive user data from server
-                 */
-                UserData userData = userDataList.get(0);
-                userData.encrypted = true;
-                UserData.writeFile(userFile, userData);
-                this.userData = UserData.decryptData(userData);
-                this.validUser = isValidUser(userData);
-                Log.e("CinA", "User info read from server");
-            } else {
-                /*
-                 * Create new user in server
-                 */
-                UserData userData = new UserData(UserData.getDeviceID(context)
-                        , UserData.getString(Calendar.getInstance().getTime()), "7");
-                userData = Backendless.Data.of(UserData.class).save(UserData.encryptData(userData));
-                userData.encrypted = true;
-                UserData.writeFile(userFile, userData);
-                this.userData = UserData.decryptData(userData);
-                this.validUser = true;
-                Log.e("CinA", "New user");
-            }
-        } catch (BackendlessException e) {
             /*
-             * Network problem, check storage
+             * Read user data from storage
              */
+            UserData userData = UserData.readFile(userFile);
+            this.userData = UserData.decryptData(userData);
+            this.validUser = isValidUser(userData);
+            Log.e("CinA", "User info read from storage");
+        } catch (Exception e) {
             try {
                 /*
-                 * Read user data from storage
+                 * Storage problem, check server
                  */
-                UserData userData = UserData.readFile(userFile);
-                this.userData = UserData.decryptData(userData);
-                this.validUser = isValidUser(userData);
-                Log.e("CinA", "User info read from storage");
-            } catch (Exception e1) {
+                if (!userFile.exists()) {
+                    userFile.createNewFile();
+                }
+                List<UserData> userDataList = Backendless.Data.of(UserData.class).find(queryBuilder);
+                if (userDataList.size() != 0) {
+                    /*
+                     * Revive user data from server
+                     */
+                    UserData userData = userDataList.get(0);
+                    userData.encrypted = true;
+                    UserData.writeFile(userFile, userData);
+                    this.userData = UserData.decryptData(userData);
+                    this.validUser = isValidUser(userData);
+                    Log.e("CinA", "User info read from server");
+                } else {
+                    /*
+                     * Create new user in server
+                     */
+                    UserData userData = new UserData(UserData.getDeviceID(context)
+                            , UserData.getString(Calendar.getInstance().getTime()), "7");
+                    userData = Backendless.Data.of(UserData.class).save(UserData.encryptData(userData));
+                    userData.encrypted = true;
+                    UserData.writeFile(userFile, userData);
+                    this.userData = UserData.decryptData(userData);
+                    this.validUser = true;
+                    Log.e("CinA", "New user");
+                }
+            } catch (BackendlessException be) {
                 /*
-                 * No user data in storage
+                 * Network error.
                  */
                 needNetwork = true;
                 Log.e("CinA", "Unknown user");
+            } catch (IOException ioe) {
+                /*
+                 * Storage error
+                 */
+                needNetwork = true;
+                Log.e("CinA", "Unknown user");
+                Log.e("CinA", e.toString());
             }
-        } catch (IOException e) {
-            needNetwork = true;
-            Log.e("CinA", "Unknown user");
-            Log.e("CinA", e.toString());
         }
+//        queryBuilder.setWhereClause("phone_id = '" + Encryption.encrypt(context, UserData.getDeviceID(context)) + "'");
+//        try {
+//            if (!userFile.exists()) {
+//                userFile.createNewFile();
+//            }
+//            List<UserData> userDataList = Backendless.Data.of(UserData.class).find(queryBuilder);
+//            if (userDataList.size() != 0) {
+//                /*
+//                 * Revive user data from server
+//                 */
+//                UserData userData = userDataList.get(0);
+//                userData.encrypted = true;
+//                UserData.writeFile(userFile, userData);
+//                this.userData = UserData.decryptData(userData);
+//                this.validUser = isValidUser(userData);
+//                Log.e("CinA", "User info read from server");
+//            } else {
+//                /*
+//                 * Create new user in server
+//                 */
+//                UserData userData = new UserData(UserData.getDeviceID(context)
+//                        , UserData.getString(Calendar.getInstance().getTime()), "7");
+//                userData = Backendless.Data.of(UserData.class).save(UserData.encryptData(userData));
+//                userData.encrypted = true;
+//                UserData.writeFile(userFile, userData);
+//                this.userData = UserData.decryptData(userData);
+//                this.validUser = true;
+//                Log.e("CinA", "New user");
+//            }
+//        } catch (BackendlessException e) {
+//            /*
+//             * Network problem, check storage
+//             */
+//            try {
+//                /*
+//                 * Read user data from storage
+//                 */
+//                UserData userData = UserData.readFile(userFile);
+//                this.userData = UserData.decryptData(userData);
+//                this.validUser = isValidUser(userData);
+//                Log.e("CinA", "User info read from storage");
+//            } catch (Exception e1) {
+//                /*
+//                 * No user data in storage
+//                 */
+//                needNetwork = true;
+//                Log.e("CinA", "Unknown user");
+//            }
+//        } catch (IOException e) {
+//            needNetwork = true;
+//            Log.e("CinA", "Unknown user");
+//            Log.e("CinA", e.toString());
+//        }
     }
 
     public boolean updateDataBase(Context context, UserData userData) {
